@@ -3,15 +3,15 @@ Requirement:
 - Cloud MySQL ko cần cài đặt
 - TypeScript và tx-node
 
-Thứ tự chạy cài đặt
-- yarn setups
+Cài đặt các Modules và thư viện cần thiết
+- yarn
 
-Lấy env từ Hoàng
+Lấy config database từ Hoàng và ghi đè vào /src/shared/constants/Database.ts
 
 Chạy Project
-- yarn backend:start
+- yarn dev
+- test thử với endpoints: localhost:3000/api/users/110/fetch?name=xxx
 
-Mở một terminal khác
-- yarn frontend:start
+API sẽ viết ở /src/pages/api. Sau khi compile xong thì api sẽ ở route /api/...
 
-Backend chạy ở port 5000, frontend chạy ở port 3000
+Viết các phương thức GET, POST, PATCH, PUT xem thêm ở dây https://github.com/vercel/next.js/blob/canary/examples/api-routes-rest/pages/api/user/%5Bid%5D.js
