@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const jwtAxios = axios.create({
-  baseURL: 'https://crema-gomango.herokuapp.com/api/', // YOUR_API_URL HERE
+  baseURL: 'http://localhost:3000/api', // YOUR_API_URL HERE
   headers: {
     'Content-Type': 'application/json',
   },

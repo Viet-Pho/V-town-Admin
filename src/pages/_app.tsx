@@ -10,6 +10,7 @@ import AppThemeProvider from '../@crema/utility/AppThemeProvider';
 import AppStyleProvider from '../@crema/utility/AppStyleProvider';
 import AppLocaleProvider from '../@crema/utility/AppLocaleProvider';
 import FirebaseAuthProvider from '../@crema/services/auth/firebase/FirebaseAuthProvider';
+import JWTAuthProvider from '../@crema/services/auth/jwt-auth/JWTAuthProvider';
 import AuthRoutes from '../@crema/utility/AuthRoutes';
 import {useStore} from '../redux/store'; // Client-side cache, shared for the whole session of the user in the browser.
 import {EmotionCache} from '@emotion/cache';
@@ -26,7 +27,11 @@ interface MyAppProps extends AppProps {
 }
 
 export default function MyApp(props: MyAppProps) {
-  const {Component, emotionCache = clientSideEmotionCache, pageProps} = props;
+  const {
+    Component,
+    emotionCache = clientSideEmotionCache,
+    pageProps,
+  }: any = props;
   const store = useStore(pageProps.initialReduxState);
 
   return (
@@ -40,12 +45,12 @@ export default function MyApp(props: MyAppProps) {
           <AppThemeProvider>
             <AppStyleProvider>
               <AppLocaleProvider>
-                <FirebaseAuthProvider>
+                <JWTAuthProvider>
                   <AuthRoutes>
                     <CssBaseline />
                     <Component {...pageProps} />
                   </AuthRoutes>
-                </FirebaseAuthProvider>
+                </JWTAuthProvider>
               </AppLocaleProvider>
             </AppStyleProvider>
           </AppThemeProvider>

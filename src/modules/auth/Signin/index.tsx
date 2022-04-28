@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import AuthWrapper from '../AuthWrapper';
 import SigninFirebase from './SigninFirebase';
+import SigninJwtAuth from './SigninJwtAuth';
 import AppLogo from '@crema/core/AppLayout/components/AppLogo';
 
 const Signin = () => {
@@ -20,7 +21,7 @@ const Signin = () => {
           </Box>
         </Box>
 
-        <SigninFirebase />
+        <SigninJwtAuth />
       </Box>
     </AuthWrapper>
   );

@@ -20,6 +20,11 @@ interface SignUpProps {
   name: string;
   email: string;
   password: string;
+  first_name: string;
+  last_name: string;
+  age: number;
+  phone_number: string;
+  address: string;
 }
 
 interface SignInProps {
@@ -106,23 +111,29 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
   }) => {
     dispatch(fetchStart());
     try {
-      const {data} = await jwtAxios.post('auth', {email, password});
+      const {data} = await jwtAxios.post('/logIn', {
+        email,
+        password,
+      });
+
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       setAuthToken(data.token);
-      const res = await jwtAxios.get('/auth');
+
       setJWTAuthData({
-        user: res.data,
+        user: data.user,
         isAuthenticated: true,
         isLoading: false,
       });
       dispatch(fetchSuccess());
     } catch (error) {
+      console.log(error);
       setJWTAuthData({
         ...firebaseData,
         isAuthenticated: false,
         isLoading: false,
       });
-      dispatch(fetchError('Something went wrong'));
+      dispatch(fetchError(`Something went wrong`));
     }
   };
 
@@ -137,7 +148,7 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
   }) => {
     dispatch(fetchStart());
     try {
-      const {data} = await jwtAxios.post('users', {name, email, password});
+      const {data} = await jwtAxios.post('signUp', {name, email, password});
       localStorage.setItem('token', data.token);
       setAuthToken(data.token);
       const res = await jwtAxios.get('/auth');

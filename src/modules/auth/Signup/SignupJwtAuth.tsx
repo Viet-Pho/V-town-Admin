@@ -18,7 +18,9 @@ const SignupJwtAuth = () => {
   const {messages} = useIntl();
 
   const validationSchema = yup.object({
-    name: yup.string().required(String(messages['validation.nameRequired'])),
+    username: yup
+      .string()
+      .required(String(messages['validation.nameRequired'])),
     email: yup
       .string()
       .email(String(messages['validation.emailFormat']))
@@ -26,6 +28,10 @@ const SignupJwtAuth = () => {
     password: yup
       .string()
       .required(String(messages['validation.passwordRequired'])),
+    first_name: yup.string().required('First Name is required'),
+    last_name: yup.string().required('Last Name is required'),
+    phone_number: yup.string().required('Phone Number is required'),
+    address: yup.string().required('Address is required'),
   });
 
   return (
@@ -34,18 +40,28 @@ const SignupJwtAuth = () => {
         <Formik
           validateOnChange={true}
           initialValues={{
-            name: '',
             email: '',
+            first_name: '',
+            last_name: '',
+            age: '',
+            phone_number: '',
+            address: '',
+            username: '',
             password: '',
-            confirmPassword: '',
           }}
           validationSchema={validationSchema}
           onSubmit={(data, {setSubmitting}) => {
+            console.log('data', data);
             setSubmitting(true);
             signUpUser({
               email: data.email,
               password: data.password,
-              name: data.name,
+              name: data.username,
+              last_name: data.last_name,
+              age: parseInt(data.age),
+              phone_number: data.phone_number,
+              address: data.address,
+              first_name: data.first_name,
             });
             setSubmitting(false);
           }}
@@ -54,8 +70,73 @@ const SignupJwtAuth = () => {
             <Form style={{textAlign: 'left'}} noValidate autoComplete='off'>
               <Box sx={{mb: {xs: 4, xl: 5}}}>
                 <AppTextField
-                  label={<IntlMessages id='common.name' />}
-                  name='name'
+                  label='First Name'
+                  name='first_Name'
+                  variant='outlined'
+                  sx={{
+                    width: '100%',
+                    '& .MuiInputBase-input': {
+                      fontSize: 14,
+                    },
+                  }}
+                />
+              </Box>
+              <Box sx={{mb: {xs: 4, xl: 5}}}>
+                <AppTextField
+                  label='Last Name'
+                  name='last_name'
+                  variant='outlined'
+                  sx={{
+                    width: '100%',
+                    '& .MuiInputBase-input': {
+                      fontSize: 14,
+                    },
+                  }}
+                />
+              </Box>
+              <Box sx={{mb: {xs: 4, xl: 5}}}>
+                <AppTextField
+                  label='Age'
+                  name='age'
+                  variant='outlined'
+                  sx={{
+                    width: '100%',
+                    '& .MuiInputBase-input': {
+                      fontSize: 14,
+                    },
+                  }}
+                />
+              </Box>
+              <Box sx={{mb: {xs: 4, xl: 5}}}>
+                <AppTextField
+                  label=' Address'
+                  name='address'
+                  variant='outlined'
+                  sx={{
+                    width: '100%',
+                    '& .MuiInputBase-input': {
+                      fontSize: 14,
+                    },
+                  }}
+                />
+              </Box>
+              <Box sx={{mb: {xs: 4, xl: 5}}}>
+                <AppTextField
+                  label='Username'
+                  name='username'
+                  variant='outlined'
+                  sx={{
+                    width: '100%',
+                    '& .MuiInputBase-input': {
+                      fontSize: 14,
+                    },
+                  }}
+                />
+              </Box>
+              <Box sx={{mb: {xs: 4, xl: 5}}}>
+                <AppTextField
+                  label='Phone Number'
+                  name='phone_number'
                   variant='outlined'
                   sx={{
                     width: '100%',

@@ -33,6 +33,8 @@ const SigninJwtAuth = () => {
       .required(String(messages['validation.passwordRequired'])),
   });
 
+  console.log(signInUser);
+
   return (
     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
       <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', mb: 5}}>
@@ -45,10 +47,12 @@ const SigninJwtAuth = () => {
           validationSchema={validationSchema}
           onSubmit={(data, {setSubmitting}) => {
             setSubmitting(true);
+
             signInUser({
               email: data.email,
               password: data.password,
             });
+
             setSubmitting(false);
           }}
         >
