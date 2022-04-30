@@ -8,6 +8,7 @@ import {
   RiTodoLine,
   RiUserSettingsLine,
   RiUserReceived2Line,
+  RiMoneyDollarCircleLine
 } from 'react-icons/ri';
 import {BiCarousel, BiCartAlt, BiErrorAlt} from 'react-icons/bi';
 import {
@@ -62,6 +63,46 @@ const routesConfig: RouterConfigData[] = [
         id: 'register-staff',
         title: 'Register Staff',
         messageId: 'sidebar.app.dashboard.registerStaff',
+        type: 'item',
+        icon: <RiUserReceived2Line />,
+        url: '/dashboards/register-staff',
+      },
+      {
+        id: 'exchange-point',
+        title: 'Exchange Point',
+        messageId: 'sidebar.app.dashboard.exchangePoint',
+        type: 'item',
+        icon: <RiMoneyDollarCircleLine />,
+        url: '/dashboards/exchange-point',
+      },
+      {
+        id: 'crypto',
+        title: 'Crypto',
+        messageId: 'sidebar.app.dashboard.crypto',
+        type: 'item',
+        icon: <BsCurrencyBitcoin />,
+        url: '/dashboards/crypto',
+      },
+      {
+        id: 'crm',
+        title: 'CRM',
+        messageId: 'sidebar.app.dashboard.crm',
+        type: 'item',
+        icon: <RiCustomerService2Line />,
+        url: '/dashboards/crm',
+      },
+      {
+        id: 'analytics',
+        title: 'Analytics',
+        messageId: 'sidebar.app.dashboard.analytics',
+        type: 'item',
+        icon: <MdOutlineAnalytics />,
+        url: '/dashboards/analytics',
+      },
+      {
+        id: 'healthCare',
+        title: 'Health Care',
+        messageId: 'sidebar.healthCare',
         type: 'item',
         icon: <RiUserReceived2Line />,
         url: '/dashboards/register-staff',
