@@ -56,7 +56,7 @@ const SignupJwtAuth = () => {
             signUpUser({
               email: data.email,
               password: data.password,
-              name: data.username,
+              username: data.username,
               last_name: data.last_name,
               age: parseInt(data.age),
               phone_number: data.phone_number,
@@ -71,7 +71,7 @@ const SignupJwtAuth = () => {
               <Box sx={{mb: {xs: 4, xl: 5}}}>
                 <AppTextField
                   label='First Name'
-                  name='first_Name'
+                  name='first_name'
                   variant='outlined'
                   sx={{
                     width: '100%',

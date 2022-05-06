@@ -17,7 +17,7 @@ interface JWTAuthContextProps {
 }
 
 interface SignUpProps {
-  name: string;
+  username: string;
   email: string;
   password: string;
   first_name: string;
@@ -138,32 +138,56 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
   };
 
   const signUpUser = async ({
-    name,
+    username,
     email,
     password,
+    first_name,
+    last_name,
+    age,
+    phone_number,
+    address,
   }: {
-    name: string;
+    username: string;
     email: string;
     password: string;
+    first_name: string;
+    last_name: string;
+    age: number;
+    phone_number: string;
+    address: string;
   }) => {
     dispatch(fetchStart());
     try {
-      const {data} = await jwtAxios.post('signUp', {name, email, password});
+      const {data} = await jwtAxios.post('signUp', {
+        username,
+        email,
+        password,
+        first_name,
+        last_name,
+        age,
+        phone_number,
+        address,
+      });
+
+      console.log('Data', data);
+
       localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       setAuthToken(data.token);
-      const res = await jwtAxios.get('/auth');
       setJWTAuthData({
-        user: res.data,
+        user: data.user,
         isAuthenticated: true,
         isLoading: false,
       });
       dispatch(fetchSuccess());
-    } catch (error) {
+    } catch (err: any) {
+      console.log(JSON.stringify(err));
       setJWTAuthData({
         ...firebaseData,
         isAuthenticated: false,
         isLoading: false,
       });
+
       dispatch(fetchError('Something went wrong'));
     }
   };
