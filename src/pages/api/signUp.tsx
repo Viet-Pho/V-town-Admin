@@ -49,17 +49,23 @@ export default async function signUp(
           .status(400)
           .send({error: true, message: 'Password should not be null'});
       }
+      if (req.body.username === null) {
+        res
+          .status(400)
+          .send({error: true, message: 'Username should not be null'});
+      }
 
       try {
         const insertUser = await database('users').insert({
           email: req.body.email,
-          first_name: req.body.firstName,
-          last_name: req.body.lastName,
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
           age: req.body.age,
-          phone_number: req.body.phoneNumber,
+          phone_number: req.body.phone_number,
           address: req.body.address,
           username: req.body.username,
           password: hash,
+          account_type: 3,
         });
 
         const user: any = await database('users')
