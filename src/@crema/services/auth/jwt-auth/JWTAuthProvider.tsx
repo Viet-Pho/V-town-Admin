@@ -126,14 +126,14 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
         isLoading: false,
       });
       dispatch(fetchSuccess());
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.log(error?.response?.data?.message);
       setJWTAuthData({
         ...firebaseData,
         isAuthenticated: false,
         isLoading: false,
       });
-      dispatch(fetchError(`Something went wrong`));
+      dispatch(fetchError(`Error: ${error?.response?.data?.message}`));
     }
   };
 
@@ -181,14 +181,14 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
       });
       dispatch(fetchSuccess());
     } catch (err: any) {
-      console.log(JSON.stringify(err));
+      console.log(err.response.data.message);
       setJWTAuthData({
         ...firebaseData,
         isAuthenticated: false,
         isLoading: false,
       });
 
-      dispatch(fetchError('Something went wrong'));
+      dispatch(fetchError(`Error: ${err?.response?.data?.message}`));
     }
   };
 
