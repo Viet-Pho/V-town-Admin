@@ -1,11 +1,12 @@
 export interface Customer {
     id: number;
-    code: string;
+    cardNumber: string;
     phoneNumber: string;
     firstName: string;
     lastName: string;
     email: string;
     address: string;
+    totalPoints: number
 }
 
 export interface ExchangePointData {

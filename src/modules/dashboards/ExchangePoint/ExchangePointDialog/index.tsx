@@ -6,9 +6,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import ExchangePointForm from '../ExchangePointForm';
+import {useIntl} from 'react-intl';
 
 export default function ExchangePointDialog(props) {
   const {open, onClose} = props;
+  const {messages} = useIntl();
 
   const descriptionElementRef = React.useRef<HTMLElement>(null);
   React.useEffect(() => {
@@ -30,24 +32,23 @@ export default function ExchangePointDialog(props) {
         aria-labelledby='scroll-dialog-title'
         aria-describedby='scroll-dialog-description'
       >
-        <DialogTitle id='scroll-dialog-title'>Subscribe</DialogTitle>
+        <DialogTitle id='scroll-dialog-title'>
+          {messages['sidebar.app.dashboard.exchangePoint']}
+        </DialogTitle>
         <DialogContent dividers={true}>
           <ExchangePointForm
             customer={{
               id: 1,
-              code: '',
+              cardNumber: '',
               phoneNumber: '',
               firstName: '',
               lastName: '',
               email: '',
               address: '',
+              totalPoints: 0
             }}
           />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={onClose}>Subscribe</Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

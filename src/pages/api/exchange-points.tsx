@@ -18,6 +18,7 @@ export default async function customerHandler(
         return res.status(400).send('Bad Request');
 
       const customer = await getCustomer(customerId);
+      if (!!customer.cardDeleted) return res.status(400).send('Bad Request');
       if (!customer || !customer.id) return res.status(404).send('Not Found');
 
       const user = await getUser(userId);
@@ -30,7 +31,11 @@ export default async function customerHandler(
       };
       await database('exchange_points').insert(addedExchangePoint);
 
-      return res.status(200).send('Ok');
+      const [totalPoints] = await database('exchange_points')
+        .where('customer_id', customerId)
+        .sum('points as totalPoints');
+
+      return res.status(200).send(totalPoints);
     default:
       res.setHeader('Allow', ['POST']);
       res.status(405).end(`Method ${method} Not Allowed`);
@@ -39,9 +44,10 @@ export default async function customerHandler(
 
 async function getCustomer(id) {
   return database('customers')
-    .where('is_deleted', false)
-    .where('id', id)
-    .first();
+    .leftJoin('cards', 'cards.id', 'customers.card_id')
+    .where('customers.is_deleted', false)
+    .where('customers.id', id)
+    .first('customers.*', 'cards.is_deleted as cardDeleted');
 }
 
 async function getUser(id) {

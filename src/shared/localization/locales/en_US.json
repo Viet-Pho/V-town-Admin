@@ -383,6 +383,8 @@
   "sidebar.app.dashboard.registerStaff": "Register Staff",
   "sidebar.app.dashboard.editUser": "Edit User",
   "sidebar.app.dashboard.exchangePoint": "Exchange Point",
+  "sidebar.app.dashboard.customer": "Customers",
+  "sidebar.app.dashboard.customerlist": "Customer List",
   "sidebar.app.dashboard.crypto": "Crypto",
   "sidebar.app.metrics": "Metrics",
   "sidebar.app.widgets": "Widgets",
@@ -771,5 +773,16 @@
   "wall.groupCall": "Group Call",
   "wall.videoCall": "Video Call",
   "wall.likeTeam": "Like Team",
-  "wall.comments": "Comments"
+  "wall.comments": "Comments",
+  "exchangepoint.cardNumber": "Card Number",
+  "exchangepoint.firstName": "First Name",
+  "exchangepoint.lastName": "Last Name",
+  "exchangepoint.phoneNumber": "Phone Number",
+  "exchangepoint.email": "Email",
+  "exchangepoint.address": "Address",
+  "exchangepoint.exchangePoint": "Exchange Points",
+  "exchangepoint.clearForm": "Clear Form",
+  "exchangepoint.exchange": "Exchange",
+  "exchangepoint.totalPoint": "Total Points",
+  "exchangepoint.cardDisabled": "This card was disabled. You can not exchange point for this Customer"
 }

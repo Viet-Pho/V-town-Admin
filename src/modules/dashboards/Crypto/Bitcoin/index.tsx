@@ -11,21 +11,11 @@ import AppCard from '../../../../@crema/core/AppCard';
 import AppSelect from '../../../../@crema/core/AppSelect';
 import {CoinGraphData} from 'types/models/dashboards/Crypto';
 
-import { getUsers } from '../../../../models/user'
-
 interface BitcoinProps {
   coinGraphData: CoinGraphData;
 }
 
 const Bitcoin: React.FC<BitcoinProps> = ({coinGraphData}) => {
-
-  useEffect(() => {
-    async function fetchUser() {
-      const users = await getUsers()
-      console.log(2555, users)
-    }
-    fetchUser()
-  })
   
   const onGetCoinData = useCallback(
     (coin) => {

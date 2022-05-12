@@ -17,6 +17,8 @@ import {
   BsChatDots,
   BsCurrencyBitcoin,
   BsQuestionDiamond,
+  BsFillFilePersonFill,
+  BsPersonLinesFill
 } from 'react-icons/bs';
 import {DiHtml5Multimedia} from 'react-icons/di';
 import {
@@ -74,6 +76,23 @@ const routesConfig: RouterConfigData[] = [
         type: 'item',
         icon: <RiMoneyDollarCircleLine />,
         url: '/dashboards/exchange-point',
+      },
+      {
+        id: 'customer',
+        title: 'Customers',
+        messageId: 'sidebar.app.dashboard.customer',
+        type: 'collapse',
+        icon: <BsFillFilePersonFill />,
+        children: [
+          {
+            id: 'customerlist',
+            title: 'Customer List',
+            messageId: 'sidebar.app.dashboard.customerlist',
+            type: 'item',
+            icon: <BsPersonLinesFill />,
+            url: '/customers/list',
+          }
+        ]
       },
       {
         id: 'crypto',
