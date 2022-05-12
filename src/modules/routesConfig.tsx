@@ -6,6 +6,7 @@ import {
   RiDashboardLine,
   RiShieldUserLine,
   RiTodoLine,
+  RiUserSettingsLine,
 } from 'react-icons/ri';
 import {BiCarousel, BiCartAlt, BiErrorAlt} from 'react-icons/bi';
 import {
@@ -22,11 +23,15 @@ import {
   MdOutlineContactSupport,
   MdOutlineManageAccounts,
 } from 'react-icons/md';
-import {CgFeed} from 'react-icons/cg';
+import {CgFeed, CgUserList} from 'react-icons/cg';
 import {ImFeed, ImLab} from 'react-icons/im';
 import {GrDatabase, GrNavigate} from 'react-icons/gr';
 import {VscTable, VscTools} from 'react-icons/vsc';
-import {AiOutlineLayout, AiOutlineUnorderedList} from 'react-icons/ai';
+import {
+  AiOutlineLayout,
+  AiOutlineUnorderedList,
+  AiOutlineUserAdd,
+} from 'react-icons/ai';
 import {ReactNode} from 'react';
 import {RoutePermittedRole} from '../shared/constants/AppConst';
 
@@ -52,6 +57,30 @@ const routesConfig: RouterConfigData[] = [
     messageId: 'sidebar.application',
     type: 'group',
     children: [
+      {
+        id: 'userlist',
+        title: 'Add User',
+        messageId: 'sidebar.app.dashboard.userList',
+        type: 'item',
+        icon: <CgUserList />,
+        url: 'users-list',
+      },
+      {
+        id: 'add-user',
+        title: 'Add User',
+        messageId: 'sidebar.app.dashboard.addUser',
+        type: 'item',
+        icon: <AiOutlineUserAdd />,
+        url: '/dashboards/add-user',
+      },
+      {
+        id: 'edit-user',
+        title: 'Edit User',
+        messageId: 'sidebar.app.dashboard.editUser',
+        type: 'item',
+        icon: <RiUserSettingsLine />,
+        url: '/dashboards/edit-user',
+      },
       {
         id: 'crypto',
         title: 'Crypto',
