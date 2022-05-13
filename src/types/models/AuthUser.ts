@@ -1,5 +1,6 @@
 export interface AuthUser {
   id?: number;
+  uid?: string;
   userId?: string;
   displayName?: string;
   email?: string;

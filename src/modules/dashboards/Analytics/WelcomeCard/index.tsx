@@ -63,7 +63,7 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({data}) => {
                 fontSize: 16,
               }}
             >
-              {messages['dashboard.analytics.welcome']}
+              {`${messages['dashboard.analytics.welcome']}`}
             </Box>
             <Box
               component='h3'
@@ -74,7 +74,7 @@ const WelcomeCard: React.FC<WelcomeCardProps> = ({data}) => {
                 mb: 3,
               }}
             >
-              {messages['dashboard.analytics.eddieMassy']}
+              {`${messages['dashboard.analytics.eddieMassy']}`}
             </Box>
           </Box>
           <Box

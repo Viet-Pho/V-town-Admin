@@ -8,7 +8,7 @@ const Products = () => {
   const {messages} = useIntl();
   return (
     <AppsContainer
-      title={messages['sidebar.ecommerce.products']}
+      title={`${messages['sidebar.ecommerce.products']}`}
       sidebarContent={<ProductsSidebar />}
     >
       <ProductListing />

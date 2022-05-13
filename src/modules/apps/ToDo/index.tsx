@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {useEffect} from 'react';
 import TaskSideBar from './TaskSideBar/index';
 import TasksList from './TasksList';

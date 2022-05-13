@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import {DataGrid, GridCellParams, GridColumns} from '@mui/x-data-grid';

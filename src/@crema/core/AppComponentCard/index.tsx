@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {ReactNode, useState} from 'react';
 import {Card} from '@mui/material';
 import CardHeader from '@mui/material/CardHeader';
@@ -89,37 +90,27 @@ const AppComponentCard: React.FC<AppComponentCardProps> = ({
                   background: '#333333',
                 }}
               >
-                <Highlight
-                  {...defaultProps}
-                  code={source}
-                  language='jsx'
-                  theme={highlightTheme}
-                >
-                  {({style, tokens, getLineProps, getTokenProps}) => (
-                    <pre
-                      style={{
-                        ...style,
-                        maxHeight: 500,
-                        borderRadius: 8,
-                        padding: 12,
-                      }}
-                    >
-                      {tokens.map((line, i) => (
-                        <Box
-                          key={'line-' + i}
-                          {...getLineProps({line, key: i})}
-                        >
-                          {line.map((token, key) => (
-                            <span
-                              key={'token-' + key}
-                              {...getTokenProps({token, key})}
-                            />
-                          ))}
-                        </Box>
-                      ))}
-                    </pre>
-                  )}
-                </Highlight>
+                {({style, tokens, getLineProps, getTokenProps}) => (
+                  <pre
+                    style={{
+                      ...style,
+                      maxHeight: 500,
+                      borderRadius: 8,
+                      padding: 12,
+                    }}
+                  >
+                    {tokens.map((line, i) => (
+                      <Box key={'line-' + i} {...getLineProps({line, key: i})}>
+                        {line.map((token, key) => (
+                          <span
+                            key={'token-' + key}
+                            {...getTokenProps({token, key})}
+                          />
+                        ))}
+                      </Box>
+                    ))}
+                  </pre>
+                )}
               </AppScrollbar>
             ) : null}
           </Collapse>

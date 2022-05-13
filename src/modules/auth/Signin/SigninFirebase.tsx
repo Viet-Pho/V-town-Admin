@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import {Form, Formik} from 'formik';
 import * as yup from 'yup';
@@ -17,7 +18,7 @@ import {BsGithub} from 'react-icons/bs';
 import {useRouter} from 'next/router';
 import Link from 'next/link';
 
-const SigninFirebase = () => {
+const SigninFirebase = (): any => {
   const {signInWithEmailAndPassword, signInWithPopup} = useAuthMethod();
   const router = useRouter();
   const {messages} = useIntl();

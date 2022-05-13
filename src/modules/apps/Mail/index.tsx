@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {useEffect} from 'react';
 import MailsList from './MailsList';
 import MailDetail from './MailDetail';

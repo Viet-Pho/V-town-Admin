@@ -38,7 +38,7 @@ export const useLayoutContext = () => useContext(LayoutContext);
 
 export const useLayoutActionsContext = () => useContext(LayoutActionsContext);
 
-const LayoutContextProvider: React.FC<React.ReactNode> = ({children}) => {
+const LayoutContextProvider: React.FC<any> = ({children}) => {
   const [layoutType, updateLayoutType] = useState<string>(
     defaultConfig.layoutType,
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import {Field, FieldHookConfig} from 'formik';
 import DatePicker from '@mui/lab/DatePicker';
 import TextField from '@mui/material/TextField';
-import {DatePickerProps} from '@mui/lab/DatePicker/DatePicker';
+import {DatePickerProps} from '@mui/x-date-pickers/DatePicker/DatePicker';
 import {TextFieldProps} from '@mui/material/TextField/TextField';
 
 const AppDateFiled = (
