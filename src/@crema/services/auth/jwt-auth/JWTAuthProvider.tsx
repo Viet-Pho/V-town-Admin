@@ -80,23 +80,26 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
         });
         return;
       }
+
       setAuthToken(token);
-      jwtAxios
-        .get('/auth')
-        .then(({data}) =>
-          setJWTAuthData({
-            user: data,
-            isLoading: false,
-            isAuthenticated: true,
-          }),
-        )
-        .catch(() =>
-          setJWTAuthData({
-            user: undefined,
-            isLoading: false,
-            isAuthenticated: false,
-          }),
-        );
+
+      const userData = localStorage.getItem('user');
+      if (!userData) {
+        setJWTAuthData({
+          user: undefined,
+          isLoading: false,
+          isAuthenticated: false,
+        });
+        return;
+      }
+      if (userData) {
+        const parseJSONUserData = JSON.parse(userData);
+        setJWTAuthData({
+          user: parseJSONUserData,
+          isLoading: false,
+          isAuthenticated: true,
+        });
+      }
     };
 
     getAuthUser();
@@ -194,6 +197,7 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
 
   const logout = async () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setAuthToken();
     setJWTAuthData({
       user: null,
