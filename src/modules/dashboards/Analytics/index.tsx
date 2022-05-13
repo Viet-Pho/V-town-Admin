@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {useEffect} from 'react';
 import {Grid} from '@mui/material';
 import {useDispatch, useSelector} from 'react-redux';

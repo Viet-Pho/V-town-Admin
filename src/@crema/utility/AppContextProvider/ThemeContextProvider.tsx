@@ -43,7 +43,7 @@ export const useThemeContext = () => useContext(ThemeContext);
 
 export const useThemeActionsContext = () => useContext(ThemeActionsContext);
 
-const ThemeContextProvider: React.FC<React.ReactNode> = ({children}) => {
+const ThemeContextProvider: React.FC<any> = ({children}) => {
   const [theme, setTheme] = useState<any>(defaultTheme.theme);
   const [themeMode, updateThemeMode] = useState<string>(
     defaultConfig.themeMode,

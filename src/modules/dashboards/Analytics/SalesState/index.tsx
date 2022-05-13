@@ -57,7 +57,7 @@ const SalesState: React.FC<SalesStateProps> = ({salesState, chartData}) => {
             mb: 2,
           }}
         >
-          1343 {messages['dashboard.analytics.salesThisWeek']}
+          1343 {`${messages['dashboard.analytics.salesThisWeek']}`}
         </Box>
 
         <Box

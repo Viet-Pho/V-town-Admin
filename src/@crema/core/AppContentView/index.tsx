@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {ReactNode} from 'react';
 import Box from '@mui/material/Box';
 import AppContentViewWrapper from './AppContentViewWrapper';

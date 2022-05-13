@@ -79,7 +79,7 @@ const SiteVisitors: React.FC<SiteVisitorsProps> = ({siteVisitorsData}) => {
               fontWeight: Fonts.MEDIUM,
             }}
           >
-            {messages['eCommerce.countries']}
+            {`${messages['eCommerce.countries']}`}
           </Box>
           <AppList
             data={siteVisitorsData}
@@ -99,7 +99,7 @@ const SiteVisitors: React.FC<SiteVisitorsProps> = ({siteVisitorsData}) => {
               fontWeight: Fonts.MEDIUM,
             }}
           >
-            {messages['eCommerce.countries']}
+            {`${messages['eCommerce.countries']}`}
           </Box>
           <AppList
             data={siteVisitorsData}

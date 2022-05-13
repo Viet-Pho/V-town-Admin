@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {useEffect, useState} from 'react';
 import OrderTable from './OrderTable';
 import AppsContainer from '../../../@crema/core/AppsContainer';

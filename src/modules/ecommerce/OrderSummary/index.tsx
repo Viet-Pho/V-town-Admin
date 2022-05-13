@@ -28,7 +28,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({cartItems}) => {
       <AppCard
         title={
           <Box fontSize={16} fontWeight={Fonts.BOLD}>
-            {messages['ecommerce.orderSummary']}
+            {`${messages['ecommerce.orderSummary']}`}
           </Box>
         }
       >

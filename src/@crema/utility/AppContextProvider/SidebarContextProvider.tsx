@@ -41,7 +41,7 @@ export const useSidebarContext = () => useContext(SidebarContext);
 
 export const useSidebarActionsContext = () => useContext(SidebarActionsContext);
 
-const SidebarContextProvider: React.FC<React.ReactNode> = ({children}) => {
+const SidebarContextProvider: React.FC<any> = ({children}) => {
   const [menuStyle, updateMenuStyle] = useState<string>(
     defaultConfig.sidebar.menuStyle,
   );

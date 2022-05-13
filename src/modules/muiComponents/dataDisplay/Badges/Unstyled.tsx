@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as React from 'react';
 import {Box, styled} from '@mui/system';
 import BadgeUnstyled from '@mui/base/BadgeUnstyled';
@@ -73,10 +74,10 @@ function BadgeContent() {
 export default function UnstyledBadge() {
   return (
     <Box sx={{'& > :not(style) + :not(style)': {ml: 4}}}>
-      <StyledBadge badgeContent={5} overlap='circular'>
+      <StyledBadge badgeContent={5}>
         <BadgeContent />
       </StyledBadge>
-      <StyledBadge badgeContent={5} variant='dot' overlap='circular'>
+      <StyledBadge badgeContent={5} variant='dot'>
         <BadgeContent />
       </StyledBadge>
     </Box>

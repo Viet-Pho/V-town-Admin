@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+// @ts-nocheck
 import React, {isValidElement, ReactNode} from 'react';
 import Card from '@mui/material/Card';
 import {Box, Button, CardHeader} from '@mui/material';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react';
 import Box from '@mui/material/Box';
 import {Fonts} from '../../../../shared/constants/AppEnums';

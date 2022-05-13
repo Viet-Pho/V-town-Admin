@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, {ReactNode} from 'react';
 import ThemeContextProvider from './ThemeContextProvider';
 import LocaleContextProvider from './LocaleContextProvide';
