@@ -33,8 +33,6 @@ const SigninJwtAuth = () => {
       .required(String(messages['validation.passwordRequired'])),
   });
 
-  console.log(signInUser);
-
   return (
     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
       <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', mb: 5}}>
