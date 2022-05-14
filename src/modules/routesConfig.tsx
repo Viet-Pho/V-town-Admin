@@ -7,6 +7,7 @@ import {
   RiShieldUserLine,
   RiTodoLine,
   RiUserSettingsLine,
+  RiUserReceived2Line,
 } from 'react-icons/ri';
 import {BiCarousel, BiCartAlt, BiErrorAlt} from 'react-icons/bi';
 import {
@@ -57,6 +58,14 @@ const routesConfig: RouterConfigData[] = [
     messageId: 'sidebar.application',
     type: 'group',
     children: [
+      {
+        id: 'register-staff',
+        title: 'Register Staff',
+        messageId: 'sidebar.app.dashboard.registerStaff',
+        type: 'item',
+        icon: <RiUserReceived2Line />,
+        url: '/dashboards/register-staff',
+      },
       {
         id: 'userlist',
         title: 'Add User',

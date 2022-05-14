@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, {useEffect, useState} from 'react';
 import AddNewCustomer from './AddNewUser';
 import CustomerTable from './CustomerTable';
