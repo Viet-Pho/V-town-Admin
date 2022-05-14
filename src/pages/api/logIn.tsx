@@ -46,6 +46,7 @@ export default async function logIn(req: NextApiRequest, res: NextApiResponse) {
                 userId: user[0].id,
                 username: user[0].username,
                 email: user[0].email,
+                role: user[0].account_type,
               },
             });
           } else {
