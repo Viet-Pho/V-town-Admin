@@ -6,6 +6,6 @@ export interface AuthUser {
   email?: string;
   photoURL?: string;
   token?: string;
-  role?: string[] | string;
+  role?: number;
   username?: string;
 }

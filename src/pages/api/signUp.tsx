@@ -86,6 +86,7 @@ export default async function signUp(
             userId: insertUser[0],
             email: req.body.email,
             username: req.body.username,
+            role: 3,
           },
         });
       } catch (error) {
