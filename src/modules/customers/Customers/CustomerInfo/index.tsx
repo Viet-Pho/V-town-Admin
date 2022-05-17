@@ -1,15 +1,9 @@
 import React, {useState} from 'react';
-import Box from '@mui/material/Box';
-import moment from 'moment';
-import Button from '@mui/material/Button';
-import AppDialog from '@crema/core/AppDialog';
-import Divider from '@mui/material/Divider';
-import {styled} from '@mui/material/styles';
+import AppDialog from '../../../../@crema/core/AppDialog';
 import {useEffect} from 'react';
 import CustomerForm from '../CustomerForm';
 import {getCustomerInfoById} from '../../../../models/customers';
 import {Customers} from '../../../../types/models/dashboards/Customers';
-import avatars from 'pages/mui/data-display/avatars';
 
 interface CustomerInfoProps {
   customer: Customers;
@@ -22,15 +16,6 @@ interface CustomerInfoProps {
   isAddCustomerOpen: boolean;
 }
 
-const StyledDivider = styled(Divider)(({theme}) => ({
-  marginTop: 20,
-  marginBottom: 20,
-  [theme.breakpoints.up('xl')]: {
-    marginTop: 32,
-    marginBottom: 32,
-  },
-}));
-
 const CustomerInfo: React.FC<CustomerInfoProps> = ({
   isCustomerInfoOpen,
   onCloseCustomerInfo,
@@ -42,17 +27,19 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
     lastName: '',
     email: '',
     address: '',
-    age: 0,
+    age: 1,
     birthday: '',
     gender: '',
+    avatar: '',
     // point: 0,
   });
-  const pid = 1;
+  const pid = 29;
   useEffect(() => {
     async function fetchCustomerInfo() {
       const customer = await getCustomerInfoById(pid);
       setCustomerData(customer);
     }
+    console.log('customerData', customerData);
     fetchCustomerInfo();
   }, []);
 
@@ -65,6 +52,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
       title={'Customer Info'}
     >
       <CustomerForm
+        onCloseEditCustomer={onCloseCustomerInfo}
         onClose={onCloseCustomerInfo}
         isCustomerInfoOpen={isCustomerInfoOpen}
         isEditCustomerOpen={false}
@@ -82,7 +70,6 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
           avatar: customerData[0]?.avatar,
         }}
       />
-      <StyledDivider />
     </AppDialog>
   );
 };

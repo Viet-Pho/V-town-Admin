@@ -1,34 +1,40 @@
 import FormControl from '@mui/material/FormControl';
 import {alpha, Box, Select} from '@mui/material';
-import {useSelector} from 'react-redux';
 import InputLabel from '@mui/material/InputLabel';
 import Divider from '@mui/material/Divider';
-import {useDropzone} from 'react-dropzone';
 import Avatar from '@mui/material/Avatar';
-import AppCard from '@crema/core/AppCard';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import AppGridContainer from '@crema/core/AppGridContainer';
 import Grid from '@mui/material/Grid';
 import {styled} from '@mui/material/styles';
-import React, {useState, useRef} from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import MenuItem from '@mui/material/MenuItem';
-import {Fonts} from 'shared/constants/AppEnums';
-import {AppState} from '../../../../redux/store';
 import Alert from '@mui/material/Alert';
 import DatePicker from '@mui/lab/DatePicker';
+import FormHelperText from '@mui/material/FormHelperText';
+import {useDispatch} from 'react-redux';
+import {useDropzone} from 'react-dropzone';
+import React, {useState} from 'react';
+import AppGridContainer from '../../../../@crema/core/AppGridContainer';
+import AppCard from '../../../../@crema/core/AppCard';
+import {useSelector} from 'react-redux';
 import {Customers} from '../../../../types/models/dashboards/Customers';
-import * as yup from 'yup';
+import isEmail from 'isemail';
 import {
-  getCustomerInfoById,
-  editCustomer,
-  addNewCustomer,
-} from '../../../../models/customers';
+  fetchError,
+  fetchStart,
+  fetchSuccess,
+  showMessage,
+} from '../../../../redux/actions';
+import {editCustomer, addNewCustomer} from '../../../../models/customers';
+import EditCustomer from '../EditCustomer';
+import HelperText from 'modules/muiComponents/lab/DatePicker/HelperText';
 
 interface CustomersProps {
-  customer?: any;
+  customer: Customers;
   onClose: () => void;
+  onCloseEditCustomer: () => void;
+  onOpenEditCustomer?: () => void;
   refreshData?: any;
   setRefreshData?: any;
   isCustomerInfoOpen: boolean;
@@ -95,22 +101,25 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
     refreshData,
     setRefreshData,
     isCustomerInfoOpen,
-    isEditCustomerOpen,
     isAddCustomerOpen,
+    onCloseEditCustomer,
+    isEditCustomerOpen,
     ...other
   } = props;
-  console.log(customer);
+  const dispatch = useDispatch();
 
   const [customerData, setCustomerData] = React.useState(customer);
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-  const pid = 1;
+  const validEmail = isEmail.validate(customerData.email);
+
+  const pid = 14;
   const [loading, setLoading] = useState(false);
   const handleAddCustomer = async () => {
+    dispatch(fetchStart());
     try {
-      setLoading(true);
       const response: any = await addNewCustomer(customerData);
-      if (response) {
+      console.log('response', response);
+      if (response && validEmail) {
         // in need of a toast - to be continue
         console.log('edit', pid);
         if (refreshData !== null && setRefreshData !== null) {
@@ -121,8 +130,10 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
             setRefreshData(true);
           }
         }
-        setLoading(false);
-        setShowSuccessAlert(true);
+        dispatch(fetchSuccess());
+        dispatch(
+          showMessage(`Successfully Added Customer ${customerData.firstName}.`),
+        );
       }
     } catch (error) {
       // in need of a toast
@@ -135,17 +146,15 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
           setRefreshData(true);
         }
       }
-      setLoading(false);
-      setShowSuccessAlert(false);
+      dispatch(fetchError(`${error}`));
     }
   };
   const handleEditCustomer = async () => {
+    dispatch(fetchStart());
     try {
       setLoading(true);
       const response: any = await editCustomer(pid, customerData);
-      if (response) {
-        // in need of a toast - to be continue
-        console.log('edit', pid);
+      if (response && validEmail) {
         if (refreshData !== null && setRefreshData !== null) {
           if (refreshData === true) {
             setRefreshData(false);
@@ -154,12 +163,14 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
             setRefreshData(true);
           }
         }
-        setLoading(false);
-        setShowSuccessAlert(true);
       }
+      dispatch(fetchSuccess());
+      dispatch(
+        showMessage(
+          `Successfully Edited Customer ${customerData.firstName} Information.`,
+        ),
+      );
     } catch (error) {
-      // in need of a toast
-      console.log(error);
       if (refreshData !== null && setRefreshData !== null) {
         if (refreshData === true) {
           setRefreshData(false);
@@ -168,26 +179,47 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
           setRefreshData(true);
         }
       }
-      setLoading(false);
-      setShowSuccessAlert(false);
+      // console.log(error.response.data.message);
+      dispatch(fetchError(`${error}`));
     }
   };
 
-  const [avatar, setAvatar] = useState('');
-
-  const {getRootProps, getInputProps} = useDropzone({
-    accept: 'image/*',
-    onDrop: (acceptedFiles) => {
-      setAvatar(URL.createObjectURL(acceptedFiles[0]));
-      console.log('drop1', acceptedFiles[0]);
-    },
-  });
-
-  const handleChangeAvatar = (event) => {
-    setCustomerData((prevState) => {
-      return {...prevState, avatar: event.target.value};
+  const file2Base64 = (file: File): Promise<string> => {
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onerror = (error) => reject(error);
+      reader.onload = (event) => {
+        setCustomerData((prevState) => {
+          return {...prevState, avatar: event.target!.result};
+        });
+      };
     });
   };
+  const [avatarError, setAvatarError] = React.useState('');
+  const {getRootProps, getInputProps} = useDropzone({
+    accept: ['image/jpeg', 'image/png', 'image/jpg'],
+    maxSize: 4000000,
+    onDrop: async (acceptedFiles, fileRejections) => {
+      fileRejections.forEach((file) => {
+        file.errors.forEach((err) => {
+          if (err.code === 'file-too-large') {
+            console.log(`${err.message}`);
+            setAvatarError('File is larger than 4MB');
+          }
+          if (err.code === 'file-invalid-type') {
+            setAvatarError(`${err.message}`);
+            console.log(`${err.message}`);
+          }
+        });
+      });
+      if (fileRejections.length === 0) {
+        setAvatarError('');
+        const avatar = await file2Base64(acceptedFiles[0]);
+        setCustomerData({...customerData, avatar});
+      }
+    },
+  });
   const handleChangeGender = (event) => {
     setCustomerData((prevState) => {
       return {...prevState, gender: event.target.value};
@@ -230,29 +262,33 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
       return {...prevState, age: event.target.value};
     });
   };
-
   console.log('changes', customerData);
+
   return (
     <AppCard className='card-hover'>
       <HeaderWrapper>
-        <div {...getRootProps({className: 'dropzone'})}>
-          <input {...getInputProps()} />
-          <label htmlFor='icon-button-file'>
-            <AvatarViewWrapper>
-              <Avatar
-                sx={{
-                  width: 60,
-                  height: 60,
-                }}
-                src={avatar ? avatar : ''}
-                alt='user Image'
-              />
-              <Box className='edit-icon'>
-                <EditIcon />
-              </Box>
-            </AvatarViewWrapper>
-          </label>
-        </div>
+        <input
+          {...getInputProps()}
+          accept='image/jpeg,image/png,image/gif,image/jpg,application/pdf'
+        />
+        <label htmlFor='icon-button-file'>
+          <AvatarViewWrapper {...getRootProps({className: 'dropzone'})}>
+            <Avatar
+              sx={{
+                width: 60,
+                height: 60,
+              }}
+              src={customerData.avatar ? customerData.avatar : ''}
+              alt='user Image'
+            />
+            <Box className='edit-icon'>
+              <EditIcon />
+            </Box>
+          </AvatarViewWrapper>
+        </label>
+        <FormControl sx={{m: 3}}>
+          {<FormHelperText error>{avatarError}</FormHelperText>}
+        </FormControl>
       </HeaderWrapper>
 
       <AppGridContainer spacing={5}>
@@ -267,14 +303,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
       </AppGridContainer>
 
       <AppGridContainer>
-        {showSuccessAlert && (
-          <Grid item xs={12} md={12} lg={12}>
-            <Alert variant='filled' severity='success'>
-              Thêm Khách Hàng ${customer.firstName} Thành Công.
-            </Alert>
-          </Grid>
-        )}
-
         <Grid item xs={12} md={6} lg={6}>
           <FormControl fullWidth sx={{m: 1}}>
             <TextField
@@ -292,37 +320,10 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
         <Grid item xs={12} md={6} lg={6}>
           <FormControl fullWidth sx={{m: 1}}>
             <TextField
-              id='customer_code'
+              id='last_name'
               label='Last Name'
               value={customerData?.lastName}
               onChange={handleChangeLastName}
-              InputProps={{
-                readOnly: isCustomerInfoOpen,
-              }}
-            />
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} md={6} lg={6}>
-          <FormControl fullWidth sx={{m: 1}}>
-            <TextField
-              id='phone_number'
-              label='Phone Number'
-              value={customerData?.phoneNumber}
-              onChange={handleChangePhone}
-              InputProps={{
-                readOnly: isCustomerInfoOpen,
-              }}
-              required
-            />
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} md={6} lg={6}>
-          <FormControl fullWidth sx={{m: 1}}>
-            <TextField
-              id='email'
-              label='Email'
-              value={customerData?.email}
-              onChange={handleChangeEmail}
               InputProps={{
                 readOnly: isCustomerInfoOpen,
               }}
@@ -363,7 +364,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
             >
               <MenuItem value={0}>Male</MenuItem>
               <MenuItem value={1}>Female</MenuItem>
-              <MenuItem value={2}>Other</MenuItem>
+              <MenuItem value={2}>Unknown</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -380,6 +381,39 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
             />
           </FormControl>
         </Grid>
+        <Grid item xs={12} md={6} lg={6}>
+          <FormControl fullWidth sx={{m: 1}}>
+            <TextField
+              id='phone_number'
+              label='Phone Number'
+              value={customerData?.phoneNumber}
+              onChange={handleChangePhone}
+              InputProps={{
+                readOnly: isCustomerInfoOpen,
+              }}
+              required
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={6} lg={6}>
+          <FormControl fullWidth sx={{m: 1}}>
+            <TextField
+              error={!validEmail && !customerData?.email}
+              id='email'
+              label='Email'
+              value={customerData?.email}
+              onChange={handleChangeEmail}
+              InputProps={{
+                readOnly: isCustomerInfoOpen,
+              }}
+              required
+            />
+            {customerData?.email && !validEmail && (
+              <FormHelperText error>Invalid Email</FormHelperText>
+            )}
+          </FormControl>
+        </Grid>
+
         <Grid item xs={12} md={12} lg={12}>
           <FormControl fullWidth sx={{m: 1}}>
             <TextField
@@ -390,6 +424,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               InputProps={{
                 readOnly: isCustomerInfoOpen,
               }}
+              required
             />
           </FormControl>
         </Grid>
@@ -413,7 +448,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
             <TextField
               id='points'
               label='Point'
-              value={customerData?.point}
+              // value={customerData?.point}
               // onChange={handleChangePoint}
               InputProps={{
                 readOnly: isCustomerInfoOpen,
@@ -436,11 +471,19 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               sx={{width: 1 / 7}}
               color='primary'
               variant='outlined'
-              onClick={() => handleEditCustomer()}
+              onClick={handleEditCustomer}
               disabled={loading}
             >
               Edit
             </Button>
+            <EditCustomer
+              customer={customer}
+              pid={pid}
+              isAddCustomerOpen={isAddCustomerOpen}
+              isCustomerInfoOpen={isCustomerInfoOpen}
+              isEditCustomerOpen={isEditCustomerOpen}
+              onCloseEditCustomer={onCloseEditCustomer}
+            />
           </Grid>
         )}
         {isEditCustomerOpen && (

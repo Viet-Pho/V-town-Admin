@@ -9,7 +9,10 @@ export async function searchCustomers(query) {
   }
 }
 export async function addNewCustomer(query) {
-  const response = await axiosPost('/api/customers', query);
+  const response = await axiosPost(
+    '/api/customer-list/customer-details',
+    query,
+  );
   if (response.status === 200) {
     return response.data;
   } else {

@@ -1,13 +1,9 @@
 import React, {useState} from 'react';
-import Box from '@mui/material/Box';
-import moment from 'moment';
-import Button from '@mui/material/Button';
-import AppDialog from '@crema/core/AppDialog';
-import Divider from '@mui/material/Divider';
-import {styled} from '@mui/material/styles';
+import AppDialog from '../../../../@crema/core/AppDialog';
 import CustomerForm from '../CustomerForm';
 
 interface AddNewCustomerProps {
+  oncloseEditCustomer: () => void;
   isAddCustomerOpen: boolean;
   onOpenAddCustomer?: () => void;
   onCloseAddCustomer: () => void;
@@ -15,41 +11,34 @@ interface AddNewCustomerProps {
   isEditCustomerOpen: boolean;
 }
 
-const StyledDivider = styled(Divider)(({theme}) => ({
-  marginTop: 20,
-  marginBottom: 20,
-  [theme.breakpoints.up('xl')]: {
-    marginTop: 32,
-    marginBottom: 32,
-  },
-}));
+const AddNewCustomer: React.FC<AddNewCustomerProps> = (props) => {
+  const {isAddCustomerOpen, onCloseAddCustomer, oncloseEditCustomer} = props;
 
-const AddNewUser: React.FC<AddNewCustomerProps> = (props) => {
-  const {isAddCustomerOpen, onCloseAddCustomer} = props;
   return (
     <AppDialog
       dividers
       maxWidth='md'
-      // maxHeight='xl'
       open={isAddCustomerOpen}
       onClose={() => onCloseAddCustomer()}
       title={'Add New User'}
     >
       <CustomerForm
+        onCloseEditCustomer={oncloseEditCustomer}
         onClose={onCloseAddCustomer}
         isAddCustomerOpen={isAddCustomerOpen}
         isCustomerInfoOpen={false}
         isEditCustomerOpen={false}
         customer={{
-          cardId: '',
+          cardId: 0,
           phoneNumber: '',
           firstName: '',
           lastName: '',
           email: '',
           address: '',
-          age: '',
+          age: 1,
           birthday: '',
-          gender: '',
+          gender: 2,
+          avatar: '',
           // point: 0,
         }}
       />
@@ -57,4 +46,4 @@ const AddNewUser: React.FC<AddNewCustomerProps> = (props) => {
   );
 };
 
-export default AddNewUser;
+export default AddNewCustomer;
