@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import React, {useEffect, useState} from 'react';
-import AddNewCustomer from './AddNewUser';
+import AddNewCustomer from './AddCustomer';
 import CustomerTable from './CustomerTable';
 import AppsContainer from '../../../@crema/core/AppsContainer';
 import {useIntl} from 'react-intl';
@@ -15,9 +15,14 @@ import Box from '@mui/material/Box';
 import AppInfoView from '../../../@crema/core/AppInfoView';
 import AppSearchBar from '../../../@crema/core/AppSearchBar';
 import {AppState} from '../../../redux/store';
-import EditCustomer from './EditCustomer';
 
-const Customers = () => {
+interface TableItemProps {
+  isEditCustomerOpen: boolean;
+  isCustomerInfoOpen: boolean;
+}
+
+const Customers: React.FC<TableItemProps> = (props) => {
+  const {isEditCustomerOpen, isCustomerInfoOpen} = props;
   const {messages} = useIntl();
   const dispatch = useDispatch();
   const {customers, customerCount} = useSelector<
@@ -130,6 +135,8 @@ const Customers = () => {
         </Hidden>
       </AppsContainer>
       <AddNewCustomer
+        isCustomerInfoOpen={isCustomerInfoOpen}
+        isEditCustomerOpen={isEditCustomerOpen}
         isAddCustomerOpen={isAddCustomerOpen}
         onCloseAddCustomer={onCloseAddCustomer}
       />

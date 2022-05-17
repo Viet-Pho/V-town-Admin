@@ -1,13 +1,8 @@
 import React, {useState} from 'react';
-import Box from '@mui/material/Box';
-import moment from 'moment';
-import Alert from '@mui/material/Alert';
-import {AlertTitle} from '@mui/material';
-import Button from '@mui/material/Button';
-import AppDialog from '@crema/core/AppDialog';
+import AppDialog from '../../../../@crema/core/AppDialog';
 import {useEffect} from 'react';
 import CustomerForm from '../CustomerForm';
-import {getCustomerInfoById, editCustomer} from '../../../../models/customers';
+import {getCustomerInfoById} from '../../../../models/customers';
 import {Customers} from '../../../../types/models/dashboards/Customers';
 
 interface EditCustomerProps {
@@ -21,11 +16,9 @@ interface EditCustomerProps {
   isAddCustomerOpen: boolean;
 }
 
-const EditCustomer: React.FC<EditCustomerProps> = ({
-  isEditCustomerOpen,
-  onCloseEditCustomer,
-  isCustomerInfoOpen,
-}) => {
+const EditCustomer: React.FC<EditCustomerProps> = (props) => {
+  const {isEditCustomerOpen, onCloseEditCustomer} = props;
+
   const [customerData, setCustomerData] = useState({
     id: 0,
     cardId: 0,
@@ -34,14 +27,14 @@ const EditCustomer: React.FC<EditCustomerProps> = ({
     lastName: '',
     email: '',
     address: '',
-    age: 0,
+    age: 1,
     birthday: '',
     gender: '',
     avatar: '',
     // point: 0,
   });
   const [refreshData, setRefreshData] = useState(false);
-  const pid = 1;
+  const pid = 29;
   useEffect(() => {
     async function fetchCustomerInfo() {
       try {
@@ -69,6 +62,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({
         setRefreshData={setRefreshData}
         onClose={onCloseEditCustomer}
         isEditCustomerOpen={isEditCustomerOpen}
+        onCloseEditCustomer={onCloseEditCustomer}
         isCustomerInfoOpen={false}
         isAddCustomerOpen={false}
         customer={{
@@ -82,6 +76,7 @@ const EditCustomer: React.FC<EditCustomerProps> = ({
           age: customerData[0]?.age,
           birthday: customerData[0]?.birthday,
           gender: customerData[0]?.gender,
+          avatar: customerData[0]?.avatar,
         }}
       />
     </AppDialog>

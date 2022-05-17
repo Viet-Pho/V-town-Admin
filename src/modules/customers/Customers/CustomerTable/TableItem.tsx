@@ -27,11 +27,11 @@ const StyledTableCell = styled(TableCell)(() => ({
 
 interface TableItemProps {
   data: CustomersData;
+  customer: CustomersData;
   isEditCustomerOpen: boolean;
   onCloseEditCustomer: () => void;
   isCustomerInfoOpen: boolean;
   onCloseCustomerInfo: () => void;
-  customer: any;
   isAddCustomerOpen: boolean;
   pid: number;
 }
@@ -133,10 +133,12 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           </Menu>
         </Box>
         <EditCustomer
+          isCustomerInfoOpen={isCustomerInfoOpen}
           isEditCustomerOpen={isEditCustomerOpen}
           onCloseEditCustomer={onCloseEditCustomer}
         />
         <CustomerInfo
+          isEditCustomerOpen={isEditCustomerOpen}
           isCustomerInfoOpen={isCustomerInfoOpen}
           onCloseCustomerInfo={onCloseCustomerInfo}
         />
