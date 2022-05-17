@@ -52,7 +52,6 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
     const [customer] = customers || [];
 
     if (!!customer) {
-      console.log(555, customer);
       setCustomer(customer);
       pointsInput.current?.focus();
       setShowCardDisabledAlert(!!customer.cardDeleted);
@@ -105,19 +104,12 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
     <AppCard className='card-hover'>
       <AppAnimate animation='transition.slideUpIn' delay={200}>
         <AppGridContainer>
-          {showCardDisabledAlert && (
-            <Grid item xs={12} md={12} lg={12}>
-              <Alert variant='filled' severity='error'>
-                {messages['exchangepoint.cardDisabled']}
-              </Alert>
-            </Grid>
-          )}
           <Grid item xs={12} md={12} lg={12}>
             <FormControl fullWidth sx={{m: 1}}>
               <TextField
                 id='card_number'
                 autoFocus
-                label={messages['exchangepoint.cardNumber']}
+                label={messages['exchangepoint.cardNumber'] as string}
                 value={customer.cardNumber}
                 onChange={(event) =>
                   setCustomer({...customer, cardNumber: event.target.value})
@@ -131,7 +123,8 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
             <FormControl fullWidth sx={{m: 1}}>
               <TextField
                 id='firstname'
-                label={messages['exchangepoint.firstName']}
+                label={messages['exchangepoint.firstName'] as string}
+                // label={messages['exchangepoint.firstName'] as string}
                 variant='filled'
                 value={customer.firstName}
                 InputProps={{
@@ -144,7 +137,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
             <FormControl fullWidth sx={{m: 1}}>
               <TextField
                 id='lastname'
-                label={messages['exchangepoint.lastName']}
+                label={messages['exchangepoint.lastName'] as string}
                 variant='filled'
                 value={customer.lastName}
                 InputProps={{
@@ -157,7 +150,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
             <FormControl fullWidth sx={{m: 1}}>
               <TextField
                 id='phonenumber'
-                label={messages['exchangepoint.phoneNumber']}
+                label={messages['exchangepoint.phoneNumber'] as string}
                 variant='filled'
                 value={customer.phoneNumber}
                 InputProps={{
@@ -170,7 +163,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
             <FormControl fullWidth sx={{m: 1}}>
               <TextField
                 id='email'
-                label={messages['exchangepoint.email']}
+                label={messages['exchangepoint.email'] as string}
                 variant='filled'
                 value={customer.email}
                 InputProps={{
@@ -183,7 +176,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
             <FormControl fullWidth sx={{m: 1}}>
               <TextField
                 id='address'
-                label={messages['exchangepoint.address']}
+                label={messages['exchangepoint.address'] as string}
                 variant='filled'
                 value={customer.address}
                 InputProps={{
@@ -196,7 +189,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
             <FormControl fullWidth sx={{m: 1}}>
               <TextField
                 id='total_point'
-                label={messages['exchangepoint.totalPoint']}
+                label={messages['exchangepoint.totalPoint'] as string}
                 variant='filled'
                 value={customer.totalPoints}
                 InputProps={{
@@ -209,7 +202,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
             <FormControl fullWidth sx={{m: 1}}>
               <TextField
                 id='points'
-                label={messages['exchangepoint.exchangePoint']}
+                label={messages['exchangepoint.exchangePoint'] as string}
                 value={points}
                 onChange={(event) => setPoints(Number(event.target.value))}
                 onKeyDown={handleClickExchangePoint}
@@ -226,7 +219,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
               }}
             >
               <Button variant='outlined' color='error' onClick={_clearForm}>
-                {messages['exchangepoint.clearForm']}
+                {messages['exchangepoint.clearForm'] as string}
               </Button>
               <Button
                 variant='contained'
@@ -235,7 +228,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
                 onClick={_createExchangePoint}
                 disabled={showCardDisabledAlert}
               >
-                {messages['exchangepoint.exchange']}
+                {messages['exchangepoint.exchange']  as string}
               </Button>
             </Box>
           </Grid>
@@ -251,7 +244,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
         aria-describedby='scroll-dialog-description'
       >
         <DialogTitle id='scroll-dialog-title'>
-          {messages['exchangepoint.successDialog.title']}
+          {messages['exchangepoint.successDialog.title']  as string}
         </DialogTitle>
         <DialogContent dividers={true}>
           Total points after exchange: {successResult.totalPoints}

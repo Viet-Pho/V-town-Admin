@@ -12,7 +12,7 @@ export default async function customerHandler(req, res) {
       let queryBuilder = database('customers')
         .leftJoin('cards', 'cards.id', 'customers.card_id')
         .where('customers.is_deleted', false);
-      if (!!cardId) queryBuilder = queryBuilder.where('code', cardId);
+
       if (!!cardNumber)
         queryBuilder = queryBuilder.where('card_number', cardNumber);
       if (!!searchText) {
