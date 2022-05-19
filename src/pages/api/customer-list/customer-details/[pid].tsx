@@ -17,47 +17,37 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: {pid},
     method,
   } = req;
-  if (!pid) {
-    res.status(404).json({error: 'Not found'});
-    return;
-  }
+  if (!req.body) return res.status(400).send({message: 'Bad Request'});
+  if (!pid) return res.status(404).json({message: 'Not found'});
+
   if (method === 'PATCH') {
-    if (!req.body) {
-      return res.status(400).send({message: 'Bad Request'});
-    }
-    if (!isEmail.validate(`${req.body.email}`)) {
-      return res
-        .status(400)
-        .send({error: true, message: 'Invalid Email Address'});
-    }
-    if (!req.body.firstName) {
-      return res
-        .status(400)
-        .send({error: true, message: 'No blank first name'});
-    }
-    if (!req.body.lastName) {
-      return res.status(400).send({error: true, message: 'No blank last name'});
-    }
-    if (!req.body.phoneNumber) {
-      return res
-        .status(400)
-        .send({error: true, message: 'No blank phone number'});
-    }
-    if (!req.body.address) {
-      return res.status(400).send({error: true, message: 'No blank address'});
-    }
-    if (!req.body.birthday) {
-      return res.status(400).send({error: true, message: 'No blank birthday'});
-    }
-    if (!req.body.cardId) {
-      return res.status(400).send({error: true, message: 'No blank card id'});
-    }
+    if (!req.body.firstName)
+      return res.status(400).send({message: 'No blank first name'});
+
+    if (!req.body.lastName)
+      return res.status(400).send({message: 'No blank last name'});
+
+    if (!req.body.birthday)
+      return res.status(400).send({message: 'No blank birthday'});
+
+    if (!req.body.phoneNumber)
+      return res.status(400).send({message: 'No blank phone number'});
+
+    if (!isEmail.validate(`${req.body.email}`))
+      return res.status(400).send({message: 'Invalid Email Address'});
+
+    if (!req.body.address)
+      return res.status(400).send({message: 'No blank address'});
+
+    if (!req.body.cardId)
+      return res.status(400).send({message: 'No blank card id'});
+
     // if (!req.body.age) {
-    //   return res.status(400).send({error: true, message: 'No blank age'});
+    //   return res.status(400).send({  message: 'No blank age'});
     // }
-    if (!req.body.avatar) {
-      return res.status(400).send({error: true, message: 'No blank avatar'});
-    }
+    if (!req.body.avatar)
+      return res.status(400).send({message: 'No blank avatar'});
+
     try {
       let customer = database('customers');
       const updateCustomer = await customer.where('id', pid).update({
@@ -74,7 +64,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
       res.status(200).json(updateCustomer);
     } catch (error) {
-      return res.status(400).send({error: true, message: `error: ${error}`});
+      return res.status(400).send({message: `${error}`});
     }
   }
   if (method === 'GET') {
@@ -96,7 +86,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       );
       res.status(200).json(getCustomer);
     } catch (error) {
-      return res.status(400).send({error: true, message: `error: ${error}`});
+      return res.status(400).send({message: ` ${error}`});
     }
   }
 };
