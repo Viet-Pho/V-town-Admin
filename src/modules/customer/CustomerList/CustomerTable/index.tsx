@@ -8,10 +8,11 @@ import AppTableContainer from '../../../../@crema/core/AppTableContainer';
 import {Customer} from '../../../../types/models/dashboards/ExchangePoint';
 
 interface CustomerTableProps {
-  customers: Customer[];
+  customers: any[];
 }
 
-const CustomerTable: React.FC<CustomerTableProps> = ({customers}) => {
+const CustomerTable: React.FC<CustomerTableProps> = (props) => {
+  const {customers} = props;
 
   return (
     <AppTableContainer>
