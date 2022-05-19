@@ -33,13 +33,12 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
     avatar: '',
     // point: 0,
   });
-  const pid = 29;
+  const pid = 28;
   useEffect(() => {
     async function fetchCustomerInfo() {
       const customer = await getCustomerInfoById(pid);
       setCustomerData(customer);
     }
-    console.log('customerData', customerData);
     fetchCustomerInfo();
   }, []);
 

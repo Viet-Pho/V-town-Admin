@@ -34,7 +34,7 @@ const EditCustomer: React.FC<EditCustomerProps> = (props) => {
     // point: 0,
   });
   const [refreshData, setRefreshData] = useState(false);
-  const pid = 29;
+  const pid = 28;
   useEffect(() => {
     async function fetchCustomerInfo() {
       try {

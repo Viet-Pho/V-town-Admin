@@ -19,7 +19,7 @@ import AppGridContainer from '../../../../@crema/core/AppGridContainer';
 import AppCard from '../../../../@crema/core/AppCard';
 import {useSelector} from 'react-redux';
 import {Customers} from '../../../../types/models/dashboards/Customers';
-import isEmail from 'isemail';
+import IsEmail from 'isemail';
 import {
   fetchError,
   fetchStart,
@@ -110,7 +110,8 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
 
   const [customerData, setCustomerData] = React.useState(customer);
 
-  const validEmail = isEmail.validate(customerData.email);
+  const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  const validEmail = regex.test(customerData?.email);
 
   const pid = 14;
   const [loading, setLoading] = useState(false);
@@ -118,10 +119,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
     dispatch(fetchStart());
     try {
       const response: any = await addNewCustomer(customerData);
-      console.log('response', response);
       if (response && validEmail) {
-        // in need of a toast - to be continue
-        console.log('edit', pid);
         if (refreshData !== null && setRefreshData !== null) {
           if (refreshData === true) {
             setRefreshData(false);
@@ -135,9 +133,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
           showMessage(`Successfully Added Customer ${customerData.firstName}.`),
         );
       }
-    } catch (error) {
-      // in need of a toast
-      console.log(error);
+    } catch (error: any) {
       if (refreshData !== null && setRefreshData !== null) {
         if (refreshData === true) {
           setRefreshData(false);
@@ -146,7 +142,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
           setRefreshData(true);
         }
       }
-      dispatch(fetchError(`${error}`));
+      dispatch(fetchError(`${error?.response?.data?.message}`));
     }
   };
   const handleEditCustomer = async () => {
@@ -170,7 +166,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
           `Successfully Edited Customer ${customerData.firstName} Information.`,
         ),
       );
-    } catch (error) {
+    } catch (error: any) {
       if (refreshData !== null && setRefreshData !== null) {
         if (refreshData === true) {
           setRefreshData(false);
@@ -179,8 +175,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
           setRefreshData(true);
         }
       }
-      // console.log(error.response.data.message);
-      dispatch(fetchError(`${error}`));
+      dispatch(fetchError(`${error?.response?.data?.message}`));
     }
   };
 
@@ -262,7 +257,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
       return {...prevState, age: event.target.value};
     });
   };
-  console.log('changes', customerData);
 
   return (
     <AppCard className='card-hover'>
@@ -306,6 +300,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
         <Grid item xs={12} md={6} lg={6}>
           <FormControl fullWidth sx={{m: 1}}>
             <TextField
+              error={!customerData.firstName}
               onChange={handleChangeFirstName}
               id='first_name'
               label='First Name'
@@ -315,6 +310,11 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               }}
               required
             />
+            {!customerData?.firstName ? (
+              <FormHelperText error>First Name Can Not Be Blank</FormHelperText>
+            ) : (
+              <></>
+            )}
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
@@ -364,13 +364,14 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
             >
               <MenuItem value={0}>Male</MenuItem>
               <MenuItem value={1}>Female</MenuItem>
-              <MenuItem value={2}>Unknown</MenuItem>
+              <MenuItem value={2}>Other</MenuItem>
             </Select>
           </FormControl>
         </Grid>
         <Grid item xs={12} md={4} lg={4}>
           <FormControl fullWidth sx={{m: 1}}>
             <TextField
+              error={!customerData.age}
               id='age'
               label='age'
               value={customerData?.age}
@@ -379,11 +380,17 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
                 readOnly: isCustomerInfoOpen,
               }}
             />
+            {!customerData?.age ? (
+              <FormHelperText error> Age Can Not Be Blank</FormHelperText>
+            ) : (
+              <></>
+            )}
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
           <FormControl fullWidth sx={{m: 1}}>
             <TextField
+              error={!customerData.phoneNumber}
               id='phone_number'
               label='Phone Number'
               value={customerData?.phoneNumber}
@@ -393,6 +400,13 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               }}
               required
             />
+            {!customerData?.phoneNumber ? (
+              <FormHelperText error>
+                Phone Number Can Not Be Blank
+              </FormHelperText>
+            ) : (
+              <></>
+            )}
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
@@ -417,6 +431,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
         <Grid item xs={12} md={12} lg={12}>
           <FormControl fullWidth sx={{m: 1}}>
             <TextField
+              error={!customerData?.address}
               id='address'
               label='Address'
               value={customerData?.address}
@@ -426,11 +441,17 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               }}
               required
             />
+            {!customerData?.address ? (
+              <FormHelperText error> Address Can Not Be Blank</FormHelperText>
+            ) : (
+              <></>
+            )}
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
           <FormControl fullWidth sx={{m: 1}}>
             <TextField
+              error={!customerData?.cardId}
               id='card_id'
               autoFocus
               label='Card Number'
@@ -441,6 +462,11 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               }}
               required
             />
+            {!customerData?.cardId ? (
+              <FormHelperText error> Card Id Can Not Be Blank</FormHelperText>
+            ) : (
+              <></>
+            )}
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6} lg={6}>
