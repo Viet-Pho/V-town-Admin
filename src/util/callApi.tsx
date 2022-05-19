@@ -12,7 +12,7 @@ import axios from 'axios';
 //   });
 // };
 
-export const axiosGet = (url, query) => {
+export const axiosGet = (url, query = null) => {
   return axios.get(url, {params: query});
 };
 

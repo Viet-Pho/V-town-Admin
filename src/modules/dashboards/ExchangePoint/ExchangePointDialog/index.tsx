@@ -9,6 +9,7 @@ import ExchangePointForm from '../ExchangePointForm';
 import {useIntl} from 'react-intl';
 
 export default function ExchangePointDialog(props) {
+  // eslint-disable-next-line react/prop-types
   const {open, onClose} = props;
   const {messages} = useIntl();
 
@@ -33,7 +34,7 @@ export default function ExchangePointDialog(props) {
         aria-describedby='scroll-dialog-description'
       >
         <DialogTitle id='scroll-dialog-title'>
-          {messages['sidebar.app.dashboard.exchangePoint']}
+          {messages['sidebar.app.dashboard.exchangePoint'] as string}
         </DialogTitle>
         <DialogContent dividers={true}>
           <ExchangePointForm
@@ -45,7 +46,7 @@ export default function ExchangePointDialog(props) {
               lastName: '',
               email: '',
               address: '',
-              totalPoints: 0
+              totalPoints: 0,
             }}
           />
         </DialogContent>

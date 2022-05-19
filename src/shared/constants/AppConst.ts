@@ -15,7 +15,7 @@ export const defaultUser: AuthUser = {
   displayName: 'John Alex',
   email: 'demo@example.com',
   token: 'access-token',
-  role: 'user',
+  role: 1,
   photoURL: '/assets/images/avatar/A11.jpg',
 };
 export const initialUrl = '/dashboards/crypto'; // this url will open after login
