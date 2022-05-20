@@ -1,7 +1,7 @@
 import database from '../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
 import moment from 'moment';
-import isEmail from 'isemail';
+
 // import {pid} from 'process';
 
 export const config = {
@@ -15,60 +15,61 @@ export const config = {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {method} = req;
-  if (!req.body) {
-    return res.status(400).send({error: true, message: 'Data is blank'});
-  }
   if (method === 'POST') {
-    if (!isEmail.validate(`${req.body.email}`)) {
-      return res
-        .status(400)
-        .send({error: true, message: 'Invalid Email Address'});
-    }
-    if (!req.body.firstName) {
-      return res
-        .status(400)
-        .send({error: true, message: 'No blank first name'});
-    }
-    if (!req.body.lastName) {
-      return res.status(400).send({error: true, message: 'No blank last name'});
-    }
-    if (!req.body.phoneNumber) {
-      return res
-        .status(400)
-        .send({error: true, message: 'No blank phone number'});
-    }
-    if (!req.body.address) {
-      return res.status(400).send({error: true, message: 'No blank address'});
-    }
-    if (!req.body.birthday) {
-      return res.status(400).send({error: true, message: 'No blank birthday'});
-    }
-    if (!req.body.cardId) {
-      return res.status(400).send({error: true, message: 'No blank card id'});
-    }
+    if (!req.body.firstName)
+      return res.status(400).send({message: 'No blank first name'});
+
+    if (!req.body.lastName)
+      return res.status(400).send({message: 'No blank last name'});
+
+    if (!req.body.address)
+      return res.status(400).send({message: 'No blank address'});
+
+    if (!req.body.birthday)
+      return res.status(400).send({message: 'No blank birthday'});
+
+    if (!req.body.phoneNumber)
+      return res.status(400).send({message: 'No blank phone number'});
+
+    if (!req.body.email)
+      return res.status(400).send({message: 'No blank Email Address'});
+
+    const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const validEmail = regex.test(req.body.email);
+    if (!validEmail)
+      return res.status(400).send({message: 'Invalid Email Address'});
+
+    if (!req.body.cardId)
+      return res.status(400).send({message: 'No blank card id'});
+
     // if (!req.body.age) {
-    //   return res.status(400).send({error: true, message: 'No blank age'});
+    //   return res.status(400).send({   message: 'No blank age'});
     // }
+    if (!req.body.avatar)
+      return res.status(400).send({message: 'No blank avatar'});
+
     try {
-      let customer = database('customers');
-      const addCustomer = await customer.insert({
-        card_id: req.body.cardId,
-        first_name: req.body.firstName,
-        last_name: req.body.lastName,
-        email: req.body.email,
-        phone_number: req.body.phoneNumber,
-        address: req.body.address,
-        age: req.body.age,
-        gender: req.body.gender,
-        avatar: req.body.avatar,
-        is_deleted: false,
-        birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
-      });
-      res.status(200).json(addCustomer);
+      await database('customers')
+        .insert({
+          card_id: req.body.cardId,
+          first_name: req.body.firstName,
+          last_name: req.body.lastName,
+          email: req.body.email,
+          phone_number: req.body.phoneNumber,
+          address: req.body.address,
+          gender: req.body.gender,
+          birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
+          avatar: req.body.avatar,
+          age: req.body.age,
+        })
+        .then(
+          await database('cards').insert({
+            card_number: req.body.cardId,
+          }),
+        );
+      res.status(200).json({message: 'Success'});
     } catch (error) {
-      return res
-        .status(400)
-        .send({error: true, message: `Cannot Add Customer`});
+      return res.status(400).send({message: `${error}`});
     }
   }
 };
