@@ -37,7 +37,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
   const [successResult, setSuccessResult] = useState({totalPoints: 0});
   const [showCardDisabledAlert, setShowCardDisabledAlert] = useState(false);
 
-  const cardNumberInput = useRef<HTMLInputElement>(null);
+  const cardIdInput = useRef<HTMLInputElement>(null);
   const pointsInput = useRef<HTMLInputElement>(null);
   const stringUser = localStorage.getItem('user');
   const {userId} = JSON.parse(stringUser || '{userId: 0}');
@@ -48,7 +48,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
     dispatch(fetchStart());
     setShowCardDisabledAlert(false);
     setCustomer({...props.customer});
-    const {customers} = await searchCustomers({cardNumber: event.target.value});
+    const {customers} = await searchCustomers({cardId: event.target.value});
     const [customer] = customers || [];
 
     if (!!customer) {
@@ -92,7 +92,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
   const _clearForm = () => {
     setCustomer({...props.customer});
     setPoints(0);
-    cardNumberInput.current?.focus();
+    cardIdInput.current?.focus();
   };
 
   const handleClickExchangePoint = (event) => {
@@ -109,13 +109,13 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
               <TextField
                 id='card_number'
                 autoFocus
-                label={messages['exchangepoint.cardNumber'] as string}
-                value={customer.cardNumber}
+                label={messages['exchangepoint.cardId'] as string}
+                value={customer.cardId}
                 onChange={(event) =>
-                  setCustomer({...customer, cardNumber: event.target.value})
+                  setCustomer({...customer, cardId: event.target.value})
                 }
                 onKeyDown={handleSearchCustomer}
-                inputRef={cardNumberInput}
+                inputRef={cardIdInput}
               />
             </FormControl>
           </Grid>

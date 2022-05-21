@@ -3,22 +3,22 @@ import moment from 'moment';
 
 export default async function customerHandler(req, res) {
   const {
-    query: {cardNumber, cardId, searchText = '', page = 1, limit = 20},
+    query: {cardId, searchText = '', page = 1, limit = 20},
     method,
   } = req;
 
   switch (method) {
     case 'GET': {
       let queryBuilder = database('customers')
-        .leftJoin('cards', 'cards.id', 'customers.card_id')
+        .leftJoin('cards', 'cards.card_number', 'customers.card_id')
         .where('customers.is_deleted', false);
 
-      if (!!cardNumber)
-        queryBuilder = queryBuilder.where('card_number', cardNumber);
+      if (!!cardId)
+        queryBuilder = queryBuilder.where('card_id', cardId);
       if (!!searchText) {
         const likeStringSearchText = `%${searchText}%`;
         queryBuilder = queryBuilder
-          .whereLike('card_number', likeStringSearchText)
+          .whereLike('card_id', likeStringSearchText)
           .orWhereLike('phone_number', likeStringSearchText)
           .orWhereLike('first_name', likeStringSearchText)
           .orWhereLike('last_name', likeStringSearchText)
@@ -42,13 +42,17 @@ export default async function customerHandler(req, res) {
         .limit(limit)
         .select(
           'customers.id as id',
-          'card_number as cardNumber',
+          'card_id as cardId',
           'first_name as firstName',
           'last_name as lastName',
           'phone_number as phoneNumber',
           'email',
+          'age',
+          'birthday',
           'address',
           'cards.is_deleted as cardDeleted',
+          'avatar',
+          'gender'
         )
         .sum({totalPoints: 'exchange_points.points'})
         .groupBy('customers.id');

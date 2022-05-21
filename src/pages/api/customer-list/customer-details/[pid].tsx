@@ -17,6 +17,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: {pid},
     method,
   } = req;
+
+  if (method === 'DELETE') {
+    await database('customers').where('id', pid).update({is_deleted: true});
+    return res.status(200).json({message: 'Delete customer successful.'});
+  }
   if (!req.body) return res.status(400).send({message: 'Bad Request'});
   if (!pid) return res.status(404).json({message: 'Not found'});
 

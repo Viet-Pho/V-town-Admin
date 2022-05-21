@@ -7,13 +7,16 @@ import TableBody from '@mui/material/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
 import AppTableContainer from '../../../../@crema/core/AppTableContainer';
-import {CustomersData} from '../../../../types/models/ecommerce/EcommerceApp';
+import {Customer} from '../../../../types/models/dashboards/ExchangePoint';
 
 interface CustomerTableProps {
-  customers: CustomersData[];
+  customers: any[];
 }
 
-const CustomerTable: React.FC<CustomerTableProps> = ({customers}) => {
+const CustomerTable: React.FC<CustomerTableProps> = (props) => {
+  const {customers} = props;
+  
+
   return (
     <AppTableContainer>
       <Table stickyHeader className='table'>
@@ -21,8 +24,8 @@ const CustomerTable: React.FC<CustomerTableProps> = ({customers}) => {
           <TableHeading />
         </TableHead>
         <TableBody>
-          {customers.map((data) => (
-            <TableItem data={data} key={data.id} />
+          {!!customers && !!customers.length && customers.map((customer) => (
+            <TableItem customer={customer} key={customer.id} />
           ))}
         </TableBody>
       </Table>

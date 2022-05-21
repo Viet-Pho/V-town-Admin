@@ -775,6 +775,7 @@
   "wall.likeTeam": "Like Team",
   "wall.comments": "Comments",
   "exchangepoint.cardNumber": "Card Number",
+  "exchangepoint.cardId": "Card ID",
   "exchangepoint.firstName": "First Name",
   "exchangepoint.lastName": "Last Name",
   "exchangepoint.phoneNumber": "Phone Number",

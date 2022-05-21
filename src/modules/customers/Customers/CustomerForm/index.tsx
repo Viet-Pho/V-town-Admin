@@ -113,7 +113,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
   const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   const validEmail = regex.test(customerData?.email);
 
-  const pid = 14;
   const [loading, setLoading] = useState(false);
   const handleAddCustomer = async () => {
     dispatch(fetchStart());
@@ -149,7 +148,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
     dispatch(fetchStart());
     try {
       setLoading(true);
-      const response: any = await editCustomer(pid, customerData);
+      const response: any = await editCustomer(customerData.id, customerData);
       if (response && validEmail) {
         if (refreshData !== null && setRefreshData !== null) {
           if (refreshData === true) {
@@ -504,7 +503,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
             </Button>
             <EditCustomer
               customer={customer}
-              pid={pid}
               isAddCustomerOpen={isAddCustomerOpen}
               isCustomerInfoOpen={isCustomerInfoOpen}
               isEditCustomerOpen={isEditCustomerOpen}

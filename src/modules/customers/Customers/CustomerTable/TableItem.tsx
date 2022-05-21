@@ -14,6 +14,16 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditCustomer from '../EditCustomer';
 import CustomerInfo from '../CustomerInfo';
+import {deleteCustomerById} from 'models/customers';
+import {
+  fetchError,
+  fetchStart,
+  fetchSuccess,
+  showMessage,
+} from '../../../../redux/actions';
+import {useDispatch} from 'react-redux';
+import {Customer} from '../../../../types/models/dashboards/ExchangePoint';
+
 const StyledTableCell = styled(TableCell)(() => ({
   fontSize: 14,
   padding: 8,
@@ -26,8 +36,8 @@ const StyledTableCell = styled(TableCell)(() => ({
 }));
 
 interface TableItemProps {
-  data: CustomersData;
-  customer: CustomersData;
+  data: Customer;
+  customer: Customer;
   isEditCustomerOpen: boolean;
   onCloseEditCustomer: () => void;
   isCustomerInfoOpen: boolean;
@@ -36,7 +46,8 @@ interface TableItemProps {
   pid: number;
 }
 
-const TableItem: React.FC<TableItemProps> = ({data}) => {
+const TableItem: React.FC<TableItemProps> = ({customer}) => {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -65,8 +76,20 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
     setCustomerInfoOpen(false);
   };
 
+  const deleteCustomer = async () => {
+    dispatch(fetchStart());
+    try {
+      const response: any = await deleteCustomerById(customer.id);
+      dispatch(fetchSuccess());
+      dispatch(showMessage(`${response.message}`));
+    } catch (e) {
+      console.log(e);
+      dispatch(fetchError(`${e?.response?.data?.message}`));
+    }
+  };
+
   return (
-    <TableRow key={data.name} className='item-hover'>
+    <TableRow key={customer.id} className='item-hover'>
       <StyledTableCell component='th' scope='row'>
         <Box
           sx={{
@@ -75,35 +98,13 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
             display: 'inline-block',
           }}
         >
-          {data.name}
+          {`${customer.firstName} ${customer.lastName}`}
         </Box>
       </StyledTableCell>
-      <StyledTableCell align='left'>{data.email}</StyledTableCell>
-      <StyledTableCell align='left'>{data.lastItem}</StyledTableCell>
-      <StyledTableCell align='left'>{data.lastOrder}</StyledTableCell>
-      <StyledTableCell align='left'>
-        <Box
-          component='span'
-          sx={{
-            color: 'white',
-            backgroundColor: '#388E3C',
-            maxWidth: 55,
-            mr: 2,
-            px: 3,
-            pt: 0.5,
-            pb: 1,
-            display: 'flex',
-            alignItems: 'center',
-            borderRadius: 10,
-            fontSize: 12,
-          }}
-        >
-          {data.rating} <StarRateIcon style={{fontSize: 16}} />
-        </Box>
-      </StyledTableCell>
-      <StyledTableCell align='left'>{data.balance}</StyledTableCell>
-      <StyledTableCell align='left'>{data.address}</StyledTableCell>
-      <StyledTableCell align='left'>{data.joinDate}</StyledTableCell>
+      <StyledTableCell align='left'>{customer.cardId}</StyledTableCell>
+      <StyledTableCell align='left'>{customer.phoneNumber}</StyledTableCell>
+      <StyledTableCell align='left'>{customer.email}</StyledTableCell>
+      <StyledTableCell align='left'>{customer.address}</StyledTableCell>
       <StyledTableCell align='right'>
         <Box>
           <IconButton
@@ -127,7 +128,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
             <MenuItem style={{fontSize: 14}} onClick={onOpenEditCustomer}>
               Edit
             </MenuItem>
-            <MenuItem style={{fontSize: 14}} onClick={handleClose}>
+            <MenuItem style={{fontSize: 14}} onClick={deleteCustomer}>
               Delete
             </MenuItem>
           </Menu>
@@ -136,11 +137,13 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           isCustomerInfoOpen={isCustomerInfoOpen}
           isEditCustomerOpen={isEditCustomerOpen}
           onCloseEditCustomer={onCloseEditCustomer}
+          customer={customer}
         />
         <CustomerInfo
           isEditCustomerOpen={isEditCustomerOpen}
           isCustomerInfoOpen={isCustomerInfoOpen}
           onCloseCustomerInfo={onCloseCustomerInfo}
+          customer={customer}
         />
       </StyledTableCell>
     </TableRow>

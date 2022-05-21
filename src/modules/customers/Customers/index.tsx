@@ -1,12 +1,11 @@
 // @ts-nocheck
-
 import React, {useEffect, useState} from 'react';
-import AddNewCustomer from './AddCustomer';
 import CustomerTable from './CustomerTable';
 import AppsContainer from '../../../@crema/core/AppsContainer';
 import {useIntl} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 import {getCustomers} from '../../../redux/actions';
+import {searchCustomers} from '../../../models/customer';
 import {Button, Hidden} from '@mui/material';
 import AppsHeader from '../../../@crema/core/AppsContainer/AppsHeader';
 import AppsContent from '../../../@crema/core/AppsContainer/AppsContent';
@@ -16,20 +15,27 @@ import AppInfoView from '../../../@crema/core/AppInfoView';
 import AppSearchBar from '../../../@crema/core/AppSearchBar';
 import {AppState} from '../../../redux/store';
 
-interface TableItemProps {
-  isEditCustomerOpen: boolean;
-  isCustomerInfoOpen: boolean;
-}
+// interface TableItemProps {
+//   isEditCustomerOpen: boolean;
+//   isCustomerInfoOpen: boolean;
+// }
 
-const Customers: React.FC<TableItemProps> = (props) => {
-  const {isEditCustomerOpen, isCustomerInfoOpen} = props;
+const Customers = () => {
+  // const {isEditCustomerOpen, isCustomerInfoOpen} = props;
   const {messages} = useIntl();
   const dispatch = useDispatch();
-  const {customers, customerCount} = useSelector<
-    AppState,
-    AppState['ecommerce']
-  >(({ecommerce}) => ecommerce);
-
+  const [customers, setCustomers] = useState([
+    {
+      id: 13,
+      code: '100001',
+      phoneNumber: '123456',
+      firstName: 'Hung',
+      lastName: 'Nguyen',
+      email: 'nqhptit@gmail.com',
+      address: '64 Sec 82, Phu Do Street, Nam Tu Liem District, Hanoi City',
+    },
+  ]);
+  const [customerCount, setCustomerCount] = useState(1);
   const [page, setPage] = useState(0);
   const [search, setSearchQuery] = useState<string>('');
 
@@ -39,24 +45,36 @@ const Customers: React.FC<TableItemProps> = (props) => {
   ) => {
     setPage(value);
   };
+
+  const fetchCustomer = async () => {
+    const {total, customers} = await searchCustomers({searchText: search});
+
+    setCustomers(customers);
+    setCustomerCount(total);
+  };
   useEffect(() => {
-    dispatch(getCustomers(search, page));
-  }, [dispatch, search, page]);
+    fetchCustomer();
+  }, []);
 
-  const [isAddCustomerOpen, setAddCustomerOpen] = React.useState(false);
-
-  const onOpenAddCustomer = () => {
-    setAddCustomerOpen(true);
+  const handleSearchCustomer = (event) => {
+    if (event.key !== 'Enter') return;
+    fetchCustomer();
   };
 
-  const onCloseAddCustomer = () => {
-    setAddCustomerOpen(false);
-  };
+  // const [isAddCustomerOpen, setAddCustomerOpen] = React.useState(false);
 
-  const onSearchCustomer = (value: string) => {
-    setSearchQuery(value);
-    setPage(0);
-  };
+  // const onOpenAddCustomer = () => {
+  //   setAddCustomerOpen(true);
+  // };
+
+  // const onCloseAddCustomer = () => {
+  //   setAddCustomerOpen(false);
+  // };
+
+  // const onSearchCustomer = (value: string) => {
+  //   setSearchQuery(value);
+  //   setPage(0);
+  // };
 
   return (
     <>
@@ -76,9 +94,8 @@ const Customers: React.FC<TableItemProps> = (props) => {
             <AppSearchBar
               iconPosition='right'
               overlap={false}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                onSearchCustomer(event.target.value)
-              }
+              onKeyDown={handleSearchCustomer}
+              onChange={(event) => setSearchQuery(event.target.value)}
               placeholder={messages['common.searchHere'] as string}
             />
             <Box
@@ -89,19 +106,8 @@ const Customers: React.FC<TableItemProps> = (props) => {
                 ml: 'auto',
               }}
             >
-              <Button
-                variant='outlined'
-                color='primary'
-                sx={{
-                  padding: '8px 28px',
-                  borderRadius: 30,
-                  '& .MuiSvgIcon-root': {
-                    fontSize: 26,
-                  },
-                }}
-                onClick={onOpenAddCustomer}
-              >
-                Add customer
+              <Button variant='contained' color='primary'>
+                Add Customer
               </Button>
 
               <Hidden smDown>
@@ -134,12 +140,12 @@ const Customers: React.FC<TableItemProps> = (props) => {
           />
         </Hidden>
       </AppsContainer>
-      <AddNewCustomer
+      {/* <AddNewCustomer
         isCustomerInfoOpen={isCustomerInfoOpen}
         isEditCustomerOpen={isEditCustomerOpen}
         isAddCustomerOpen={isAddCustomerOpen}
         onCloseAddCustomer={onCloseAddCustomer}
-      />
+      /> */}
       <AppInfoView />
     </>
   );

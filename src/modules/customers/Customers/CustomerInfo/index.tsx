@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import AppDialog from '../../../../@crema/core/AppDialog';
 import {useEffect} from 'react';
 import CustomerForm from '../CustomerForm';
-import {getCustomerInfoById} from '../../../../models/customers';
+// import {getCustomerInfoById} from '../../../../models/customers';
 import {Customers} from '../../../../types/models/dashboards/Customers';
 
 interface CustomerInfoProps {
@@ -19,28 +19,17 @@ interface CustomerInfoProps {
 const CustomerInfo: React.FC<CustomerInfoProps> = ({
   isCustomerInfoOpen,
   onCloseCustomerInfo,
+  customer
 }) => {
-  const [customerData, setCustomerData] = useState({
-    cardId: 0,
-    phoneNumber: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    address: '',
-    age: 1,
-    birthday: '',
-    gender: '',
-    avatar: '',
-    // point: 0,
-  });
-  const pid = 28;
-  useEffect(() => {
-    async function fetchCustomerInfo() {
-      const customer = await getCustomerInfoById(pid);
-      setCustomerData(customer);
-    }
-    fetchCustomerInfo();
-  }, []);
+  const [customerData, setCustomerData] = useState({...customer});
+
+  // useEffect(() => {
+  //   async function fetchCustomerInfo() {
+  //     const customer = await getCustomerInfoById(customerData.id);
+  //     setCustomerData(customer);
+  //   }
+  //   fetchCustomerInfo();
+  // }, []);
 
   return (
     <AppDialog
@@ -57,16 +46,16 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
         isEditCustomerOpen={false}
         isAddCustomerOpen={false}
         customer={{
-          cardId: customerData[0]?.cardId,
-          phoneNumber: customerData[0]?.phoneNumber,
-          firstName: customerData[0]?.firstName,
-          lastName: customerData[0]?.lastName,
-          email: customerData[0]?.email,
-          address: customerData[0]?.address,
-          age: customerData[0]?.age,
-          birthday: customerData[0]?.birthday,
-          gender: customerData[0]?.gender,
-          avatar: customerData[0]?.avatar,
+          cardId: customerData?.cardId,
+          phoneNumber: customerData?.phoneNumber,
+          firstName: customerData?.firstName,
+          lastName: customerData?.lastName,
+          email: customerData?.email,
+          address: customerData?.address,
+          age: customerData?.age,
+          birthday: customerData?.birthday,
+          gender: customerData?.gender,
+          avatar: customerData?.avatar,
         }}
       />
     </AppDialog>

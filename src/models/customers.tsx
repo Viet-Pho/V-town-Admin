@@ -1,4 +1,4 @@
-import {axiosGet, axiosPost, axiosPatch} from '../util/callApi';
+import {axiosGet, axiosPost, axiosPatch, axiosDelete} from '../util/callApi';
 
 export async function searchCustomers(query) {
   const response = await axiosGet('/api/customers', query);
@@ -8,6 +8,7 @@ export async function searchCustomers(query) {
     return [];
   }
 }
+
 export async function addNewCustomer(query) {
   const response = await axiosPost(
     '/api/customer-list/customer-details',
@@ -36,6 +37,15 @@ export async function getCustomerInfoById(query) {
   const response = await axiosGet(
     `/api/customer-list/customer-details/${query}`,
   );
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return [];
+  }
+}
+
+export async function deleteCustomerById(pid) {
+  const response = await axiosDelete(`/api/customer-list/customer-details/${pid}`);
   if (response.status === 200) {
     return response.data;
   } else {

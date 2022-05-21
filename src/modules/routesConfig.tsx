@@ -78,24 +78,6 @@ const routesConfig: RouterConfigData[] = [
         url: '/dashboards/exchange-point',
       },
       {
-        id: 'customer',
-        title: 'Customers',
-        messageId: 'sidebar.app.dashboard.customer',
-        type: 'collapse',
-        icon: <BsFillFilePersonFill />,
-        children: [
-          {
-            id: 'customerlist',
-            title: 'Customer List',
-            messageId: 'sidebar.app.dashboard.customerlist',
-            type: 'item',
-            icon: <BsPersonLinesFill />,
-            url: '/customers/list',
-          },
-        ],
-      },
-
-      {
         id: 'userlist',
         title: 'User List',
         messageId: 'sidebar.app.dashboard.userList',
