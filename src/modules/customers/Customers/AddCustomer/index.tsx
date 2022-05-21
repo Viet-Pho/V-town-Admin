@@ -29,7 +29,7 @@ const AddNewCustomer: React.FC<AddNewCustomerProps> = (props) => {
         isCustomerInfoOpen={false}
         isEditCustomerOpen={false}
         customer={{
-          cardId: 0,
+          cardId: '0',
           phoneNumber: '',
           firstName: '',
           lastName: '',

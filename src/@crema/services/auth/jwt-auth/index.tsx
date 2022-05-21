@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const jwtAxios = axios.create({
-  baseURL: 'http://localhost:3000/api', // YOUR_API_URL HERE
+  baseURL: '/api', // YOUR_API_URL HERE
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

@@ -40,7 +40,7 @@ export default function ExchangePointDialog(props) {
           <ExchangePointForm
             customer={{
               id: 1,
-              cardNumber: '',
+              cardId: '',
               phoneNumber: '',
               firstName: '',
               lastName: '',

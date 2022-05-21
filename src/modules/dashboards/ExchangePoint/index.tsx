@@ -8,7 +8,7 @@ const ExchangePoint = () => {
       <ExchangePointForm
         customer={{
           id: 0,
-          cardNumber: '',
+          cardId: '',
           phoneNumber: '',
           firstName: '',
           lastName: '',

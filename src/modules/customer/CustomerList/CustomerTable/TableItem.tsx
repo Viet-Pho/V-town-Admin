@@ -36,7 +36,7 @@ const TableItem: React.FC<TableItemProps> = ({customer}) => {
           {`${customer.firstName} ${customer.lastName}`}
         </Box>
       </StyledTableCell>
-      <StyledTableCell align='left'>{customer.cardNumber}</StyledTableCell>
+      <StyledTableCell align='left'>{customer.cardId}</StyledTableCell>
       <StyledTableCell align='left'>{customer.phoneNumber}</StyledTableCell>
       <StyledTableCell align='left'>{customer.email}</StyledTableCell>
       <StyledTableCell align='left'>{customer.address}</StyledTableCell>
