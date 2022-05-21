@@ -47,46 +47,54 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // }
     if (!req.body.avatar)
       return res.status(400).send({message: 'No blank avatar'});
-
     try {
       let customer = database('customers');
-      const updateCustomer = await customer.where('id', pid).update({
-        card_id: req.body.cardId,
-        first_name: req.body.firstName,
-        last_name: req.body.lastName,
-        email: req.body.email,
-        phone_number: req.body.phoneNumber,
-        address: req.body.address,
-        gender: req.body.gender,
-        birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
-        avatar: req.body.avatar,
-        age: req.body.age,
-      });
+      const updateCustomer = await customer
+        .where({
+          id: pid,
+          is_deleted: 0,
+        })
+        .update({
+          card_id: req.body.cardId,
+          first_name: req.body.firstName,
+          last_name: req.body.lastName,
+          email: req.body.email,
+          phone_number: req.body.phoneNumber,
+          address: req.body.address,
+          gender: req.body.gender,
+          birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
+          avatar: req.body.avatar,
+          age: req.body.age,
+        });
       res.status(200).json(updateCustomer);
     } catch (error) {
       return res.status(400).send({message: `${error}`});
     }
   }
   if (method === 'GET') {
-    try {
-      let customer = database('customers');
-      if (!!pid) customer = customer.where('id', pid);
-      const getCustomer = await customer.select(
-        'id',
-        'card_id as cardId',
-        'first_name as firstName',
-        'last_name as lastName',
-        'phone_number as phoneNumber',
-        'email',
-        'address',
-        'gender',
-        'birthday',
-        'avatar',
-        'age',
-      );
-      res.status(200).json(getCustomer);
-    } catch (error) {
-      return res.status(400).send({message: ` ${error}`});
+    if (!!pid) {
+      try {
+        const getCustomer = await database('customers')
+          .where({
+            id: pid,
+            is_deleted: 0,
+          })
+          .select(
+            'card_id as cardId',
+            'first_name as firstName',
+            'last_name as lastName',
+            'phone_number as phoneNumber',
+            'email',
+            'address',
+            'gender',
+            'birthday',
+            'avatar',
+            'age',
+          );
+        res.status(200).json(getCustomer);
+      } catch (error) {
+        return res.status(400).send({message: ` ${error}`});
+      }
     }
   }
 };

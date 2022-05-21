@@ -34,7 +34,6 @@ export async function editCustomer(pid, query) {
 
 export async function getCustomerInfoById(pid) {
   const response = await axiosGet(`/api/customer-list/customer-details/${pid}`);
-  console.log('response', response);
   if (response.status === 200) {
     return response.data;
   } else {
@@ -43,7 +42,6 @@ export async function getCustomerInfoById(pid) {
 }
 
 export async function deleteCustomerById(pid) {
-  console.log('pid', pid);
   const response = await axiosPatch(`/api/customer-list/${pid}`);
   if (response.status === 200) {
     return response.data;

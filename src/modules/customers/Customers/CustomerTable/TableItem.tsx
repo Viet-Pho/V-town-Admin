@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import React from 'react';
+import React, {useState} from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
@@ -22,6 +22,8 @@ import {
   showMessage,
 } from '../../../../redux/actions';
 import {useDispatch} from 'react-redux';
+import AppConfirmDialog from '@crema/core/AppConfirmDialog';
+import {AiOutlineDeploymentUnit} from 'react-icons/ai';
 
 const StyledTableCell = styled(TableCell)(() => ({
   fontSize: 14,
@@ -38,6 +40,8 @@ interface TableItemProps {
   data: CustomersData;
   customer: CustomersData;
   isEditCustomerOpen: boolean;
+  onCloseDeleteCustomer: () => void;
+  onDeleteCustomerOpe?: () => void;
   onCloseEditCustomer: () => void;
   isCustomerInfoOpen: boolean;
   onCloseCustomerInfo: () => void;
@@ -45,7 +49,7 @@ interface TableItemProps {
   pid: number;
 }
 
-const TableItem: React.FC<TableItemProps> = ({data}) => {
+const TableItem: React.FC<TableItemProps> = ({data, onCloseDeleteCustomer}) => {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -53,6 +57,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -81,9 +86,10 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
       const response: any = await deleteCustomerById(pid);
       dispatch(fetchSuccess());
       dispatch(showMessage(`${response.message}`));
+      setDeleteDialogOpen(false);
     } catch (e) {
-      console.log(e);
       dispatch(fetchError(`${e?.response?.data?.message}`));
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -149,7 +155,10 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
             <MenuItem style={{fontSize: 14}} onClick={onOpenEditCustomer}>
               Edit
             </MenuItem>
-            <MenuItem style={{fontSize: 14}} onClick={deleteCustomer}>
+            <MenuItem
+              style={{fontSize: 14}}
+              onClick={() => setDeleteDialogOpen(true)}
+            >
               Delete
             </MenuItem>
           </Menu>
@@ -163,6 +172,13 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
           isEditCustomerOpen={isEditCustomerOpen}
           isCustomerInfoOpen={isCustomerInfoOpen}
           onCloseCustomerInfo={onCloseCustomerInfo}
+        />
+        <AppConfirmDialog
+          open={isDeleteDialogOpen}
+          onDeny={setDeleteDialogOpen}
+          onConfirm={deleteCustomer}
+          title={'Are you sure you want to delete this customer?'}
+          dialogTitle={'Delete Customer'}
         />
       </StyledTableCell>
     </TableRow>
