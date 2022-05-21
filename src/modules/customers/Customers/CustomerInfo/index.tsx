@@ -34,12 +34,12 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
     // point: 0,
   });
   const pid = 28;
+  const fetchCustomerInfor = async () => {
+    const customer = await getCustomerInfoById(pid);
+    setCustomerData(customer);
+  };
   useEffect(() => {
-    async function fetchCustomerInfo() {
-      const customer = await getCustomerInfoById(pid);
-      setCustomerData(customer);
-    }
-    fetchCustomerInfo();
+    fetchCustomerInfor();
   }, []);
 
   return (

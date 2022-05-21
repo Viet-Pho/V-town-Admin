@@ -20,6 +20,6 @@ export const axiosPost = (url, body) => {
   return axios.post(url, body);
 };
 
-export const axiosPatch = (url, query) => {
+export const axiosPatch = (url, query?) => {
   return axios.patch(url, query);
 };

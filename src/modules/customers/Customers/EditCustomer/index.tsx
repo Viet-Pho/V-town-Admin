@@ -38,6 +38,7 @@ const EditCustomer: React.FC<EditCustomerProps> = (props) => {
   useEffect(() => {
     async function fetchCustomerInfo() {
       try {
+        console.log('edit');
         const customer = await getCustomerInfoById(pid);
         if (customer) {
           setCustomerData(customer);

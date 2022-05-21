@@ -9,7 +9,6 @@ import Grid from '@mui/material/Grid';
 import {styled} from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import MenuItem from '@mui/material/MenuItem';
-import Alert from '@mui/material/Alert';
 import DatePicker from '@mui/lab/DatePicker';
 import FormHelperText from '@mui/material/FormHelperText';
 import {useDispatch} from 'react-redux';
@@ -17,9 +16,9 @@ import {useDropzone} from 'react-dropzone';
 import React, {useState} from 'react';
 import AppGridContainer from '../../../../@crema/core/AppGridContainer';
 import AppCard from '../../../../@crema/core/AppCard';
-import {useSelector} from 'react-redux';
+
 import {Customers} from '../../../../types/models/dashboards/Customers';
-import IsEmail from 'isemail';
+
 import {
   fetchError,
   fetchStart,
@@ -28,7 +27,6 @@ import {
 } from '../../../../redux/actions';
 import {editCustomer, addNewCustomer} from '../../../../models/customers';
 import EditCustomer from '../EditCustomer';
-import HelperText from 'modules/muiComponents/lab/DatePicker/HelperText';
 
 interface CustomersProps {
   customer: Customers;
@@ -114,7 +112,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
   const validEmail = regex.test(customerData?.email);
 
   const pid = 14;
-  const [loading, setLoading] = useState(false);
+
   const handleAddCustomer = async () => {
     dispatch(fetchStart());
     try {
@@ -148,7 +146,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
   const handleEditCustomer = async () => {
     dispatch(fetchStart());
     try {
-      setLoading(true);
       const response: any = await editCustomer(pid, customerData);
       if (response && validEmail) {
         if (refreshData !== null && setRefreshData !== null) {
@@ -163,7 +160,7 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
       dispatch(fetchSuccess());
       dispatch(
         showMessage(
-          `Successfully Edited Customer ${customerData.firstName} Information.`,
+          `Successfully Change ${customerData.firstName} Information  .`,
         ),
       );
     } catch (error: any) {
@@ -498,7 +495,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               color='primary'
               variant='outlined'
               onClick={handleEditCustomer}
-              disabled={loading}
             >
               Edit
             </Button>
@@ -528,7 +524,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               color='primary'
               variant='outlined'
               onClick={() => handleEditCustomer()}
-              disabled={loading}
             >
               Save
             </Button>
@@ -550,7 +545,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               color='primary'
               variant='outlined'
               onClick={() => handleAddCustomer()}
-              disabled={loading}
             >
               Add
             </Button>

@@ -14,6 +14,15 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditCustomer from '../EditCustomer';
 import CustomerInfo from '../CustomerInfo';
+import {deleteCustomerById} from 'models/customers';
+import {
+  fetchError,
+  fetchStart,
+  fetchSuccess,
+  showMessage,
+} from '../../../../redux/actions';
+import {useDispatch} from 'react-redux';
+
 const StyledTableCell = styled(TableCell)(() => ({
   fontSize: 14,
   padding: 8,
@@ -37,6 +46,7 @@ interface TableItemProps {
 }
 
 const TableItem: React.FC<TableItemProps> = ({data}) => {
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -63,6 +73,18 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
   };
   const onCloseCustomerInfo = () => {
     setCustomerInfoOpen(false);
+  };
+  const pid = 21;
+  const deleteCustomer = async () => {
+    dispatch(fetchStart());
+    try {
+      const response: any = await deleteCustomerById(pid);
+      dispatch(fetchSuccess());
+      dispatch(showMessage(`${response.message}`));
+    } catch (e) {
+      console.log(e);
+      dispatch(fetchError(`${e?.response?.data?.message}`));
+    }
   };
 
   return (
@@ -127,7 +149,7 @@ const TableItem: React.FC<TableItemProps> = ({data}) => {
             <MenuItem style={{fontSize: 14}} onClick={onOpenEditCustomer}>
               Edit
             </MenuItem>
-            <MenuItem style={{fontSize: 14}} onClick={handleClose}>
+            <MenuItem style={{fontSize: 14}} onClick={deleteCustomer}>
               Delete
             </MenuItem>
           </Menu>
