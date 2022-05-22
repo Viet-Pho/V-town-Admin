@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import AppDialog from '../../../../@crema/core/AppDialog';
+import AppDialog from '../../../@crema/core/AppDialog';
 import CustomerForm from '../CustomerForm';
 
 interface AddNewCustomerProps {
@@ -29,7 +29,7 @@ const AddNewCustomer: React.FC<AddNewCustomerProps> = (props) => {
         isCustomerInfoOpen={false}
         isEditCustomerOpen={false}
         customer={{
-          cardId: '0',
+          cardId: 0,
           phoneNumber: '',
           firstName: '',
           lastName: '',

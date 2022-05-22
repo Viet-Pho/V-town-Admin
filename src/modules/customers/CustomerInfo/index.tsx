@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import AppDialog from '../../../../@crema/core/AppDialog';
+import AppDialog from '../../../@crema/core/AppDialog';
 import {useEffect} from 'react';
 import CustomerForm from '../CustomerForm';
 // import {getCustomerInfoById} from '../../../../models/customers';
-import {Customers} from '../../../../types/models/dashboards/Customers';
+import {Customers} from '../../../types/models/dashboards/Customers';
 
 interface CustomerInfoProps {
   customer: Customers;
@@ -19,7 +19,7 @@ interface CustomerInfoProps {
 const CustomerInfo: React.FC<CustomerInfoProps> = ({
   isCustomerInfoOpen,
   onCloseCustomerInfo,
-  customer
+  customer,
 }) => {
   const [customerData, setCustomerData] = useState({...customer});
 

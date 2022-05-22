@@ -19,8 +19,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } = req;
 
   if (method === 'DELETE') {
-    await database('customers').where('id', pid).update({is_deleted: true});
-    return res.status(200).json({message: 'Delete customer successful.'});
+    try {
+      const customer = await database('customers').where('id', pid).update({
+        is_deleted: true,
+      });
+      const customerName = await database('customers')
+        .where('id', customer)
+        .select('first_name as firstName');
+      console.log('customerName', customerName);
+      return res.status(200).json({
+        message: `Successfully deleted customer: ${customerName[0].firstName}`,
+      });
+    } catch (error) {
+      console.log('error', error);
+      return res.status(400).send({message: `${error}`});
+    }
   }
   if (!req.body) return res.status(400).send({message: 'Bad Request'});
   if (!pid) return res.status(404).json({message: 'Not found'});

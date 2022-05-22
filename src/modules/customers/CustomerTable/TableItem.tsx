@@ -6,7 +6,7 @@ import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import {styled} from '@mui/material/styles';
-import {CustomersData} from '../../../../types/models/ecommerce/EcommerceApp';
+import {CustomersData} from '../../../types/models/ecommerce/EcommerceApp';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
@@ -20,9 +20,11 @@ import {
   fetchStart,
   fetchSuccess,
   showMessage,
-} from '../../../../redux/actions';
+} from '../../../redux/actions';
 import {useDispatch} from 'react-redux';
-import {Customer} from '../../../../types/models/dashboards/ExchangePoint';
+import {Customer} from '../../../types/models/dashboards/ExchangePoint';
+import AppConfirmDialog from '@crema/core/AppConfirmDialog';
+import {AiOutlineDeploymentUnit} from 'react-icons/ai';
 
 const StyledTableCell = styled(TableCell)(() => ({
   fontSize: 14,
@@ -75,16 +77,18 @@ const TableItem: React.FC<TableItemProps> = ({customer}) => {
   const onCloseCustomerInfo = () => {
     setCustomerInfoOpen(false);
   };
-
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const deleteCustomer = async () => {
     dispatch(fetchStart());
     try {
       const response: any = await deleteCustomerById(customer.id);
       dispatch(fetchSuccess());
       dispatch(showMessage(`${response.message}`));
+      setDeleteDialogOpen(false);
     } catch (e) {
       console.log(e);
       dispatch(fetchError(`${e?.response?.data?.message}`));
+      setDeleteDialogOpen(false);
     }
   };
 
@@ -128,7 +132,10 @@ const TableItem: React.FC<TableItemProps> = ({customer}) => {
             <MenuItem style={{fontSize: 14}} onClick={onOpenEditCustomer}>
               Edit
             </MenuItem>
-            <MenuItem style={{fontSize: 14}} onClick={deleteCustomer}>
+            <MenuItem
+              style={{fontSize: 14}}
+              onClick={() => setDeleteDialogOpen(true)}
+            >
               Delete
             </MenuItem>
           </Menu>
@@ -144,6 +151,13 @@ const TableItem: React.FC<TableItemProps> = ({customer}) => {
           isCustomerInfoOpen={isCustomerInfoOpen}
           onCloseCustomerInfo={onCloseCustomerInfo}
           customer={customer}
+        />
+        <AppConfirmDialog
+          open={isDeleteDialogOpen}
+          onDeny={setDeleteDialogOpen}
+          onConfirm={deleteCustomer}
+          title={'Are you sure you want to delete this customer?'}
+          dialogTitle={'Delete Customer'}
         />
       </StyledTableCell>
     </TableRow>

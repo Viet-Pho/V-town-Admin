@@ -1,31 +1,39 @@
+// @ts-nocheck
 import React, {useEffect, useState} from 'react';
 import CustomerTable from './CustomerTable';
-import AppsContainer from '../../../@crema/core/AppsContainer';
+import AppsContainer from '../../@crema/core/AppsContainer';
 import {useIntl} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
-import {getCustomers} from '../../../redux/actions';
-import {searchCustomers} from '../../../models/customer';
+import {getCustomers} from '../../redux/actions';
+import {searchCustomers} from '../../models/customer';
 import {Button, Hidden} from '@mui/material';
-import AppsHeader from '../../../@crema/core/AppsContainer/AppsHeader';
-import AppsContent from '../../../@crema/core/AppsContainer/AppsContent';
-import AppsPagination from '../../../@crema/core/AppsPagination';
+import AppsHeader from '../../@crema/core/AppsContainer/AppsHeader';
+import AppsContent from '../../@crema/core/AppsContainer/AppsContent';
+import AppsPagination from '../../@crema/core/AppsPagination';
 import Box from '@mui/material/Box';
-import AppInfoView from '../../../@crema/core/AppInfoView';
-import AppSearchBar from '../../../@crema/core/AppSearchBar';
-import {AppState} from '../../../redux/store';
+import AppInfoView from '../../@crema/core/AppInfoView';
+import AppSearchBar from '../../@crema/core/AppSearchBar';
+import {AppState} from '../../redux/store';
+import AddNewCustomer from './AddNewCustomer';
 
-const Customers = () => {
+interface TableItemProps {
+  isEditCustomerOpen: boolean;
+  isCustomerInfoOpen: boolean;
+}
+
+const Customers: React.FC<TableItemProps> = (props) => {
+  const {isEditCustomerOpen, isCustomerInfoOpen} = props;
   const {messages} = useIntl();
   const dispatch = useDispatch();
   const [customers, setCustomers] = useState([
     {
-      id: 13,
-      code: '100001',
-      phoneNumber: '123456',
-      firstName: 'Hung',
-      lastName: 'Nguyen',
-      email: 'nqhptit@gmail.com',
-      address: '64 Sec 82, Phu Do Street, Nam Tu Liem District, Hanoi City',
+      id: 0,
+      code: '',
+      phoneNumber: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+      address: '',
     },
   ]);
   const [customerCount, setCustomerCount] = useState(1);
@@ -41,6 +49,7 @@ const Customers = () => {
 
   const fetchCustomer = async () => {
     const {total, customers} = await searchCustomers({searchText: search});
+
     setCustomers(customers);
     setCustomerCount(total);
   };
@@ -52,6 +61,21 @@ const Customers = () => {
     if (event.key !== 'Enter') return;
     fetchCustomer();
   };
+
+  const [isAddCustomerOpen, setAddCustomerOpen] = React.useState(false);
+
+  const onOpenAddCustomer = () => {
+    setAddCustomerOpen(true);
+  };
+
+  const onCloseAddCustomer = () => {
+    setAddCustomerOpen(false);
+  };
+
+  // const onSearchCustomer = (value: string) => {
+  //   setSearchQuery(value);
+  //   setPage(0);
+  // };
 
   return (
     <>
@@ -83,7 +107,11 @@ const Customers = () => {
                 ml: 'auto',
               }}
             >
-              <Button variant='contained' color='primary'>
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={onOpenAddCustomer}
+              >
                 Add Customer
               </Button>
 
@@ -117,7 +145,12 @@ const Customers = () => {
           />
         </Hidden>
       </AppsContainer>
-
+      <AddNewCustomer
+        isCustomerInfoOpen={isCustomerInfoOpen}
+        isEditCustomerOpen={isEditCustomerOpen}
+        isAddCustomerOpen={isAddCustomerOpen}
+        onCloseAddCustomer={onCloseAddCustomer}
+      />
       <AppInfoView />
     </>
   );

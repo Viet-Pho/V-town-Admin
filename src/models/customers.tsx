@@ -45,7 +45,9 @@ export async function getCustomerInfoById(query) {
 }
 
 export async function deleteCustomerById(pid) {
-  const response = await axiosDelete(`/api/customer-list/customer-details/${pid}`);
+  const response = await axiosDelete(
+    `/api/customer-list/customer-details/${pid}`,
+  );
   if (response.status === 200) {
     return response.data;
   } else {

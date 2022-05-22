@@ -1,6 +1,6 @@
 export interface Customers {
   id?: number;
-  cardId: string;
+  cardId: number;
   phoneNumber: string;
   firstName: string;
   lastName: string;
