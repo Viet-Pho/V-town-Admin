@@ -9,7 +9,7 @@ interface AppsPaginationProps {
     page: number,
   ) => void;
   rowsPerPage?: number;
-  onRowsPerPageChange: (event) => void;
+  onRowsPerPageChange?: (event) => void;
 
   [x: string]: any;
 }
