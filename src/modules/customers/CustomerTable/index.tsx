@@ -6,8 +6,8 @@ import TableHead from '@mui/material/TableHead';
 import TableBody from '@mui/material/TableBody';
 import TableHeading from './TableHeading';
 import TableItem from './TableItem';
-import AppTableContainer from '../../../../@crema/core/AppTableContainer';
-import {Customer} from '../../../../types/models/dashboards/ExchangePoint';
+import AppTableContainer from '../../../@crema/core/AppTableContainer';
+import {Customer} from '../../../types/models/dashboards/ExchangePoint';
 
 interface CustomerTableProps {
   customers: any[];
@@ -15,7 +15,6 @@ interface CustomerTableProps {
 
 const CustomerTable: React.FC<CustomerTableProps> = (props) => {
   const {customers} = props;
-  
 
   return (
     <AppTableContainer>
@@ -24,9 +23,11 @@ const CustomerTable: React.FC<CustomerTableProps> = (props) => {
           <TableHeading />
         </TableHead>
         <TableBody>
-          {!!customers && !!customers.length && customers.map((customer) => (
-            <TableItem customer={customer} key={customer.id} />
-          ))}
+          {!!customers &&
+            !!customers.length &&
+            customers.map((customer) => (
+              <TableItem customer={customer} key={customer.id} />
+            ))}
         </TableBody>
       </Table>
     </AppTableContainer>

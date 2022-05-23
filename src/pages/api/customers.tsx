@@ -1,6 +1,14 @@
 import database from '../../database';
 import moment from 'moment';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '6mb', // Set desired value here
+    },
+    responseLimit: '6mb',
+  },
+};
 export default async function customerHandler(req, res) {
   const {
     query: {cardId, searchText = '', page = 1, limit = 20},
@@ -13,8 +21,7 @@ export default async function customerHandler(req, res) {
         .leftJoin('cards', 'cards.card_number', 'customers.card_id')
         .where('customers.is_deleted', false);
 
-      if (!!cardId)
-        queryBuilder = queryBuilder.where('card_id', cardId);
+      if (!!cardId) queryBuilder = queryBuilder.where('card_id', cardId);
       if (!!searchText) {
         const likeStringSearchText = `%${searchText}%`;
         queryBuilder = queryBuilder
@@ -52,7 +59,7 @@ export default async function customerHandler(req, res) {
           'address',
           'cards.is_deleted as cardDeleted',
           'avatar',
-          'gender'
+          'gender',
         )
         .sum({totalPoints: 'exchange_points.points'})
         .groupBy('customers.id');

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import AppDialog from '../../../../@crema/core/AppDialog';
+import AppDialog from '../../../@crema/core/AppDialog';
 import CustomerForm from '../CustomerForm';
 
 interface AddNewCustomerProps {
@@ -23,6 +23,7 @@ const AddNewCustomer: React.FC<AddNewCustomerProps> = (props) => {
       title={'Add New User'}
     >
       <CustomerForm
+        isAddCustomerPageOpen={false}
         onCloseEditCustomer={oncloseEditCustomer}
         onClose={onCloseAddCustomer}
         isAddCustomerOpen={isAddCustomerOpen}

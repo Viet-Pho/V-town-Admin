@@ -9,6 +9,7 @@ interface AppsPaginationProps {
     page: number,
   ) => void;
   rowsPerPage?: number;
+  onRowsPerPageChange?: (event) => void;
 
   [x: string]: any;
 }
@@ -18,6 +19,7 @@ const AppsPagination: React.FC<AppsPaginationProps> = ({
   page,
   onPageChange,
   rowsPerPage = 15,
+  onRowsPerPageChange,
   ...rest
 }) => {
   return (
@@ -29,7 +31,8 @@ const AppsPagination: React.FC<AppsPaginationProps> = ({
       backIconButtonProps={{'aria-label': 'Previous Page'}}
       nextIconButtonProps={{'aria-label': 'Next Page'}}
       onPageChange={onPageChange}
-      rowsPerPageOptions={[]}
+      rowsPerPageOptions={[5, 10, 25]}
+      onRowsPerPageChange={onRowsPerPageChange}
       {...rest}
     />
   );

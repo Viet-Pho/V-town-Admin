@@ -18,4 +18,4 @@ export const defaultUser: AuthUser = {
   role: 1,
   photoURL: '/assets/images/avatar/A11.jpg',
 };
-export const initialUrl = '/dashboards/crypto'; // this url will open after login
+export const initialUrl = '/dashboards/users-list'; // this url will open after login

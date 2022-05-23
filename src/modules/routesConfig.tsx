@@ -85,6 +85,14 @@ const routesConfig: RouterConfigData[] = [
         icon: <CgUserList />,
         url: '/dashboards/users-list',
       },
+      {
+        id: 'add-customer',
+        title: 'Add Customer',
+        messageId: 'sidebar.app.dashboard.addCustomer',
+        type: 'item',
+        icon: <RiUserReceived2Line />,
+        url: '/dashboards/add-customer',
+      },
     ],
   },
 ];
