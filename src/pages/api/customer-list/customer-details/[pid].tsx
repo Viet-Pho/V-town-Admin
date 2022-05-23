@@ -26,7 +26,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const customerName = await database('customers')
         .where('id', customer)
         .select('first_name as firstName');
-      console.log('customerName', customerName);
       return res.status(200).json({
         message: `Successfully deleted customer: ${customerName[0].firstName}`,
       });

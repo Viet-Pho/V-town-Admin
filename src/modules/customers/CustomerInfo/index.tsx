@@ -40,6 +40,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = ({
       title={'Customer Info'}
     >
       <CustomerForm
+        isAddCustomerPageOpen={false}
         onCloseEditCustomer={onCloseCustomerInfo}
         onClose={onCloseCustomerInfo}
         isCustomerInfoOpen={isCustomerInfoOpen}

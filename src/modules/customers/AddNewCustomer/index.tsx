@@ -23,13 +23,14 @@ const AddNewCustomer: React.FC<AddNewCustomerProps> = (props) => {
       title={'Add New User'}
     >
       <CustomerForm
+        isAddCustomerPageOpen={false}
         onCloseEditCustomer={oncloseEditCustomer}
         onClose={onCloseAddCustomer}
         isAddCustomerOpen={isAddCustomerOpen}
         isCustomerInfoOpen={false}
         isEditCustomerOpen={false}
         customer={{
-          cardId: 0,
+          cardId: '0',
           phoneNumber: '',
           firstName: '',
           lastName: '',

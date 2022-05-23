@@ -1,5 +1,6 @@
 import FormControl from '@mui/material/FormControl';
 import {alpha, Box, Select} from '@mui/material';
+import AppInfoView from '../../../@crema/core/AppInfoView';
 import InputLabel from '@mui/material/InputLabel';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
@@ -39,6 +40,7 @@ interface CustomersProps {
   isCustomerInfoOpen: boolean;
   isEditCustomerOpen: boolean;
   isAddCustomerOpen: boolean;
+  isAddCustomerPageOpen: boolean;
 }
 const HeaderWrapper = styled('div')(({theme}) => {
   return {
@@ -101,18 +103,17 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
     setRefreshData,
     isCustomerInfoOpen,
     isAddCustomerOpen,
+    isAddCustomerPageOpen,
     onCloseEditCustomer,
     isEditCustomerOpen,
     ...other
   } = props;
   const dispatch = useDispatch();
-
   const [customerData, setCustomerData] = React.useState(customer);
 
   const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   const validEmail = regex.test(customerData?.email);
 
-  const [loading, setLoading] = useState(false);
   const handleAddCustomer = async () => {
     dispatch(fetchStart());
     try {
@@ -146,7 +147,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
   const handleEditCustomer = async () => {
     dispatch(fetchStart());
     try {
-      setLoading(true);
       const response: any = await editCustomer(customerData.id, customerData);
       if (response && validEmail) {
         if (refreshData !== null && setRefreshData !== null) {
@@ -264,7 +264,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
       return {...prevState, age: event.target.value};
     });
   };
-  console.log('customerData', customer);
 
   return (
     <AppCard className='card-hover'>
@@ -507,7 +506,6 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               color='primary'
               variant='outlined'
               onClick={handleEditCustomer}
-              disabled={loading}
             >
               Edit
             </Button>
@@ -536,13 +534,12 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               color='primary'
               variant='outlined'
               onClick={() => handleEditCustomer()}
-              disabled={loading}
             >
               Save
             </Button>
           </Grid>
         )}
-        {isAddCustomerOpen && (
+        {isAddCustomerOpen || isAddCustomerPageOpen ? (
           <Grid
             item
             xs={12}
@@ -558,13 +555,15 @@ const CustomerForm: React.FC<CustomersProps> = (props) => {
               color='primary'
               variant='outlined'
               onClick={() => handleAddCustomer()}
-              disabled={loading}
             >
               Add
             </Button>
           </Grid>
+        ) : (
+          <></>
         )}
       </AppGridContainer>
+      <AppInfoView />
     </AppCard>
   );
 };

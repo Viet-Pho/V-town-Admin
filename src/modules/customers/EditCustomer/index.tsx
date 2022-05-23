@@ -44,6 +44,7 @@ const EditCustomer: React.FC<EditCustomerProps> = (props) => {
       title={'Edit Customer'}
     >
       <CustomerForm
+        isAddCustomerPageOpen={false}
         refreshData={refreshData}
         setRefreshData={setRefreshData}
         onClose={onCloseEditCustomer}
