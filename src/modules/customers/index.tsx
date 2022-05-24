@@ -76,6 +76,7 @@ const Customers: React.FC<TableItemProps> = (props) => {
 
   const handleSearchCustomer = (event) => {
     if (event.key !== 'Enter') return;
+    setPage(0);
     fetchCustomer();
   };
 
