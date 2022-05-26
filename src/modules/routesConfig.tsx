@@ -57,8 +57,8 @@ export interface RouterConfigData {
 const routesConfig: RouterConfigData[] = [
   {
     id: 'app',
-    title: 'Application',
-    messageId: 'sidebar.application',
+    title: 'Dashboard',
+    messageId: 'sidebar.app.dashboard',
     type: 'group',
     children: [
       {
