@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import {Checkbox} from '@mui/material';
 import {Form, Formik} from 'formik';
 import * as yup from 'yup';
-
 import AppInfoView from '@crema/core/AppInfoView';
 import Box from '@mui/material/Box';
 import IntlMessages from '@crema/utility/IntlMessages';
@@ -15,7 +14,6 @@ import {useRouter} from 'next/router';
 import Link from 'next/link';
 
 const SigninJwtAuth = () => {
-  const router = useRouter();
   const {signInUser} = useJWTAuthActions();
   const {messages} = useIntl();
 
@@ -32,15 +30,15 @@ const SigninJwtAuth = () => {
       .string()
       .required(String(messages['validation.passwordRequired'])),
   });
-
+  const router = useRouter();
   return (
     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
       <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', mb: 5}}>
         <Formik
           validateOnChange={true}
           initialValues={{
-            email: 'crema.demo@gmail.com',
-            password: 'Pass@1!@all',
+            email: '',
+            password: '',
           }}
           validationSchema={validationSchema}
           onSubmit={(data, {setSubmitting}) => {
@@ -163,9 +161,13 @@ const SigninJwtAuth = () => {
             },
           }}
         >
-          <Link href='/signup'>
+          <Button
+            onClick={() => {
+              router.push('/signup');
+            }}
+          >
             <IntlMessages id='common.signup' />
-          </Link>
+          </Button>
         </Box>
       </Box>
 

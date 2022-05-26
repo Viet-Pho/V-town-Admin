@@ -62,8 +62,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // if (!req.body.age) {
     //   return res.status(400).send({  message: 'No blank age'});
     // }
-    if (!req.body.avatar)
-      return res.status(400).send({message: 'No blank avatar'});
+    // if (!req.body.avatar)
+    //   return res.status(400).send({message: 'No blank avatar'});
 
     try {
       let customer = database('customers');

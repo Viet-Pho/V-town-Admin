@@ -12,6 +12,7 @@ import {Fonts} from '../../../shared/constants/AppEnums';
 import AuthWrapper from '../AuthWrapper';
 import AppLogo from '../../../@crema/core/AppLayout/components/AppLogo';
 import {useIntl} from 'react-intl';
+import {useRouter} from 'next/router';
 
 const ForgetPasswordJwtAuth = () => {
   const {messages} = useIntl();
@@ -22,7 +23,7 @@ const ForgetPasswordJwtAuth = () => {
       .email(String(messages['validation.emailFormat']))
       .required(String(messages['validation.emailRequired'])),
   });
-
+  const router = useRouter();
   return (
     <AuthWrapper>
       <Box sx={{width: '100%'}}>
@@ -57,7 +58,7 @@ const ForgetPasswordJwtAuth = () => {
             }}
           >
             <span style={{marginRight: 4}}>
-              <IntlMessages id='common.alreadyHavePassword' />
+              <IntlMessages id='common.alreadyHaveAccount' />
             </span>
             <Box
               component='span'
@@ -69,9 +70,13 @@ const ForgetPasswordJwtAuth = () => {
                 },
               }}
             >
-              <Link href='/signin'>
-                <IntlMessages id='common.signIn' />
-              </Link>
+              <Button
+                onClick={() => {
+                  router.push('/signin');
+                }}
+              >
+                <IntlMessages id='common.login' />
+              </Button>
             </Box>
           </Typography>
         </Box>
