@@ -34,9 +34,14 @@ export default async function logIn(req: NextApiRequest, res: NextApiResponse) {
 
         compare(req.body.password, user[0]?.password, function (err, result) {
           if (!err && result) {
-            const claims = {sub: user[0].id, userEmail: user[0].email};
+            const claims = {
+              id: user[0].id,
+              email: user[0].email,
+              role: user[0].account_type,
+              username: user[0].username,
+            };
             const jwt = sign(claims, SECRET, {
-              expiresIn: '365 days',
+              expiresIn: '30 days',
             }); // auto-generate GUID for jwt;
             return res.status(200).send({
               message: 'Ok',
