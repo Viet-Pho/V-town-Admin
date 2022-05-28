@@ -24,6 +24,7 @@ import {
   showMessage,
 } from '../../../../redux/actions';
 import {useIntl} from 'react-intl';
+import {useAuthUser} from '../../../../@crema/utility/AuthHooks';
 
 interface ExchangePointProps {
   customer: Customer;
@@ -39,8 +40,10 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
 
   const cardIdInput = useRef<HTMLInputElement>(null);
   const pointsInput = useRef<HTMLInputElement>(null);
-  const stringUser = localStorage.getItem('user');
-  const {userId} = JSON.parse(stringUser || '{userId: 0}');
+  const {
+    user: {id: userId},
+  } = useAuthUser();
+
   const {messages} = useIntl();
 
   const handleSearchCustomer = async (event) => {

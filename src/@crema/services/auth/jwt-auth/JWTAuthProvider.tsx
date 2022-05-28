@@ -68,8 +68,15 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
 
   const dispatch = useDispatch();
 
+  const retriveUserInfo = async () => {
+    const {data: userInfo} = await jwtAxios.post('/auth').catch((err) => {
+      return {data: null};
+    });
+    return userInfo;
+  };
+
   useEffect(() => {
-    const getAuthUser = () => {
+    const getAuthUser = async () => {
       const token = localStorage.getItem('token');
 
       if (!token) {
@@ -83,8 +90,9 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
 
       setAuthToken(token);
 
-      const userData = localStorage.getItem('user');
-      if (!userData) {
+      const userInfo = await retriveUserInfo();
+
+      if (!userInfo) {
         setJWTAuthData({
           user: undefined,
           isLoading: false,
@@ -92,10 +100,9 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
         });
         return;
       }
-      if (userData) {
-        const parseJSONUserData = JSON.parse(userData);
+      if (userInfo) {
         setJWTAuthData({
-          user: parseJSONUserData,
+          user: userInfo as Object,
           isLoading: false,
           isAuthenticated: true,
         });
@@ -120,7 +127,6 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
       });
 
       localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
       setAuthToken(data.token);
 
       setJWTAuthData({
@@ -172,8 +178,6 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
         address,
       });
 
-      console.log('Data', data);
-
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setAuthToken(data.token);
@@ -197,7 +201,6 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
 
   const logout = async () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     setAuthToken();
     setJWTAuthData({
       user: null,
