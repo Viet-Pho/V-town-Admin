@@ -1,13 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+
+import jwtAuth from 'middleware/jwt';
+
 import database from '../../database';
 import {hash} from 'bcrypt';
 import {NextApiResponse, NextApiRequest} from 'next';
 import isEmail from 'isemail';
 
-export default async function registerStaff(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+const registerStaff = (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
     return res.status(404).send({message: 'Forbidden resources'});
   }
@@ -78,4 +78,6 @@ export default async function registerStaff(
       }
     });
   }
-}
+};
+
+export default jwtAuth(registerStaff);

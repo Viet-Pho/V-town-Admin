@@ -1,5 +1,6 @@
 // @ts-nocheck
-import axios from 'axios';
+
+import jwtAxios from '@crema/services/auth/jwt-auth';
 
 // export default (method, url, data) => {
 //   return axios({
@@ -13,17 +14,17 @@ import axios from 'axios';
 // };
 
 export const axiosGet = (url, query = null) => {
-  return axios.get(url, {params: query});
+  return jwtAxios.get(url, {params: query});
 };
 
 export const axiosPost = (url, body) => {
-  return axios.post(url, body);
+  return jwtAxios.post(url, body);
 };
 
 export const axiosPatch = (url, query?) => {
-  return axios.patch(url, query);
+  return jwtAxios.patch(url, query);
 };
 
 export const axiosDelete = (url) => {
-  return axios.delete(url);
+  return jwtAxios.delete(url);
 };

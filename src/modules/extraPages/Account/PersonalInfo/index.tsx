@@ -16,6 +16,8 @@ const PersonalInfo = () => {
   const {user} = useAuthUser();
   const dispatch = useDispatch();
 
+  console.log('User Data', user);
+
   return (
     <Box
       sx={{

@@ -1,7 +1,7 @@
 import {axiosGet, axiosPost, axiosPatch, axiosDelete} from '../util/callApi';
 
 export async function searchCustomers(query) {
-  const response = await axiosGet('/api/customers', query);
+  const response = await axiosGet('/customers', query);
   if (response.status === 200) {
     return response.data;
   } else {
@@ -10,10 +10,7 @@ export async function searchCustomers(query) {
 }
 
 export async function addNewCustomer(query) {
-  const response = await axiosPost(
-    '/api/customer-list/customer-details',
-    query,
-  );
+  const response = await axiosPost('/customer-list/customer-details', query);
   if (response.status === 200) {
     return response.data;
   } else {
@@ -23,7 +20,7 @@ export async function addNewCustomer(query) {
 
 export async function editCustomer(pid, query) {
   const response = await axiosPatch(
-    `/api/customer-list/customer-details/${pid}`,
+    `/customer-list/customer-details/${pid}`,
     query,
   );
   if (response.status === 200) {
@@ -34,9 +31,7 @@ export async function editCustomer(pid, query) {
 }
 
 export async function getCustomerInfoById(query) {
-  const response = await axiosGet(
-    `/api/customer-list/customer-details/${query}`,
-  );
+  const response = await axiosGet(`/customer-list/customer-details/${query}`);
   if (response.status === 200) {
     return response.data;
   } else {
@@ -45,9 +40,7 @@ export async function getCustomerInfoById(query) {
 }
 
 export async function deleteCustomerById(pid) {
-  const response = await axiosDelete(
-    `/api/customer-list/customer-details/${pid}`,
-  );
+  const response = await axiosDelete(`/customer-list/customer-details/${pid}`);
   if (response.status === 200) {
     return response.data;
   } else {

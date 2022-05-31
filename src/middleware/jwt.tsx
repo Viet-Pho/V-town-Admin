@@ -16,7 +16,8 @@ const decodeJwt = async (req, res) => {
       return data;
     },
   );
-  const currentTime = +(new Date())
+  // eslint-disable-next-line prettier/prettier
+  const currentTime = +new Date();
 
   if (!id || exp * 1000 < currentTime)
     return res.status(401).send({
