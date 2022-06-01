@@ -1,6 +1,8 @@
-import React, {createContext, useCallback, useContext, useState} from 'react';
+import React, {createContext, useCallback, useContext, useState, useEffect} from 'react';
 import defaultConfig from './defaultConfig';
 import PropTypes from 'prop-types';
+import {useAuthUser} from '../../utility/AuthHooks';
+import { NavStyle } from '../../../shared/constants/AppEnums';
 
 export interface LayoutData {
   layoutType: string;
@@ -43,6 +45,15 @@ const LayoutContextProvider: React.FC<any> = ({children}) => {
     defaultConfig.layoutType,
   );
   const [navStyle, setNavStyle] = useState<string>(defaultConfig.navStyle);
+  const {user} = useAuthUser();
+
+  useEffect(() => {
+    if(user?.role === 3) {
+      setNavStyle(NavStyle.H_DEFAULT)
+    } else {
+      setNavStyle(NavStyle.DEFAULT)
+    }
+  }, [user?.role]);
 
   const updateNavStyle = useCallback((navStyle) => {
     setNavStyle(navStyle);

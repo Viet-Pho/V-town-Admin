@@ -4,12 +4,15 @@ import HorizontalCollapse from './HorizontalCollapse';
 import HorizontalItem from './HorizontalItem';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
+import {useAuthUser} from '../../../../../@crema/utility/AuthHooks';
 
 import routesConfig, {
-  RouterConfigData,
+  RouterConfigData
 } from '../../../../../modules/routesConfig';
 
 const HorizontalNav = () => {
+  const { user } = useAuthUser();
+
   return (
     <List className='navbarNav'>
       {routesConfig.map((item: RouterConfigData) => (

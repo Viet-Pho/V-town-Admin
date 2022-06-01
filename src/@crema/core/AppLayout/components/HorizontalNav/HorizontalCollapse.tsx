@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo, useEffect} from 'react';
 import {
   Grow,
   Icon,
@@ -19,6 +19,8 @@ import {RouterConfigData} from '../../../../../modules/routesConfig';
 import ClientOnlyPortal from './ClientPortal';
 import {useSidebarContext} from '../../../../utility/AppContextProvider/SidebarContextProvider';
 import {useRouter} from 'next/router';
+import {useAuthUser} from '../../../../utility/AuthHooks';
+import {checkPermission} from '../../../../utility/helper/RouteHelper';
 
 interface HorizontalCollapseProps {
   item: RouterConfigData;
@@ -38,6 +40,16 @@ const HorizontalCollapse: React.FC<HorizontalCollapseProps> = (props) => {
   const handleToggle = (open: boolean) => {
     setOpened(open);
   };
+
+  const {user} = useAuthUser();
+  const hasPermission = useMemo(
+    () => checkPermission(item.permittedRole, user.role),
+    [item.permittedRole, user.role],
+  );
+
+  if (!hasPermission) {
+    return null;
+  }
 
   function isUrlInChildren(parent: RouterConfigData, url: string) {
     if (!parent.children) {
