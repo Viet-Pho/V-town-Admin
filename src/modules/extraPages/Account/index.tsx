@@ -32,21 +32,6 @@ const tabs = [
     icon: <AiOutlineLock />,
     name: <IntlMessages id='common.changePassword' />,
   },
-  {
-    id: 3,
-    icon: <IoMdInformationCircleOutline />,
-    name: <IntlMessages id='common.information' />,
-  },
-  {
-    id: 4,
-    icon: <IoShareSocialOutline />,
-    name: <IntlMessages id='common.social' />,
-  },
-  {
-    id: 5,
-    icon: <NotificationsNoneIcon />,
-    name: <IntlMessages id='healthCare.notification' />,
-  },
 ];
 
 const Account = () => {
@@ -94,9 +79,6 @@ const Account = () => {
           <Box className='account-tabs-content'>
             {value === 0 && <PersonalInfo />}
             {value === 1 && <ChangePassword />}
-            {value === 2 && <Information />}
-            {value === 3 && <Social social={accountData.member} />}
-            {value === 4 && <Notification />}
           </Box>
         </AccountTabsWrapper>
       </AppAnimate>

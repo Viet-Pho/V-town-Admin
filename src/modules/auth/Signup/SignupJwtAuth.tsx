@@ -9,9 +9,9 @@ import Box from '@mui/material/Box';
 import IntlMessages from '@crema/utility/IntlMessages';
 import AppTextField from '@crema/core/AppFormComponents/AppTextField';
 import {Fonts} from '../../../shared/constants/AppEnums';
-import Link from 'next/link';
 import {useJWTAuthActions} from '@crema/services/auth/jwt-auth/JWTAuthProvider';
 import {useIntl} from 'react-intl';
+import {useRouter} from 'next/router';
 
 const SignupJwtAuth = () => {
   const {signUpUser} = useJWTAuthActions();
@@ -33,6 +33,7 @@ const SignupJwtAuth = () => {
     phone_number: yup.string().required('Phone Number is required'),
     address: yup.string().required('Address is required'),
   });
+  const router = useRouter();
 
   return (
     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
@@ -176,46 +177,6 @@ const SignupJwtAuth = () => {
                 />
               </Box>
 
-              <Box
-                sx={{
-                  mb: {xs: 3, xl: 4},
-                  display: 'flex',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                }}
-              >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Checkbox
-                    sx={{
-                      ml: -3,
-                    }}
-                  />
-                  <Box
-                    component='span'
-                    sx={{
-                      mr: 2,
-                      color: 'grey.500',
-                    }}
-                  >
-                    <IntlMessages id='common.iAgreeTo' />
-                  </Box>
-                </Box>
-                <Box
-                  component='span'
-                  sx={{
-                    color: (theme) => theme.palette.primary.main,
-                    cursor: 'pointer',
-                  }}
-                >
-                  <IntlMessages id='common.termConditions' />
-                </Box>
-              </Box>
-
               <div>
                 <Button
                   variant='contained'
@@ -256,9 +217,13 @@ const SignupJwtAuth = () => {
             },
           }}
         >
-          <Link href='/signin'>
+          <Button
+            onClick={() => {
+              router.push('/signin');
+            }}
+          >
             <IntlMessages id='common.signIn' />
-          </Link>
+          </Button>
         </Box>
       </Box>
 

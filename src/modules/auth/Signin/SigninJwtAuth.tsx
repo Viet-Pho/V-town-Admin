@@ -11,7 +11,6 @@ import AppTextField from '@crema/core/AppFormComponents/AppTextField';
 import {useJWTAuthActions} from '@crema/services/auth/jwt-auth/JWTAuthProvider';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import {useRouter} from 'next/router';
-import Link from 'next/link';
 
 const SigninJwtAuth = () => {
   const {signInUser} = useJWTAuthActions();
@@ -90,22 +89,6 @@ const SigninJwtAuth = () => {
                   mb: {xs: 3, xl: 4},
                 }}
               >
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Checkbox color='primary' sx={{ml: -3}} />
-                  <Box
-                    component='span'
-                    sx={{
-                      color: 'grey.500',
-                    }}
-                  >
-                    <IntlMessages id='common.rememberMe' />
-                  </Box>
-                </Box>
                 <Box
                   component='span'
                   sx={{

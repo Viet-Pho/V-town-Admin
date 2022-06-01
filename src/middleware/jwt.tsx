@@ -8,7 +8,7 @@ const decodeJwt = async (req, res) => {
   if (!bearerToken || !token)
     return res.status(401).send({message: 'Your are not logged in.'});
 
-  const {id, email, role, username, exp} = await verify(
+  const {id, email, role, username, confirmed, exp} = await verify(
     token,
     SECRET,
     (err, data) => {
@@ -25,7 +25,7 @@ const decodeJwt = async (req, res) => {
         'Your token invalid or your session timeout. Please login again.',
     });
 
-  return {id, email, role, username};
+  return {id, email, role, username, confirmed};
 };
 
 const jwtAuth = (handler) => async (req, res) => {

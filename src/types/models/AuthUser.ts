@@ -8,4 +8,5 @@ export interface AuthUser {
   token?: string;
   role?: number;
   username?: string;
+  confirmed?: number;
 }
