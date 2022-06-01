@@ -13,6 +13,8 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({children}) => {
     <Box
       sx={{
         flex: 1,
+        overflowY: 'auto',
+        overflowX: 'auto',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -21,6 +23,8 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({children}) => {
     >
       <Card
         sx={{
+          overflowY: 'auto',
+          overflowX: 'auto',
           maxWidth: 900,
           minHeight: {xs: 320, sm: 450},
           width: '100%',
@@ -31,6 +35,8 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({children}) => {
       >
         <Box
           sx={{
+            overflowY: 'auto',
+            overflowX: 'auto',
             width: {xs: '100%', sm: '50%', lg: '40%'},
             padding: {xs: 5, lg: 10},
             display: 'flex',
@@ -67,12 +73,9 @@ const AuthWrapper: React.FC<AuthWrapperProps> = ({children}) => {
                 mb: 4,
               }}
             >
-              Welcome to Crema!
+              Welcome to Vtown!
             </Typography>
-            <Typography>
-              Crema is purely based on Material ui components and follows
-              Material ui guidelines.
-            </Typography>
+            <Typography>Vtown Admin Page Sign Up</Typography>
           </Box>
         </Box>
       </Card>

@@ -13,20 +13,26 @@ import AuthWrapper from '../AuthWrapper';
 import AppLogo from '../../../@crema/core/AppLayout/components/AppLogo';
 import {useIntl} from 'react-intl';
 import {useRouter} from 'next/router';
-import {forgotPasswordRequest} from 'models/forgot-password';
+
 import {useDispatch} from 'react-redux';
 import {fetchError, fetchStart, fetchSuccess, showMessage} from 'redux/actions';
+import {resetPasswordRequest} from 'models/reset-password';
 
-const ForgetPasswordJwtAuth = () => {
-  const {messages} = useIntl();
+const ResetPasswordPage = () => {
+  // Get Token from Params
+  const currentUrl = window.location.href;
+  const urlObject = new URL(currentUrl);
+  const token = urlObject.searchParams.get('token');
+
+  console.log('Current  Token', token);
 
   const dispatch = useDispatch();
 
   const validationSchema = yup.object({
-    email: yup
+    password: yup.string().required('Password is required').min(8).max(25),
+    confirmPassword: yup
       .string()
-      .email(String(messages['validation.emailFormat']))
-      .required(String(messages['validation.emailRequired'])),
+      .oneOf([yup.ref('password'), null], 'Passwords must match'),
   });
   const router = useRouter();
   return (
@@ -52,37 +58,7 @@ const ForgetPasswordJwtAuth = () => {
               fontSize: {xs: 14, xl: 16},
             }}
           >
-            <IntlMessages id='common.forgetPassword' />
-          </Typography>
-
-          <Typography
-            sx={{
-              pt: 3,
-              fontSize: 15,
-              color: 'grey.500',
-            }}
-          >
-            <span style={{marginRight: 4}}>
-              <IntlMessages id='common.alreadyHaveAccount' />
-            </span>
-            <Box
-              component='span'
-              sx={{
-                fontWeight: Fonts.MEDIUM,
-                '& a': {
-                  color: (theme) => theme.palette.primary.main,
-                  textDecoration: 'none',
-                },
-              }}
-            >
-              <Button
-                onClick={() => {
-                  router.push('/signin');
-                }}
-              >
-                <IntlMessages id='common.login' />
-              </Button>
-            </Box>
+            Reset Password
           </Typography>
         </Box>
 
@@ -91,24 +67,27 @@ const ForgetPasswordJwtAuth = () => {
             <Formik
               validateOnChange={true}
               initialValues={{
-                email: '',
+                password: '',
+                confirmPassword: '',
               }}
               validationSchema={validationSchema}
               onSubmit={async (data, {setSubmitting, resetForm}) => {
                 setSubmitting(true);
                 dispatch(fetchStart());
                 //reset password api goes here
+                const requestBody = {
+                  password: data?.password,
+                  token: token,
+                };
+
                 try {
-                  const response: any = await forgotPasswordRequest(data);
+                  const response: any = await resetPasswordRequest(requestBody);
                   console.log('response', response);
                   if (response) {
                     dispatch(fetchSuccess());
-                    dispatch(
-                      showMessage(
-                        'An Email has been sent  to  your mailbox! Please check it for your password reset link',
-                      ),
-                    );
+                    dispatch(showMessage('Success'));
                     setSubmitting(false);
+                    router.push('/signin');
                   }
                 } catch (error: any) {
                   if (error?.response?.data?.message.includes('ER_DUP_ENTRY')) {
@@ -133,9 +112,25 @@ const ForgetPasswordJwtAuth = () => {
                 <Form style={{textAlign: 'left'}}>
                   <Box sx={{mb: {xs: 5, lg: 8}}}>
                     <AppTextField
-                      placeholder='Email'
-                      name='email'
-                      label={<IntlMessages id='common.emailAddress' />}
+                      type='password'
+                      placeholder='New Password'
+                      name='password'
+                      label='New Password'
+                      sx={{
+                        width: '100%',
+                        '& .MuiInputBase-input': {
+                          fontSize: 14,
+                        },
+                      }}
+                      variant='outlined'
+                    />
+                  </Box>
+                  <Box sx={{mb: {xs: 5, lg: 8}}}>
+                    <AppTextField
+                      type='password'
+                      placeholder='Confirm Password'
+                      name='confirmPassword'
+                      label='Confirm Password'
                       sx={{
                         width: '100%',
                         '& .MuiInputBase-input': {
@@ -159,7 +154,7 @@ const ForgetPasswordJwtAuth = () => {
                       }}
                       type='submit'
                     >
-                      <IntlMessages id='common.sendNewPassword' />
+                      Confirm Reset Password
                     </Button>
                   </div>
                 </Form>
@@ -174,4 +169,4 @@ const ForgetPasswordJwtAuth = () => {
   );
 };
 
-export default ForgetPasswordJwtAuth;
+export default ResetPasswordPage;
