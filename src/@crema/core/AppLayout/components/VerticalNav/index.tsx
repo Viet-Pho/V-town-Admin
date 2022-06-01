@@ -7,8 +7,11 @@ import routesConfig, {
 import NavVerticalGroup from './VerticalNavGroup';
 import VerticalCollapse from './VerticalCollapse';
 import VerticalItem from './VerticalItem';
+import {useAuthUser} from '../../../../../@crema/utility/AuthHooks';
 
 const VerticalNav = () => {
+  const { user } = useAuthUser();
+
   return (
     <List
       sx={{

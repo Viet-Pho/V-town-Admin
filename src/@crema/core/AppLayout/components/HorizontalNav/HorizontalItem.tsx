@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Icon, ListItem, ListItemText} from '@mui/material';
 import clsx from 'clsx';
 import IntlMessages from '../../../../utility/IntlMessages';
+import {checkPermission} from '../../../../utility/helper/RouteHelper';
+import {useAuthUser} from '../../../../utility/AuthHooks';
 import Box from '@mui/material/Box';
 import Badge from '@mui/material/Badge';
 import {RouterConfigData} from '../../../../../modules/routesConfig';
@@ -17,6 +19,15 @@ interface HorizontalItemProps {
 
 const HorizontalItem: React.FC<HorizontalItemProps> = (props) => {
   const {item, dense} = props;
+
+  const {user} = useAuthUser();
+  const hasPermission = useMemo(
+    () => checkPermission(item.permittedRole, user.role),
+    [item.permittedRole, user.role],
+  );
+  if (!hasPermission) {
+    return null;
+  }
 
   const location = useRouter();
   const active = isUrlInChildren(item, location.pathname);

@@ -1,13 +1,16 @@
 import {AuthUser} from '../../types/models/AuthUser';
 
 export const authRole = {
-  admin: ['admin'],
-  user: ['user', 'admin'],
+  admin: [1],
+  user: [1, 2],
+  customer: [3]
 };
 
 export enum RoutePermittedRole {
-  Admin = 'admin',
-  User = 'user',
+  Admin = 1,
+  User = 2,
+  Customer = 3,
+  Anonymous = 4
 }
 
 export const defaultUser: AuthUser = {
