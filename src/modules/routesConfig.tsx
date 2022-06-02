@@ -9,6 +9,7 @@ import {
   RiUserSettingsLine,
   RiUserReceived2Line,
   RiMoneyDollarCircleLine,
+  RiBillFill
 } from 'react-icons/ri';
 import {BiCarousel, BiCartAlt, BiErrorAlt} from 'react-icons/bi';
 import {
@@ -92,6 +93,14 @@ const routesConfig: RouterConfigData[] = [
         type: 'item',
         icon: <RiUserReceived2Line />,
         url: '/dashboards/add-customer',
+      },
+      {
+        id: 'rooms',
+        title: 'Rooms',
+        messageId: 'sidebar.app.dashboard.rooms',
+        type: 'item',
+        icon: <RiBillFill />,
+        url: '/karaoke/rooms',
       },
     ],
   },

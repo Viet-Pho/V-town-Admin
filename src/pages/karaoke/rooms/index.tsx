@@ -3,7 +3,7 @@ import AppPage from '../../../@crema/hoc/AppPage';
 import asyncComponent from '../../../@crema/utility/asyncComponent';
 
 //../../../modules/customer/CustomerList
-const CustomerList = asyncComponent(
-  () => import('../../../modules/customers/index'),
+const Rooms = asyncComponent(
+  () => import('../../../modules/karaoke/Rooms/index'),
 );
-export default AppPage(() => <CustomerList />);
+export default AppPage(() => <Rooms />);
