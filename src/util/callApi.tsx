@@ -25,6 +25,6 @@ export const axiosPatch = (url, query?) => {
   return jwtAxios.patch(url, query);
 };
 
-export const axiosDelete = (url) => {
-  return jwtAxios.delete(url);
+export const axiosDelete = (url, query?) => {
+  return jwtAxios.delete(url, query);
 };

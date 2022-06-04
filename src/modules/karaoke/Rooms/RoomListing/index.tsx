@@ -9,21 +9,21 @@ import {setFilters} from '../../../../redux/actions';
 import {AppState} from '../../../../redux/store';
 import {searchRooms} from '../../../../models/room';
 import AppGrid from '../../../../@crema/core/AppGrid';
-
 import ListEmptyResult from '../../../../@crema/core/AppList/ListEmptyResult';
-
 import {Room} from 'types/models/Room';
 import Button from '@mui/material/Button';
-
 import {Fonts} from '../../../../shared/constants/AppEnums';
 import {useRouter} from 'next/router';
+import {startRoom} from '../../../../models/room';
+import items from 'pages/api/items';
+import {useAuthUser} from '@crema/utility/AuthHooks';
 
 interface RoomGridProps {
-  rooms: Room[];
+  room: Room[];
   loading: boolean;
   renderRow: () => JSX.Element;
 }
-const RoomListing: React.FC<RoomGridProps> = ({rooms}) => {
+const RoomListing: React.FC<RoomGridProps> = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -33,20 +33,48 @@ const RoomListing: React.FC<RoomGridProps> = ({rooms}) => {
   const {viewType, filterData} = useSelector<AppState, AppState['ecommerce']>(
     ({ecommerce}) => ecommerce,
   );
-  const [room, setRooms] = useState([]);
+  const [roomList, setRoomList] = useState([]);
 
   const fetchRoom = async () => {
-    const room = await searchRooms();
-    setRooms(room);
+    const roomList = await searchRooms();
+    setRoomList(roomList);
   };
   useEffect(() => {
     fetchRoom();
   }, []);
 
-  console.log('rooms', room);
+  // const handleClick = (room: Room) => {
+  //   startRoom(room.id);
 
-  const list = room,
-    total = room?.length;
+  // }
+  const {user} = useAuthUser();
+  console.log('user:', user);
+  const createNewBill = async (room) => {
+    console.log('room:', room.id);
+    const userAuth = {
+      userId: user.id,
+      userRole: user.role,
+    };
+    try {
+      const response = await startRoom(room.id, userAuth);
+      console.log('billId', response.billId[0]);
+      console.log('orderId', response.orderId[0]);
+      router.push({
+        pathname: `/karaoke/room/${room.id}`,
+        query: {
+          billId: response.billId[0],
+          orderId: response.orderId[0],
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // console.log('roomList', room);
+
+  const list = roomList,
+    total = roomList?.length;
   const {loading} = useSelector<AppState, AppState['common']>(
     ({common}) => common,
   );
@@ -97,7 +125,7 @@ const RoomListing: React.FC<RoomGridProps> = ({rooms}) => {
               sm: 6,
               xl: 9,
             }}
-            data={room}
+            data={roomList}
             renderRow={(room) => (
               <Button
                 sx={{
@@ -110,9 +138,7 @@ const RoomListing: React.FC<RoomGridProps> = ({rooms}) => {
                   border: 3,
                 }}
                 className='room-hover'
-                onClick={() => {
-                  router.push('/karaoke/room/' + room.id);
-                }}
+                onClick={() => createNewBill(room)}
               >
                 <Box
                   sx={{

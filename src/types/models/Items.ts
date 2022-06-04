@@ -4,8 +4,11 @@ export interface Item {
   nativeName: string;
   type: boolean;
   quantitive: string;
-  price: string;
+  price: number;
   tag: string;
   wallpaper: string;
-  count: number;
+  itemId: number;
+  orderId: number;
+  status: boolean;
+  quantity: number;
 }

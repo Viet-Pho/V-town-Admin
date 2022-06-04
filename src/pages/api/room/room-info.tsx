@@ -1,6 +1,13 @@
 import database from '../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
-
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '6mb', // Set desired value here
+    },
+    responseLimit: '6mb',
+  },
+};
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {method} = req;
   if (method === 'GET') {
@@ -11,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         'rooms.name',
         'rooms.room_type as roomType',
         'rooms.location',
-        'rooms.wallpaper',
+        // 'rooms.wallpaper',
         'rooms.availability',
         'rooms.room_type as roomType',
         'room_type.type_name as typeName',

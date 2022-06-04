@@ -1,11 +1,11 @@
 import React from 'react';
-import AppCard from '../../../../../@crema/core/AppCard';
+import AppCard from '../../../../@crema/core/AppCard';
 import {Box} from '@mui/material';
-import {Fonts} from '../../../../../shared/constants/AppEnums';
+import {Fonts} from '../../../../shared/constants/AppEnums';
 import Divider from '@mui/material/Divider';
 import {useIntl} from 'react-intl';
-import AppAnimate from '../../../../../@crema/core/AppAnimate';
-import {CartItems} from '../../../../../types/models/ecommerce/EcommerceApp';
+import AppAnimate from '../../../../@crema/core/AppAnimate';
+import {CartItems} from '../../../../types/models/ecommerce/EcommerceApp';
 
 const getTotalPrice = (cartItems: CartItems[]) => {
   let total = 0;

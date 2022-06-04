@@ -1,10 +1,9 @@
 import {useIntl} from 'react-intl';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import CartTable from './Carts/CartTable';
 import {Fonts} from '../../../shared/constants/AppEnums';
 import {getCartItems} from '../../../redux/actions';
-import OrderSummary from './Carts/OrderSummary';
+
 import {AppState} from '../../../redux/store';
 import {useRouter} from 'next/router';
 import TableHeading from './TableHeading';
@@ -15,6 +14,7 @@ import ItemHeader from './ItemsHeader';
 import {setFilters} from '../../../redux/actions';
 // import {searchItems} from '../../../../models/item';
 import {fetchItems} from '../../../models/items';
+
 // MUI
 
 import {Grid} from '@mui/material';
@@ -35,7 +35,12 @@ import {alpha, Box, Hidden} from '@mui/material';
 import Card from '@mui/material/Card';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
-
+import {
+  addItem,
+  updateItem,
+  deleteItem,
+  getOrderedItems,
+} from '../../../models/order';
 // Crema
 import AppCard from '../../../@crema/core/AppCard';
 import IntlMessages from '../../../@crema/utility/IntlMessages';
@@ -49,6 +54,7 @@ import AppsContent from '@crema/core/AppsContainer/AppsContent';
 import {useThemeContext} from '@crema/utility/AppContextProvider/ThemeContextProvider';
 import AppGrid from '@crema/core/AppGrid';
 import ListEmptyResult from '@crema/core/AppList/ListEmptyResult';
+import {MdOutlineFormatIndentDecrease} from 'react-icons/md';
 
 const StyledTableCell = styled(TableCell)(() => ({
   fontSize: 14,
@@ -82,74 +88,67 @@ interface ItemGridProps {
 }
 
 const Rooms: React.FC<ItemGridProps> = (props) => {
-  const {data} = props;
+  const {loading, renderRow} = props;
 
   const dispatch = useDispatch();
   const router = useRouter();
-  const {cartItems} = useSelector<AppState, AppState['ecommerce']>(
-    ({ecommerce}) => ecommerce,
-  );
 
-  // useEffect(() => {
-  //   dispatch(getCartItems());
-  // }, [dispatch]);
+  // console.log('router', router.query);
+
+  // const getRouterObject = withRouter(() => {
+  //   return router;
+  // });
+
   const {messages} = useIntl();
 
   const {theme} = useThemeContext();
-  const [page, setPage] = useState<number>(0);
-
+  // const [page, setPage] = useState<number>(0);
+  const [items, setItems] = useState([]);
   // const {viewType, filterData} = useSelector<AppState, AppState['ecommerce']>(
   //   ({ecommerce}) => ecommerce,
   // );
-  const [item, setItem] = useState([]);
+  const [menu, setMenu] = useState([]);
 
   const fetchItem = async () => {
-    const item = await fetchItems();
-    setItem(item);
+    const menu = await fetchItems();
+    setMenu(menu);
+    const roomId = router.query.pid;
+    // const orderedItems = await fetchOrderedItems();
+    const orderedItems = await getOrderedItems(router.query.orderId, {roomId});
+    console.log('menu', menu);
+    console.log('orderedItems', orderedItems);
+    let mergedSubjects = orderedItems.map((subject) => {
+      let otherSubject = menu.find((element) => element.id === subject.id);
+      return {...subject, ...otherSubject};
+    });
+    console.log('mergedSubjects', mergedSubjects);
+    setItems(mergedSubjects);
   };
+  const fetchOrderedItems = async () => {
+    const roomId = router.query.pid;
+    await getOrderedItems(router.query.orderId, {roomId});
+  };
+
   useEffect(() => {
     fetchItem();
   }, []);
 
-  // console.log('item', item);
-
-  const [items, setItems] = useState([]);
-  const onAddToBill = (item) => {
-    setItems((prevState) => {
-      return [...prevState, item] as any;
-    });
+  const onAddToBill = async (item) => {
+    const itemId = item.id;
+    console.log('Item Id:', itemId);
+    console.log('Order Id:', router.query.orderId);
+    const addNewItem = await addItem(router.query.orderId, {itemId});
+    await fetchOrderedItems();
+    console.log('addNewItem', addNewItem);
   };
 
-  console.log('items', items);
+  let sum = 0;
 
-  // const list = item,
-  //   total = item?.length;
-  // const {loading} = useSelector<AppState, AppState['common']>(
-  //   ({common}) => common,
-  // );
+  items.forEach((element) => {
+    sum += element.price;
+  });
 
-  const onRemoveItem = (data: CartItems) => {
-    data;
-  };
-
-  const onDecrement = () => {
-    if (data?.count > 0) {
-      ({...data, count: data.count - 1});
-    } else {
-      data;
-    }
-  };
-  const onIncrement = () => {
-    ({...data, count: data.count + 1});
-  };
-
-  // const onPageChange = (value: number) => {
-  //   setPage(value);
-  // };
-
-  // const searchItem = (title: string) => {
-  //   dispatch(setFilters({...filterData, title}));
-  // };
+  console.log('sum', sum);
 
   return (
     <>
@@ -165,7 +164,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
         <IntlMessages id='sidebar.ecommerce.cart' />
       </Box>
       <AppGridContainer>
-        <Grid sx={{}} item xs={12} md={5}>
+        <Grid sx={{}} item xs={12} md={6}>
           <AppCard contentStyle={{px: 0}}>
             <AppTableContainer>
               <Table stickyHeader className='table'>
@@ -202,12 +201,11 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                         style={{fontWeight: Fonts.MEDIUM}}
                       >
                         ${data.price}
-                        {/* ${+data.mrp - +data.discount} */}
                       </StyledTableCell>
                       <StyledTableCell align='center'>
                         <AddIcon
                           className='pointer'
-                          // onClick={onIncrement}
+                          // onClick={onIncrease(data.quantitty)}
                         />
                       </StyledTableCell>
                       <StyledTableCell align='center'>
@@ -217,26 +215,32 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                           justifyContent='center'
                           width={60}
                         >
-                          <TextField>{data?.count}</TextField>
+                          <TextField
+                            value={data?.quantity}
+                            // onChange={() => handleChangeQuantity(data)}
+                          ></TextField>
                         </Box>
                       </StyledTableCell>
                       <StyledTableCell align='center'>
-                        <RemoveIcon className='pointer' onClick={onDecrement} />
+                        <RemoveIcon
+                          className='pointer'
+                          // onClick={onDecrease(data.quantitty)}
+                        />
                       </StyledTableCell>
                       <StyledTableCell
                         align='center'
                         style={{fontWeight: Fonts.MEDIUM}}
                       >
-                        {data.price ? (
-                          <>${data.price * data?.count}</>
+                        {data?.quantity ? (
+                          <>${data.price * data?.quantity}</>
                         ) : (
                           <>${data.price}</>
                         )}
-
-                        {/* ${(+data.mrp - +data.discount) * +data.count} */}
                       </StyledTableCell>
                       <StyledTableCell component='th' scope='row'>
-                        {/* <CancelIcon onClick={() => onRemoveItem(data)} /> */}
+                        <CancelIcon
+                        // onClick={() => onRemoveItem(data)}
+                        />
                       </StyledTableCell>
                     </TableRow>
                   ))}
@@ -268,7 +272,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                   //   router.push('/ecommerce/products');
                   // }}
                 >
-                  Continue Shopping
+                  Change Table
                 </Button>
                 <Button
                   variant='contained'
@@ -277,22 +281,93 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                   //   router.push('/ecommerce/checkout');
                   // }}
                 >
-                  Checkout
+                  Pay
                 </Button>
               </Box>
             }
           >
-            <OrderSummary cartItems={cartItems} />
+            <AppAnimate animation='transition.slideUpIn' delay={200}>
+              <Box
+                sx={{
+                  p: 5,
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: 14,
+                    fontWeight: Fonts.MEDIUM,
+                    mt: 2,
+                    mb: 4,
+                  }}
+                >
+                  <Box sx={{color: 'text.secondary'}}>Grand Total: </Box>
+                  <Box>${sum}</Box>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: 14,
+                    fontWeight: Fonts.MEDIUM,
+                    mb: 4,
+                  }}
+                >
+                  <Box sx={{color: 'text.secondary'}}>Discount: </Box>
+                  {/* <Box>$4</Box> */}
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: 14,
+                    fontWeight: Fonts.MEDIUM,
+                    mb: 4,
+                  }}
+                >
+                  <Box sx={{color: 'text.secondary'}}>Tip: </Box>
+                  {/* <Box>$4</Box> */}
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: 14,
+                    fontWeight: Fonts.MEDIUM,
+                    mb: 4,
+                  }}
+                >
+                  <Box sx={{color: 'text.secondary'}}>Estimated Tax: </Box>
+                  {/* <Box>$1</Box> */}
+                </Box>
+
+                <Divider />
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: 14,
+                    fontWeight: Fonts.MEDIUM,
+                    my: 4,
+                  }}
+                >
+                  <Box sx={{color: 'text.secondary'}}>Order Total: </Box>
+                  <Box>${sum}</Box>
+                </Box>
+              </Box>
+            </AppAnimate>
           </AppCard>
         </Grid>
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={6}>
           <AppCard contentStyle={{px: 0}}>
             <AppsHeader>
               <ItemHeader
               // list={list}
               // viewType={viewType}
               // page={page}
-              // // totalItems={total}
+              // totalItems={total}
               // onPageChange={onPageChange}
               // onSearch={searchItem}
               />
@@ -322,7 +397,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                     sm: 5,
                     xl: 5,
                   }}
-                  data={item}
+                  data={menu}
                   renderRow={(item) => (
                     <Card
                       sx={{
@@ -340,7 +415,12 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                           mb: 1,
                         }}
                       >
-                        <img src={item.wallpaper} alt={item.name} />
+                        {item.wallpaper ? (
+                          <img src={item.wallpaper} alt={item.name} />
+                        ) : (
+                          <></>
+                        )}
+                        {/* <img src={item.wallpaper} alt={item.name} /> */}
                         <Box
                           sx={{
                             mt: -3,
