@@ -20,7 +20,9 @@ const Signup = () => {
             <AppLogo />
           </Box>
         </Box>
-        <SignupJwtAuth />
+        <Box>
+          <SignupJwtAuth />
+        </Box>
       </Box>
     </AuthWrapper>
   );

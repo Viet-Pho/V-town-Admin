@@ -1,5 +1,5 @@
 export const checkPermission = (routeRole: any, userRole: any) => {
-  if (!routeRole || !routeRole) {
+  if (!routeRole || !userRole) {
     return true;
   }
 

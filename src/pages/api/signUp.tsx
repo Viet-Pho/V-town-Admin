@@ -6,6 +6,8 @@ import isEmail from 'isemail';
 import {sign} from 'jsonwebtoken';
 import {resolve} from 'path';
 import {SECRET} from '../../util/CONSTANT';
+import {nanoid} from 'nanoid';
+import nodemailer from 'nodemailer';
 
 export default async function signUp(
   req: NextApiRequest,
@@ -66,6 +68,7 @@ export default async function signUp(
           username: req.body.username,
           password: hash,
           account_type: 3,
+          confirmed: 0,
         });
 
         const user: any = await database('users')
@@ -73,20 +76,72 @@ export default async function signUp(
           .where('is_deleted', 0)
           .select();
 
-        const claims = {sub: user[0].id, userEmail: user[0].email};
+        const claims = {
+          id: user[0].id,
+          email: user[0].email,
+          role: user[0].account_type,
+          username: user[0].username,
+          confirmed: user[0].confirmed,
+        };
         const jwt = sign(claims, SECRET, {
-          expiresIn: '365 days',
+          expiresIn: '30 days',
         }); // auto-generate GUID for jwt;
+
+        const securedTokenId = nanoid(32);
+        await database('tokens_confirm').delete().where('userId', user[0].id);
+
+        await database('tokens_confirm').insert({
+          userId: user[0].id,
+          type: 'verifyEmail',
+          tokenId: securedTokenId,
+          expireAt: new Date(Date.now() + 60 * 60 * 1000).getTime().toString(),
+        });
+
+        let smtpTransport = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: 'vtownmailservice@gmail.com',
+            pass: 'ABC123456!',
+          },
+        });
+
+        let mailOptions = {
+          from: 'vtownmailservice@gmail.com',
+          to: user[0]?.email,
+          subject: `Confirm your email - Vtown`,
+          html: `
+        <h2>Welcome to Vtown </h2>
+          <ul>
+            <li>Please verify your email to unlock awesome features</li>
+            <li>Click <a href="${
+              process.env.NODE_ENV !== 'development'
+                ? `${process.env.APP_URL}/verify-email?token=${securedTokenId}`
+                : `http://localhost:3000/verify-email?token=${securedTokenId}`
+            }">here</a> to verify your account  </li>
+          </ul>
+        <h3>Yours sincerely</h3>
+        <h1>Vtown Australia</h1>
+    `,
+        };
+
+        smtpTransport.sendMail(mailOptions, (err, data) => {
+          if (err) {
+            console.log('Error in Sending Email Data :(', err);
+          } else {
+            console.log('Email sent successfully');
+          }
+        });
 
         return res.status(200).send({
           message: 'OK',
           error: false,
           token: jwt,
           user: {
-            userId: insertUser[0],
-            email: req.body.email,
-            username: req.body.username,
-            role: 3,
+            userId: user[0].id,
+            username: user[0].username,
+            email: user[0].email,
+            role: user[0].account_type,
+            confirmed: user[0].confirmed,
           },
         });
       } catch (error) {

@@ -5,6 +5,9 @@ import {NextApiResponse, NextApiRequest} from 'next';
 import {sign} from 'jsonwebtoken';
 import {resolve} from 'path';
 import {SECRET} from '../../util/CONSTANT';
+import {nanoid} from 'nanoid';
+import nodemailer from 'nodemailer';
+
 export default async function logIn(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).send({message: 'Forbidden resources'});
@@ -32,33 +35,41 @@ export default async function logIn(req: NextApiRequest, res: NextApiResponse) {
           .where('is_deleted', 0)
           .select();
 
-        compare(req.body.password, user[0]?.password, function (err, result) {
-          if (!err && result) {
-            const claims = {
-              id: user[0].id,
-              email: user[0].email,
-              role: user[0].account_type,
-              username: user[0].username,
-            };
-            const jwt = sign(claims, SECRET, {
-              expiresIn: '30 days',
-            }); // auto-generate GUID for jwt;
-            return res.status(200).send({
-              message: 'Ok',
-              error: false,
-              token: jwt,
-              user: {
-                userId: user[0].id,
-                username: user[0].username,
+        compare(
+          req.body.password,
+          user[0]?.password,
+          async function (err, result) {
+            if (!err && result) {
+              const claims = {
+                id: user[0].id,
                 email: user[0].email,
                 role: user[0].account_type,
-              },
-            });
-          } else {
-            res.status(400).send({error: true, message: 'Invalid credentials'});
-            return resolve();
-          }
-        });
+                username: user[0].username,
+                confirmed: user[0].confirmed,
+              };
+              const jwt = sign(claims, SECRET, {
+                expiresIn: '30 days',
+              }); // auto-generate GUID for jwt;
+
+              return res.status(200).send({
+                message: 'Ok',
+                error: false,
+                token: jwt,
+                user: {
+                  userId: user[0].id,
+                  username: user[0].username,
+                  email: user[0].email,
+                  role: user[0].account_type,
+                  confirmed: user[0].confirmed,
+                },
+              });
+            } else {
+              return res
+                .status(400)
+                .send({error: true, message: 'Invalid credentials'});
+            }
+          },
+        );
       }
     } catch (error) {
       res.status(400).send({error: true, message: `error: ${error}`});

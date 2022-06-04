@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo} from 'react';
 import {
   Grow,
   Icon,
@@ -14,6 +14,8 @@ import HorizontalCollapse from './HorizontalCollapse';
 import HorizontalItem from './HorizontalItem';
 import Box from '@mui/material/Box';
 import IntlMessages from '../../../../utility/IntlMessages';
+import {checkPermission} from '../../../../utility/helper/RouteHelper';
+import {useAuthUser} from '../../../../utility/AuthHooks';
 import {Fonts} from '../../../../../shared/constants/AppEnums';
 import ClientOnlyPortal from './ClientPortal';
 import {RouterConfigData} from '../../../../../modules/routesConfig';
@@ -29,6 +31,16 @@ const HorizontalGroup: React.FC<HorizontalCollapseProps> = (props) => {
   const [opened, setOpened] = useState<boolean>(false);
   const {item, nestedLevel} = props;
   const location = useRouter();
+
+  const {user} = useAuthUser();
+  const hasPermission = useMemo(
+    () => checkPermission(item!.permittedRole, user.role),
+    [item, user.role],
+  );
+
+  if (!hasPermission) {
+    return null;
+  }
 
   const handleToggle = (open: boolean) => {
     setOpened(open);

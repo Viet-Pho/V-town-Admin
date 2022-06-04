@@ -1,3 +1,4 @@
+import jwtAuth from 'middleware/jwt';
 import database from '../../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
 import moment from 'moment';
@@ -12,7 +13,7 @@ export const config = {
     responseLimit: '6mb',
   },
 };
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const customerDetailHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: {pid},
     method,
@@ -30,7 +31,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         message: `Successfully deleted customer: ${customerName[0].firstName}`,
       });
     } catch (error) {
-      console.log('error', error);
       return res.status(400).send({message: `${error}`});
     }
   }
@@ -108,3 +108,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 };
+
+export default jwtAuth(customerDetailHandler)

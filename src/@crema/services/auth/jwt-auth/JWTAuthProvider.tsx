@@ -125,7 +125,7 @@ const JWTAuthAuthProvider: React.FC<JWTAuthAuthProviderProps> = ({
         email,
         password,
       });
-
+      console.log('Log In Data', data);
       localStorage.setItem('token', data.token);
       setAuthToken(data.token);
 

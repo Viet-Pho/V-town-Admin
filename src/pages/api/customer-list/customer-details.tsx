@@ -1,3 +1,4 @@
+import jwtAuth from 'middleware/jwt';
 import database from '../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
 import moment from 'moment';
@@ -13,7 +14,7 @@ export const config = {
   },
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const customerDetail =  async (req: NextApiRequest, res: NextApiResponse) => {
   const {method} = req;
   if (!req.body) {
     return res.status(400).send({error: true, message: 'Data is blank'});
@@ -72,3 +73,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 };
+
+export default jwtAuth(customerDetail)

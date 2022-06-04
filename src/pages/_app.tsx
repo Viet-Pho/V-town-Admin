@@ -57,12 +57,12 @@ export default function MyApp(props: MyAppProps) {
         <title>Vtown Admin</title>
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
-      <AppContextProvider>
-        <Provider store={store}>
-          <AppThemeProvider>
-            <AppStyleProvider>
-              <AppLocaleProvider>
-                <JWTAuthProvider>
+      <Provider store={store}>
+        <JWTAuthProvider>
+          <AppContextProvider>
+            <AppThemeProvider>
+              <AppStyleProvider>
+                <AppLocaleProvider>
                   <AuthRoutes>
                     <CssBaseline />
                     <ExchangePointDialog
@@ -71,12 +71,12 @@ export default function MyApp(props: MyAppProps) {
                     />
                     <Component {...pageProps} />
                   </AuthRoutes>
-                </JWTAuthProvider>
-              </AppLocaleProvider>
-            </AppStyleProvider>
-          </AppThemeProvider>
-        </Provider>
-      </AppContextProvider>
+                </AppLocaleProvider>
+              </AppStyleProvider>
+            </AppThemeProvider>
+          </AppContextProvider>
+        </JWTAuthProvider>
+      </Provider>
     </CacheProvider>
   );
 }

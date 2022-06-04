@@ -9,6 +9,7 @@ export const getUserFromAuth0 = (user: any) => {
       email: user.email,
       photoURL: user.picture,
       role: authRole.user,
+      confirmed: user.confirmed,
     };
   return user;
 };
@@ -45,6 +46,7 @@ export const getUserFromJwtAuth = (user: any) => {
       email: user.email,
       role: user.role,
       username: user.username,
+      confirmed: user?.confirmed,
     };
   return user;
 };
