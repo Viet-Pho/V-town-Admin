@@ -44,8 +44,6 @@ export default async function ForgetPassword(
       //  https://hoangvvo.com/blog/next-js-and-mongodb-app-3
       const securedTokenId = nanoid(32);
 
-      console.log('USer Email', user[0].email);
-
       try {
         await database('tokens_password').delete().where('userId', user[0].id);
 
@@ -93,7 +91,6 @@ export default async function ForgetPassword(
 
         return res.status(200).send({error: false, message: 'ok'});
       } catch (error) {
-        console.log(error);
         return res.status(400).send({error: true, message: `error: ${error}`});
       }
     }

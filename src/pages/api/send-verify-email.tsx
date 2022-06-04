@@ -90,14 +90,12 @@ export default async function sendVerifyEmail(
 
         return res.status(200).send({error: false, message: 'ok'});
       } catch (error) {
-        console.log(error);
         return res.status(400).send({error: true, message: `error: ${error}`});
       }
     }
 
     try {
     } catch (error: any) {
-      console.log('Error Object', error.code);
       if (error.code === 'ER_DUP_ENTRY') {
         return res.status(400).send({
           error: true,

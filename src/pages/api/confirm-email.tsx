@@ -32,8 +32,6 @@ export default async function ConfirmEmail(
       return res.status(400).send({error: true, message: 'Token expired'});
     }
 
-    console.log('Token Data', tokenData);
-
     if (tokenData.length > 0) {
       if (currentTimeStamp > tokenData[0].expireAt) {
         await database('tokens_confirm')
@@ -57,7 +55,6 @@ export default async function ConfirmEmail(
 
           res.status(200).send({error: false, message: 'OK'});
         } catch (error) {
-          console.log(error);
           return res
             .status(400)
             .send({error: true, message: `Error: ${error}`});

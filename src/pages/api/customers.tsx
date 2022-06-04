@@ -1,3 +1,4 @@
+import jwtAuth from 'middleware/jwt';
 import database from '../../database';
 import moment from 'moment';
 
@@ -9,7 +10,7 @@ export const config = {
     responseLimit: '6mb',
   },
 };
-export default async function customerHandler(req, res) {
+const customerHandler = async (req, res) => {
   const {
     query: {cardId, searchText = '', page = 1, limit = 20},
     method,
@@ -91,3 +92,5 @@ export default async function customerHandler(req, res) {
       res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
+
+export default jwtAuth(customerHandler)

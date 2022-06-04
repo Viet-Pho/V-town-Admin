@@ -1,10 +1,11 @@
+import jwtAuth from 'middleware/jwt';
 import database from '../../database';
 import {NextApiResponse, NextApiRequest} from 'next';
 
-export default async function customerHandler(
+const exchangePointHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
-) {
+) => {
   const {
     body: {customerId, userId, points},
     method,
@@ -40,7 +41,7 @@ export default async function customerHandler(
       res.setHeader('Allow', ['POST']);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
-}
+};
 
 async function getCustomer(id) {
   return database('customers')
@@ -53,3 +54,5 @@ async function getCustomer(id) {
 async function getUser(id) {
   return database('users').where('is_deleted', false).where('id', id).first();
 }
+
+export default jwtAuth(exchangePointHandler);
