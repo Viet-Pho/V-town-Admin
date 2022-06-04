@@ -15,6 +15,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditCustomer from '../EditCustomer';
 import CustomerInfo from '../CustomerInfo';
 import {deleteCustomerById} from 'models/customers';
+import {disableCard} from 'models/card';
 import {
   fetchError,
   fetchStart,
@@ -86,9 +87,22 @@ const TableItem: React.FC<TableItemProps> = ({customer}) => {
       dispatch(showMessage(`${response.message}`));
       setDeleteDialogOpen(false);
     } catch (e) {
-      console.log(e);
       dispatch(fetchError(`${e?.response?.data?.message}`));
       setDeleteDialogOpen(false);
+    }
+  };
+
+  const [isDisableCardDialogOpen, setDisableCardDialogOpen] = React.useState(false);
+  const disableCustomerCard = async () => {
+    dispatch(fetchStart());
+    try {
+      const response: any = await disableCard(customer.cardId);
+      dispatch(fetchSuccess());
+      dispatch(showMessage(`${response.message}`));
+      setDisableCardDialogOpen(false);
+    } catch (e) {
+      dispatch(fetchError(`${e?.response?.data?.message}`));
+      setDisableCardDialogOpen(false);
     }
   };
 
@@ -138,6 +152,13 @@ const TableItem: React.FC<TableItemProps> = ({customer}) => {
             >
               Delete
             </MenuItem>
+            <MenuItem
+              disabled={!!customer.cardDeleted}
+              style={{fontSize: 14}}
+              onClick={() => setDisableCardDialogOpen(true)}
+            >
+              Disable card
+            </MenuItem>
           </Menu>
         </Box>
         <EditCustomer
@@ -158,6 +179,13 @@ const TableItem: React.FC<TableItemProps> = ({customer}) => {
           onConfirm={deleteCustomer}
           title={'Are you sure you want to delete this customer?'}
           dialogTitle={'Delete Customer'}
+        />
+        <AppConfirmDialog
+          open={isDisableCardDialogOpen}
+          onDeny={setDisableCardDialogOpen}
+          onConfirm={disableCustomerCard}
+          title={`Are you sure you want to disable card ${customer.cardId} of this customer?`}
+          dialogTitle={'Disable Card Customer'}
         />
       </StyledTableCell>
     </TableRow>
