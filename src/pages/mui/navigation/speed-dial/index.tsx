@@ -6,4 +6,3 @@ const SpeedDial = asyncComponent(
   () => import('../../../../modules/muiComponents/navigation/SpeedDial'),
 );
 export default AppPage(() => <SpeedDial />);
-

@@ -6,4 +6,4 @@ const customerListHandler = async (req, res) => {
   return res.status(200).send(customers);
 };
 
-export default jwtAuth(customerListHandler)
+export default jwtAuth(customerListHandler);
