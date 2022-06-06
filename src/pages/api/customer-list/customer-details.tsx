@@ -14,7 +14,7 @@ export const config = {
   },
 };
 
-const customerDetail =  async (req: NextApiRequest, res: NextApiResponse) => {
+const customerDetail = async (req: NextApiRequest, res: NextApiResponse) => {
   const {method} = req;
   if (!req.body) {
     return res.status(400).send({error: true, message: 'Data is blank'});
@@ -74,4 +74,4 @@ const customerDetail =  async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default jwtAuth(customerDetail)
+export default jwtAuth(customerDetail);

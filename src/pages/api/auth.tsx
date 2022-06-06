@@ -12,7 +12,7 @@ const auth = async (req, res) => {
     .where('id', userId)
     .where('is_deleted', 0)
     .select('username', 'account_type as role', 'id', 'email', 'confirmed');
-  
+
   if (!user) return res.status(404).end(`User ${userId} not found`);
 
   return res.status(200).send(user);

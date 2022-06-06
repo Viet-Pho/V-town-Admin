@@ -91,6 +91,6 @@ const customerHandler = async (req, res) => {
       res.setHeader('Allow', ['GET', 'POST']);
       res.status(405).end(`Method ${method} Not Allowed`);
   }
-}
+};
 
-export default jwtAuth(customerHandler)
+export default jwtAuth(customerHandler);

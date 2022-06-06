@@ -13,7 +13,10 @@ export const config = {
     responseLimit: '6mb',
   },
 };
-const customerDetailHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const customerDetailHandler = async (
+  req: NextApiRequest,
+  res: NextApiResponse,
+) => {
   const {
     query: {pid},
     method,
@@ -109,4 +112,4 @@ const customerDetailHandler = async (req: NextApiRequest, res: NextApiResponse) 
   }
 };
 
-export default jwtAuth(customerDetailHandler)
+export default jwtAuth(customerDetailHandler);
