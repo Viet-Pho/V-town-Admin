@@ -37,10 +37,11 @@ const customerDetailHandler = async (
       return res.status(400).send({message: `${error}`});
     }
   }
-  if (!req.body) return res.status(400).send({message: 'Bad Request'});
+
   if (!pid) return res.status(404).json({message: 'Not found'});
 
   if (method === 'PATCH') {
+    if (!req.body) return res.status(400).send({message: 'Bad Request'});
     if (!req.body.firstName)
       return res.status(400).send({message: 'No blank first name'});
 

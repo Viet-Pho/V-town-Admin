@@ -1,5 +1,42 @@
-import {RiUserReceived2Line, RiMoneyDollarCircleLine} from 'react-icons/ri';
-import {CgUserList} from 'react-icons/cg';
+import {FaRegCalendarAlt, FaRegHospital} from 'react-icons/fa';
+import {FiMap, FiUsers} from 'react-icons/fi';
+import {HiOutlineAcademicCap, HiOutlineChartSquareBar} from 'react-icons/hi';
+import {
+  RiCustomerService2Line,
+  RiDashboardLine,
+  RiShieldUserLine,
+  RiTodoLine,
+  RiUserSettingsLine,
+  RiUserReceived2Line,
+  RiMoneyDollarCircleLine,
+  RiBillFill,
+} from 'react-icons/ri';
+import {BiCarousel, BiCartAlt, BiErrorAlt} from 'react-icons/bi';
+import {
+  BsBriefcase,
+  BsCart4,
+  BsChatDots,
+  BsCurrencyBitcoin,
+  BsQuestionDiamond,
+  BsFillFilePersonFill,
+  BsPersonLinesFill,
+} from 'react-icons/bs';
+import {DiHtml5Multimedia} from 'react-icons/di';
+import {
+  MdOutlineAnalytics,
+  MdOutlineContactPhone,
+  MdOutlineContactSupport,
+  MdOutlineManageAccounts,
+} from 'react-icons/md';
+import {CgFeed, CgUserList} from 'react-icons/cg';
+import {ImFeed, ImLab} from 'react-icons/im';
+import {GrDatabase, GrNavigate} from 'react-icons/gr';
+import {VscTable, VscTools} from 'react-icons/vsc';
+import {
+  AiOutlineLayout,
+  AiOutlineUnorderedList,
+  AiOutlineUserAdd,
+} from 'react-icons/ai';
 import {ReactNode} from 'react';
 import {RoutePermittedRole} from '../shared/constants/AppConst';
 
@@ -60,6 +97,14 @@ const routesConfig: RouterConfigData[] = [
         permittedRole: [RoutePermittedRole.Admin, RoutePermittedRole.User],
         icon: <RiUserReceived2Line />,
         url: '/dashboards/add-customer',
+      },
+      {
+        id: 'rooms',
+        title: 'Rooms',
+        messageId: 'sidebar.app.dashboard.rooms',
+        type: 'item',
+        icon: <RiBillFill />,
+        url: '/karaoke/rooms',
       },
     ],
   },
