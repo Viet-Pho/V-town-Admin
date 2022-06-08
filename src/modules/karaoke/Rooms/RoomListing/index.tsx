@@ -49,7 +49,7 @@ const RoomListing: React.FC<RoomGridProps> = () => {
   // }
   const {user} = useAuthUser();
   console.log('user:', user);
-  const createNewBill = async (room) => {
+  const createNewOrder = async (room) => {
     console.log('room:', room.id);
     const userAuth = {
       userId: user.id,
@@ -57,12 +57,10 @@ const RoomListing: React.FC<RoomGridProps> = () => {
     };
     try {
       const response = await startRoom(room.id, userAuth);
-      console.log('billId', response.billId[0]);
       console.log('orderId', response.orderId[0]);
       router.push({
         pathname: `/karaoke/room/${room.id}`,
         query: {
-          billId: response.billId[0],
           orderId: response.orderId[0],
         },
       });
@@ -138,7 +136,7 @@ const RoomListing: React.FC<RoomGridProps> = () => {
                   border: 3,
                 }}
                 className='room-hover'
-                onClick={() => createNewBill(room)}
+                onClick={() => createNewOrder(room)}
               >
                 <Box
                   sx={{

@@ -28,8 +28,6 @@ export async function deleteItem(pid, query) {
 }
 
 export async function getOrderedItems(pid, query) {
-  console.log('query: ', query);
-  console.log('pid: ', pid);
   const response = await axiosGet(`/order/${pid}`, query);
   if (response.status === 200) {
     return response.data;
