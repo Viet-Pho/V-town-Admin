@@ -25,23 +25,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       room_id: pid,
       user_id: req.body.userId,
     });
-    await database('order_items').insert({
-      order_id: orderId,
-    });
-    const billId = await database('bill').insert({
-      billing_object: false,
-      order_id: orderId,
-      customer_id: req.body.customerId,
-      staff_id: req.body.staffId,
-      total_price: req.body.totalPrice,
-      service_tip: req.body.serviceTip,
-      point_earned: req.body.pointEarned,
-      point_used: req.body.pointUsed,
-      discount: req.body.discount,
-      tax: req.body.tax,
-      note: req.body.note,
-      status: false,
-    });
-    return res.status(200).json({billId, orderId});
+    return res.status(200).json({orderId});
   }
 };
