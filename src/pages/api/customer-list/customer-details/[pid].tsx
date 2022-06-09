@@ -71,19 +71,44 @@ const customerDetailHandler = async (
 
     try {
       let customer = database('customers');
-      const updateCustomer = await customer.where('id', pid).update({
-        card_id: req.body.cardId,
-        first_name: req.body.firstName,
-        last_name: req.body.lastName,
-        email: req.body.email,
-        phone_number: req.body.phoneNumber,
-        address: req.body.address,
-        gender: req.body.gender,
-        birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
-        avatar: req.body.avatar,
-        age: req.body.age,
-      });
-      res.status(200).json(updateCustomer);
+      const existCard = await database('cards')
+        .where('card_number', req.body.cardId)
+        .select('card_number');
+
+      if (existCard.length > 0) {
+        const updateCustomer = await customer.where('id', pid).update({
+          card_id: req.body.cardId,
+          first_name: req.body.firstName,
+          last_name: req.body.lastName,
+          email: req.body.email,
+          phone_number: req.body.phoneNumber,
+          address: req.body.address,
+          gender: req.body.gender,
+          birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
+          avatar: req.body.avatar,
+          age: req.body.age,
+        });
+        return res.status(200).json(updateCustomer);
+      } else {
+        await customer.where('id', pid).update({
+          card_id: req.body.cardId,
+          first_name: req.body.firstName,
+          last_name: req.body.lastName,
+          email: req.body.email,
+          phone_number: req.body.phoneNumber,
+          address: req.body.address,
+          gender: req.body.gender,
+          birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
+          avatar: req.body.avatar,
+          age: req.body.age,
+        });
+        await database('cards').insert({
+          card_number: req.body.cardId,
+        });
+        return res.status(200).json({
+          message: 'Update Customer Info and added new card for customer',
+        });
+      }
     } catch (error) {
       return res.status(400).send({message: `${error}`});
     }

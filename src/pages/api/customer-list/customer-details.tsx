@@ -65,6 +65,9 @@ const customerDetail = async (req: NextApiRequest, res: NextApiResponse) => {
         is_deleted: false,
         birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
       });
+      await database('cards').insert({
+        card_number: req.body.cardId,
+      });
       res.status(200).json(addCustomer);
     } catch (error) {
       return res
