@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useIntl} from 'react-intl';
 import React, {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -159,7 +160,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
       setItems(orderedItems);
       let sum = 0;
 
-      items.forEach((element) => {
+      items.forEach((element: any) => {
         return (sum += element.price);
       });
       setTotal(sum);

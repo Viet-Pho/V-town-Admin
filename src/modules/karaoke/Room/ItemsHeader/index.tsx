@@ -35,14 +35,16 @@ interface RoomHeaderProps {
   // page: number;
 }
 
-const ItemHeader: React.FC<RoomHeaderProps> = ({
-  // onSearch,
-  // viewType,
-  // // list,
-  // page,
-  // totalItems,
-  // onPageChange,
-}) => {
+const ItemHeader: React.FC<RoomHeaderProps> = (
+  {
+    // onSearch,
+    // viewType,
+    // // list,
+    // page,
+    // totalItems,
+    // onPageChange,
+  },
+) => {
   const dispatch = useDispatch();
 
   return <Box></Box>;

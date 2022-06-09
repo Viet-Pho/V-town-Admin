@@ -19,9 +19,9 @@ import items from 'pages/api/items';
 import {useAuthUser} from '@crema/utility/AuthHooks';
 
 interface RoomGridProps {
-  room: Room[];
-  loading: boolean;
-  renderRow: () => JSX.Element;
+  room?: Room[];
+  loading?: boolean;
+  renderRow?: () => JSX.Element;
 }
 const RoomListing: React.FC<RoomGridProps> = () => {
   const dispatch = useDispatch();
