@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import {useIntl} from 'react-intl';
 import React, {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -42,11 +41,6 @@ import {alpha, Box} from '@mui/material';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 
-import IconButton from '@mui/material/IconButton';
-import StarIcon from '@mui/icons-material/Star';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
 // Crema
 
 import AppInfoView from '../../../@crema/core/AppInfoView';
@@ -99,21 +93,6 @@ const TableRowHover = styled(TableRow)(({theme}) => {
     },
   };
 });
-const ContactActionHoverWrapper = styled('div')(() => {
-  return {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    // position: 'absolute',
-    // right: -30,
-    top: '50%',
-    zIndex: 1,
-    transform: 'translateY(-50%)',
-    transition: 'all 0.4s ease',
-    opacity: 0,
-    visibility: 'hidden',
-  };
-});
 
 interface ItemGridProps {
   items: Item[];
@@ -150,8 +129,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
       dispatch(fetchError(`${e?.response?.data?.message}`));
     }
   };
-  console.log('menu', menu);
-  console.log('items', items);
+
   const fetchOrderedItems = async () => {
     dispatch(fetchStart());
     try {
@@ -182,10 +160,9 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
     dispatch(fetchStart());
     try {
       const itemId = item.id;
-      console.log('Item Id:', itemId);
-      console.log('Order Id:', router.query.orderId);
+
       const addNewItem = await addItem(router.query.orderId, {itemId});
-      console.log('addNewItem', addNewItem);
+
       const orderedItems = await getOrderedItems(router.query.orderId, {
         roomId,
       });
@@ -196,15 +173,11 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
       dispatch(fetchError(`${e?.response?.data?.message}`));
     }
   };
-  const [checkMark, setCheckMark] = useState(false);
 
   const checkPoint = async (data) => {
     const quantity = event?.target?.value;
     const orderItemId = data.orderItemId;
-    console.log('data', data);
-    console.log('orderItemId:', orderItemId);
-    console.log('Order Id:', router.query.orderId);
-    console.log('Quantity:', quantity);
+
     dispatch(fetchStart());
     try {
       await updateItem(router.query.orderId, {orderItemId, quantity});
@@ -212,17 +185,32 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
         roomId,
       });
       setItems(orderedItems);
-      setCheckMark(false);
+
       dispatch(fetchSuccess());
       dispatch(showMessage(`Success`));
     } catch (e: any) {
       dispatch(fetchError(`${e?.response?.data?.message}`));
     }
   };
-  const handleChangeQuantity = async (data) => {};
+  const onRemoveItem = async (data) => {
+    const orderItemId = data.orderItemId;
+    const name = data.name;
+    dispatch(fetchStart());
+    try {
+      await deleteItem(orderItemId);
+      const orderedItems = await getOrderedItems(router.query.orderId, {
+        roomId,
+      });
+      setItems(orderedItems);
+
+      dispatch(fetchSuccess());
+      dispatch(showMessage(`Success`));
+    } catch (e: any) {
+      dispatch(fetchError(`${e?.response?.data?.message}`));
+    }
+  };
 
   const onIncrease = async (data) => {
-    console.log('item', data);
     const itemId = data.itemId;
     const quantity = data.quantity;
     dispatch(fetchStart());
@@ -238,26 +226,25 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
       dispatch(fetchError(`${e?.response?.data?.message}`));
     }
   };
-  const onDecrease = async (data) => {
-    console.log('data', data);
 
-    // dispatch(fetchStart());
-    // try {
-    // const itemId = data.id;
-    // const quantity = data.target.value;
-    // console.log('Item Id:', itemId);
-    // console.log('Order Id:', router.query.orderId);
-    // console.log('Quantity:', quantity);
-    // await updateItem(router.query.orderId, {itemId, quantity});
-    // const orderedItems = await getOrderedItems(router.query.orderId, {
-    //   roomId,
-    // });
-    // setItems(orderedItems);
-    // dispatch(fetchSuccess());
-    // dispatch(showMessage(`Success`));
-    // } catch (e: any) {
-    // dispatch(fetchError(`${e?.response?.data?.message}`));
-    // }
+  const onDecrease = async (data) => {
+    const quantity = event?.target?.value;
+    const orderItemId = data.orderItemId;
+    const onMinus = true;
+
+    dispatch(fetchStart());
+    try {
+      await updateItem(router.query.orderId, {orderItemId, quantity, onMinus});
+      const orderedItems = await getOrderedItems(router.query.orderId, {
+        roomId,
+      });
+      setItems(orderedItems);
+
+      dispatch(fetchSuccess());
+      dispatch(showMessage(`Success`));
+    } catch (e: any) {
+      dispatch(fetchError(`${e?.response?.data?.message}`));
+    }
   };
 
   return (
@@ -327,25 +314,6 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                             value={data?.quantity}
                             onChange={() => checkPoint(data)}
                           ></TextField>
-                          {checkMark ? (
-                            <ContactActionHoverWrapper className='conActionHoverRoot'>
-                              <IconButton
-                                sx={{
-                                  '& .MuiSvgIcon-root': {
-                                    fontSize: 22,
-                                  },
-                                }}
-                                // onClick={onClickEditOption}
-                                size='large'
-                              >
-                                <CheckCircleOutlineIcon
-                                  onClick={() => handleChangeQuantity(data)}
-                                />
-                              </IconButton>
-                            </ContactActionHoverWrapper>
-                          ) : (
-                            <></>
-                          )}
                         </Box>
                       </StyledTableCell>
                       <StyledTableCell align='center'>
@@ -367,9 +335,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                         )}
                       </StyledTableCell>
                       <StyledTableCell component='th' scope='row'>
-                        <CancelIcon
-                        // onClick={() => onRemoveItem(data)}
-                        />
+                        <CancelIcon onClick={() => onRemoveItem(data)} />
                       </StyledTableCell>
                     </TableRowHover>
                   ))}

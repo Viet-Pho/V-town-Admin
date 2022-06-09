@@ -48,16 +48,15 @@ const RoomListing: React.FC<RoomGridProps> = () => {
 
   // }
   const {user} = useAuthUser();
-  console.log('user:', user);
+
   const createNewOrder = async (room) => {
-    console.log('room:', room.id);
     const userAuth = {
       userId: user.id,
       userRole: user.role,
     };
     try {
       const response = await startRoom(room.id, userAuth);
-      console.log('orderId', response.orderId[0]);
+
       router.push({
         pathname: `/karaoke/room/${room.id}`,
         query: {

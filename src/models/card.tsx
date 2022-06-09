@@ -5,6 +5,6 @@ export async function disableCard(cardId) {
   if (response.status === 200) {
     return response.data;
   } else {
-    return response
+    return response;
   }
 }
