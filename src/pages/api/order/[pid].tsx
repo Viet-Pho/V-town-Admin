@@ -1,6 +1,5 @@
 import database from '../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
-import {WhereToVote} from '@mui/icons-material';
 
 export const config = {
   api: {
@@ -16,23 +15,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: {pid},
     method,
   } = req;
-  console.log('pid: ', pid);
-  console.log('req query', req.query);
-  console.log('req body', req.body);
+
+  // console.log('req', req);
   if (!pid) {
     return res.status(404).json({
       message: 'Not Found',
     });
   }
   if (method === 'POST') {
-    console.log('Item', req.body.itemId);
     try {
       const orderedItem = await database('order_items')
         .select('item_id', 'quantity', 'status')
         .where('order_id', pid)
         .andWhere('item_id', req.body.itemId);
-      console.log('orderedItem: ', orderedItem);
-      console.log('orderedItem.length: ', orderedItem.length);
 
       if (!orderedItem[0]) {
         await database('order_items').insert({
@@ -70,7 +65,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
   if (method === 'PATCH') {
     try {
-      if (!req.body.quantity || req.body.quantity < 1) {
+      if ((!req.body.onMinus && !req.body.quantity) || req.body.quantity < 1) {
         await database('order_items')
           .update({
             quantity: 0,
@@ -83,8 +78,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .status(200)
           .json({message: `Updated ${req.query.itemId} of order ${pid}`});
       }
-      if (req.body.quantity > 0) {
-        console.log('patching');
+      if (!req.body.onMinus && req.body.quantity > 0) {
         await database('order_items')
           .update({
             quantity: req.body.quantity,
@@ -99,16 +93,40 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .status(200)
           .json({message: `Updated ${req.query.itemId} of order ${pid}`});
       }
+      if (req.body.onMinus) {
+        const item = await database('order_items').select('quantity').where({
+          order_id: pid,
+          id: req.body.orderItemId,
+        });
+
+        const newQuantity: number = item[0].quantity - 1;
+        await database('order_items')
+          .update({
+            quantity: newQuantity,
+            // status: req.body.status,
+          })
+          .where({
+            order_id: pid,
+            id: req.body.orderItemId,
+          });
+        return res
+          .status(200)
+          .json({message: `Updated ${req.query.itemId} of order ${pid}`});
+      }
     } catch (e) {
       return res.status(500).json({message: `Error: ${e}`});
     }
   }
   if (method === 'DELETE') {
     try {
-      await database('order_items').delete().where({
-        order_id: pid,
-        item_id: req.query.itemId,
-      });
+      await database('order_items')
+        .update({
+          quantity: 0,
+          order_id: 0,
+        })
+        .where({
+          id: pid,
+        });
       return res
         .status(200)
         .json({message: `Deleted item ${req.query.itemId} of order ${pid}`});

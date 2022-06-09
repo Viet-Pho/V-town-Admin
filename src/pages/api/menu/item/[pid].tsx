@@ -44,7 +44,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         native_name: req.body.nativeName,
         wallpaper: req.body.wallpaper,
       });
-      console.log('updateItem');
+
       res.status(200).json(updateItem);
     } catch (error) {
       return res.status(400).send({message: `${error}`});
