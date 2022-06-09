@@ -26,9 +26,60 @@ import {
 import {useIntl} from 'react-intl';
 import {useAuthUser} from '../../../../@crema/utility/AuthHooks';
 
+import {alpha, Select} from '@mui/material';
+
+import Divider from '@mui/material/Divider';
+import Avatar from '@mui/material/Avatar';
+import {styled} from '@mui/material/styles';
+
 interface ExchangePointProps {
   customer: Customer;
 }
+const HeaderWrapper = styled('div')(({theme}) => {
+  return {
+    padding: 20,
+    marginLeft: -24,
+    marginRight: -24,
+    marginTop: -20,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  };
+});
+const StyledDivider = styled(Divider)(({theme}) => ({
+  marginTop: 20,
+  marginBottom: 20,
+  [theme.breakpoints.up('xl')]: {
+    marginTop: 32,
+    marginBottom: 32,
+  },
+}));
+
+const AvatarViewWrapper = styled('div')(({theme}) => {
+  return {
+    position: 'relative',
+    cursor: 'pointer',
+    '& .edit-icon': {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      zIndex: 1,
+      border: `solid 2px ${theme.palette.background.paper}`,
+      backgroundColor: alpha(theme.palette.primary.main, 0.7),
+      color: theme.palette.primary.contrastText,
+      borderRadius: '50%',
+      width: 26,
+      height: 26,
+      display: 'none',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'all 0.4s ease',
+      '& .MuiSvgIcon-root': {
+        fontSize: 16,
+      },
+    },
+  };
+});
 
 const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
   const dispatch = useDispatch();
@@ -106,6 +157,21 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
   return (
     <AppCard className='card-hover'>
       <AppAnimate animation='transition.slideUpIn' delay={200}>
+        <HeaderWrapper>
+          <label htmlFor='icon-button-file'>
+            <AvatarViewWrapper>
+              <Avatar
+                sx={{
+                  width: 60,
+                  height: 60,
+                }}
+                src={customer.avatar}
+                alt='user Image'
+              />
+            </AvatarViewWrapper>
+          </label>
+        </HeaderWrapper>
+        <StyledDivider />
         <AppGridContainer>
           <Grid item xs={12} md={12} lg={12}>
             <FormControl fullWidth sx={{m: 1}}>
@@ -231,7 +297,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
                 onClick={_createExchangePoint}
                 disabled={showCardDisabledAlert}
               >
-                {messages['exchangepoint.exchange']  as string}
+                {messages['exchangepoint.exchange'] as string}
               </Button>
             </Box>
           </Grid>
@@ -247,7 +313,7 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
         aria-describedby='scroll-dialog-description'
       >
         <DialogTitle id='scroll-dialog-title'>
-          {messages['exchangepoint.successDialog.title']  as string}
+          {messages['exchangepoint.successDialog.title'] as string}
         </DialogTitle>
         <DialogContent dividers={true}>
           Total points after exchange: {successResult.totalPoints}

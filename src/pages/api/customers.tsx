@@ -68,28 +68,27 @@ const customerHandler = async (req, res) => {
       res.status(200).json({total, customers});
       break;
     }
-    case 'POST': {
-      let queryBuilder = database('customers');
-      if (!!cardId) queryBuilder = queryBuilder.where('card_id', cardId);
-      const addUsers = await queryBuilder.insert({
-        card_id: req.body.cardId,
-        first_name: req.body.firstName,
-        last_name: req.body.lastName,
-        email: req.body.email,
-        phone_number: req.body.phoneNumber,
-        address: req.body.address,
-        age: req.body.age,
-        gender: req.body.gender,
-
-        is_deleted: false,
-        birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
-      });
-      res.status(200).json(addUsers);
-      break;
-    }
-    default:
-      res.setHeader('Allow', ['GET', 'POST']);
-      res.status(405).end(`Method ${method} Not Allowed`);
+    // case 'POST': {
+    //   let queryBuilder = database('customers');
+    //   if (!!cardId) queryBuilder = queryBuilder.where('card_id', cardId);
+    //   const addUsers = await queryBuilder.insert({
+    //     card_id: req.body.cardId,
+    //     first_name: req.body.firstName,
+    //     last_name: req.body.lastName,
+    //     email: req.body.email,
+    //     phone_number: req.body.phoneNumber,
+    //     address: req.body.address,
+    //     age: req.body.age,
+    //     gender: req.body.gender,
+    //     is_deleted: false,
+    //     birthday: moment(req.body.birthday).format('YYYY-MM-DD'),
+    //   });
+    //   res.status(200).json(addUsers);
+    //   break;
+    // }
+    // default:
+    //   res.setHeader('Allow', ['GET', 'POST']);
+    //   res.status(405).end(`Method ${method} Not Allowed`);
   }
 };
 
