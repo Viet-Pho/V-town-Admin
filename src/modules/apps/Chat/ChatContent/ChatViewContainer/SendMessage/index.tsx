@@ -44,7 +44,6 @@ const SendMessage: React.FC<AddNewMessageProps> = ({
   const {getRootProps, getInputProps} = useDropzone({
     multiple: true,
     onDrop: (acceptedFiles) => {
-      console.log('acceptedFiles', acceptedFiles);
       sendFileMessage({
         message: '',
         message_type: MessageType.MEDIA,

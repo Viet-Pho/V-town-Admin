@@ -18,7 +18,6 @@ const PersonalInfo = () => {
   const {user} = useAuthUser();
   const dispatch = useDispatch();
 
-  console.log('User Data', user);
   const [submitting, setSubmitting] = useState(false);
 
   const handleSendVerifyEmail = async () => {

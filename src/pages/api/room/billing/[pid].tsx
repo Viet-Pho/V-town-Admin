@@ -13,8 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: {pid},
     method,
   } = req;
-  console.log('pid: ', pid);
-  console.log('req body', req.body);
+
   if (!pid) {
     return res.status(404).json({
       message: 'Not Found',

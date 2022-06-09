@@ -45,7 +45,7 @@ const CustomToolbar: React.FC<ToolbarProps> = (props) => {
 
   function addDays(date: Date, days: number) {
     date.setDate(date.getDate() + days);
-    console.log(date);
+
     return date;
   }
 

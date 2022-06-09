@@ -12,7 +12,6 @@ export const onGetUserList = () => {
     jwtAxios
       .get('/api/user/list')
       .then((data) => {
-        console.log('data:', data);
         if (data.status === 200) {
           dispatch(fetchSuccess());
           dispatch({type: GET_USER_LIST, payload: data.data});

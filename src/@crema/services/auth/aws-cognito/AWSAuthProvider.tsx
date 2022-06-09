@@ -102,7 +102,7 @@ const AwsAuthProvider: React.FC<AwsAuthProviderProps> = ({children}) => {
     dispatch(fetchStart());
     try {
       const user = await Auth.signIn(email, password);
-      console.log('user: ', user);
+
       dispatch(fetchSuccess());
       setAwsCognitoData({
         user,

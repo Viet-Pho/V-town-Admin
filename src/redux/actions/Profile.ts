@@ -10,7 +10,6 @@ export const saveProfile = () => {
   return (dispatch: Dispatch<AppActions>) => {
     dispatch(fetchStart());
 
-    console.log('fetchStart: ', fetchStart);
     jwtAxios
       .get('/api/chatApp/connections')
       .then((data) => {

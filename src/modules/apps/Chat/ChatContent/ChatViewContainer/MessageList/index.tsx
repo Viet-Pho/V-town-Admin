@@ -36,7 +36,6 @@ const MessageList: React.FC<MessagesListProps> = ({
         animation='transition.slideUpIn'
         data={userMessages.messageData}
         renderRow={(item, index) => {
-          console.log('item, authUser: ', item, authUser);
           if (item.sender === authUser.id) {
             return (
               <SenderMessageItem

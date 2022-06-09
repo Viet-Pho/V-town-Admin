@@ -118,7 +118,6 @@ const MessageItem: React.FC<ReplyMailProps> = ({
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  console.log('anchorEl, open: ', anchorEl, open);
   const mailDescription = () => {
     return (
       <Box

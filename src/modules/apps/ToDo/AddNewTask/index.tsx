@@ -74,7 +74,7 @@ const AddNewTask: React.FC<AddNewTaskProps> = ({
             ...data,
             label: taskLabels,
           };
-          console.log('newTask:***********', newTask);
+
           dispatch(onCreateTask(newTask));
           onCloseAddTask();
           resetForm();
