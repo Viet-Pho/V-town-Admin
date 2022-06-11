@@ -21,13 +21,23 @@ const startBilling = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
   if (method === 'POST') {
-    console.log('req.body', req.body);
-    console.log('req.query', req.query);
     try {
       const room = await database('rooms')
         .where('id', pid)
         .select('id', 'availability');
-      console.log('availability', room);
+      // const order = await database('order')
+      //   .where({
+      //     room_id: pid,
+      //   })
+      //   .whereNot({
+      //     status: 0,
+      //   })
+      //   .select(
+      //     'id as orderId',
+      //     'room_id as roomId',
+      //     'user_id as userId',
+      //     'status',
+      //   );
       if (room[0].availability === 1) {
         await database('rooms').where('id', pid).update({
           availability: 0,

@@ -76,8 +76,6 @@ const RoomListing: React.FC<RoomGridProps> = () => {
     }
   };
 
-  // console.log('roomList', room);
-
   const list = roomList,
     total = roomList?.length;
   const {loading} = useSelector<AppState, AppState['common']>(
