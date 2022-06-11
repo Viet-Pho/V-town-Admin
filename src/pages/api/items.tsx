@@ -1,3 +1,4 @@
+import jwtAuth from 'middleware/jwt';
 import database from '../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
 import moment from 'moment';
@@ -13,7 +14,7 @@ export const config = {
   },
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const itemsHandler = async  (req: NextApiRequest, res: NextApiResponse) => {
   const {method} = req;
 
   if (method === 'POST') {
@@ -33,3 +34,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 };
+export default jwtAuth(itemsHandler);
