@@ -1,3 +1,4 @@
+import jwtAuth from 'middleware/jwt';
 import database from '../../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
 export const config = {
@@ -8,7 +9,7 @@ export const config = {
     responseLimit: '6mb',
   },
 };
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handleRoomById = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: {pid},
     method,
@@ -69,3 +70,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 };
+export default jwtAuth(handleRoomById);

@@ -1,7 +1,6 @@
+import jwtAuth from 'middleware/jwt';
 import database from '../../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
-import moment from 'moment';
-import isEmail from 'isemail';
 // import {pid} from 'process';
 
 export const config = {
@@ -12,7 +11,7 @@ export const config = {
     responseLimit: '6mb',
   },
 };
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const itemHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: {pid},
     method,
@@ -59,3 +58,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 };
+export default jwtAuth(itemHandler);

@@ -56,13 +56,21 @@ const RoomListing: React.FC<RoomGridProps> = () => {
     };
     try {
       const response = await startRoom(room.id, userAuth);
-
-      router.push({
-        pathname: `/karaoke/room/${room.id}`,
-        query: {
-          orderId: response.orderId[0],
-        },
-      });
+      if (response.order[0].status === 0) {
+        router.push({
+          pathname: `/karaoke/room/${room.id}`,
+          query: {
+            orderId: response.order[0].orderId,
+          },
+        });
+      } else {
+        router.push({
+          pathname: `/karaoke/room/${room.id}`,
+          query: {
+            orderId: response.order[0],
+          },
+        });
+      }
     } catch (e) {
       console.log(e);
     }
@@ -119,7 +127,7 @@ const RoomListing: React.FC<RoomGridProps> = () => {
             // delay={200}
             responsive={{
               xs: 3,
-              sm: 6,
+              sm: 7,
               xl: 9,
             }}
             data={roomList}
@@ -167,6 +175,18 @@ const RoomListing: React.FC<RoomGridProps> = () => {
                     }}
                   >
                     {room.typeName}
+                  </Box>
+                  <Box
+                    component='p'
+                    sx={{
+                      color: 'text.secondary',
+                      fontSize: 14,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {room.availability === 0 ? <>Ocupied</> : <>Available</>}
                   </Box>
                 </Box>
               </Button>

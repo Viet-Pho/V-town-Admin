@@ -1,3 +1,4 @@
+import jwtAuth from 'middleware/jwt';
 import database from '../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
 
@@ -10,7 +11,7 @@ export const config = {
   },
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handleOrderById = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: {pid},
     method,
@@ -165,3 +166,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 };
+export default jwtAuth(handleOrderById);
