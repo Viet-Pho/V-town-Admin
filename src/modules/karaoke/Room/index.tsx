@@ -20,6 +20,7 @@ import {
   updateItem,
   deleteItem,
   getOrderedItems,
+  calculateBillRoom,
 } from '../../../models/order';
 // MUI
 
@@ -117,6 +118,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
 
   const [menu, setMenu] = useState([]);
   const roomId = router.query.pid;
+  const [room, setRoom] = useState({});
 
   const fetchItem = async () => {
     dispatch(fetchStart());
@@ -149,11 +151,23 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
     }
   };
 
+  const fetchRoomInfo = async () => {
+    dispatch(fetchStart());
+    try {
+      const room = await getRoom(roomId);
+      setRoom(room);
+      dispatch(fetchSuccess());
+    } catch (e: any) {
+      dispatch(fetchError(`${e?.response?.data?.message}`));
+    }
+  };
+
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     fetchItem();
     fetchOrderedItems();
+    fetchRoomInfo();
   }, []);
 
   const onAddToBill = async (item) => {
@@ -247,6 +261,27 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
     }
   };
 
+  const onCalculateRoomTime = async () => {
+    const timeZone = -new Date().getTimezoneOffset() / 60;
+    const result = await calculateBillRoom(router.query.orderId, {
+      roomId,
+      timeZone,
+    });
+    if (result) {
+      const {usingTime, roomPrice, startTime, endTime} = result;
+      setItems([
+        ...items,
+        {
+          name: `${startTime.substring(0, 18)} -> ${endTime.substring(0, 18)}`,
+          price: roomPrice,
+          quantitive: room?.roomName,
+          quantity: usingTime,
+          isRoomBill: true,
+        },
+      ]);
+    }
+  };
+
   return (
     <>
       <Box
@@ -259,6 +294,16 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
         }}
       >
         <IntlMessages id='sidebar.ecommerce.cart' />
+        <Button
+          variant='contained'
+          color='secondary'
+          style={{marginLeft: '20px'}}
+          onClick={() => {
+            onCalculateRoomTime();
+          }}
+        >
+          Calculate Room Time
+        </Button>
       </Box>
       <AppGridContainer>
         <Grid sx={{}} item xs={12} md={5}>
@@ -294,10 +339,12 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                         ${data.price}
                       </StyledTableCell>
                       <StyledTableCell align='center'>
-                        <AddIcon
-                          className='pointer'
-                          onClick={() => onIncrease(data)}
-                        />
+                        {!data.isRoomBill && (
+                          <AddIcon
+                            className='pointer'
+                            onClick={() => onIncrease(data)}
+                          />
+                        )}
                       </StyledTableCell>
                       <StyledTableCell align='center'>
                         <Box
@@ -310,6 +357,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                           // width={}
                         >
                           <TextField
+                            disabled={data?.isRoomBill}
                             style={{minWidth: 80, maxWidth: 100}}
                             value={data?.quantity}
                             onChange={() => checkPoint(data)}
@@ -317,10 +365,12 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                         </Box>
                       </StyledTableCell>
                       <StyledTableCell align='center'>
-                        <RemoveIcon
-                          className='pointer'
-                          onClick={() => onDecrease(data)}
-                        />
+                        {!data.isRoomBill && (
+                          <RemoveIcon
+                            className='pointer'
+                            onClick={() => onDecrease(data)}
+                          />
+                        )}
                       </StyledTableCell>
                       {/* <StyledTableCell align='center'></StyledTableCell> */}
 

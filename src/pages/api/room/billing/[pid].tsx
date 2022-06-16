@@ -1,6 +1,6 @@
 import jwtAuth from 'middleware/jwt';
-import database from '../../../../database';
-import {NextApiRequest, NextApiResponse} from 'next/types';
+import database from 'database';
+import {userRole} from 'constants/user';
 export const config = {
   api: {
     bodyParser: {
@@ -9,7 +9,7 @@ export const config = {
     responseLimit: '6mb',
   },
 };
-const startBilling = async (req: NextApiRequest, res: NextApiResponse) => {
+const startBilling = async (req: any, res: any) => {
   const {
     query: {pid},
     method,
@@ -24,7 +24,8 @@ const startBilling = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const room = await database('rooms')
         .where('id', pid)
-        .select('id', 'availability');
+        .select('id', 'availability')
+        .first();
       // const order = await database('order')
       //   .where({
       //     room_id: pid,
@@ -38,24 +39,29 @@ const startBilling = async (req: NextApiRequest, res: NextApiResponse) => {
       //     'user_id as userId',
       //     'status',
       //   );
-      if (room[0].availability === 1) {
+      if (room && room.availability === 1) {
         await database('rooms').where('id', pid).update({
           availability: 0,
         });
         const order = await database('order').insert({
           room_id: pid,
-          user_id: req.body.userId,
+          roomName: room.name,
+          user_id: req.user?.role === userRole.customer ? req.user?.id : null,
+          created: new Date(),
         });
         return res.status(200).json({order});
       } else {
         const order = await database('order')
           .where({room_id: pid, status: 0})
+          .join('rooms', 'rooms.id', '=', 'order.room_id')
           .select(
-            'id as orderId',
-            'room_id as roomId',
-            'user_id as userId',
-            'status',
-          );
+            'order.id as orderId',
+            'order.room_id as roomId',
+            'rooms.name as roomName',
+            'order.user_id as userId',
+            'order.status',
+          )
+          .first();
         return res.status(200).json({order});
       }
     } catch (error) {
