@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import AppsHeader from '../../../../@crema/core/AppsContainer/AppsHeader';
 import RoomHeader from '../RoomsHeader';
+import DialogConfirmCalculateTime from '../DialogConfirmCalculateTime';
 import {useDispatch, useSelector} from 'react-redux';
 import AppsContent from '../../../../@crema/core/AppsContainer/AppsContent';
 import {alpha, Box, Hidden} from '@mui/material';
@@ -29,6 +30,9 @@ const RoomListing: React.FC<RoomGridProps> = () => {
 
   const {theme} = useThemeContext();
   const [page, setPage] = useState<number>(0);
+  const [isConfirmCalculateTime, setConfirmCalculateTime] =
+    useState<boolean>(false);
+  const [roomSelected, setRoomSelected] = useState<Room>();
 
   const {viewType, filterData} = useSelector<AppState, AppState['ecommerce']>(
     ({ecommerce}) => ecommerce,
@@ -43,31 +47,34 @@ const RoomListing: React.FC<RoomGridProps> = () => {
     fetchRoom();
   }, []);
 
-  // const handleClick = (room: Room) => {
-  //   startRoom(room.id);
+  const openDialogConfirmCalculateTime = (room) => {
+    setConfirmCalculateTime(true);
+    setRoomSelected(room);
+  };
 
-  // }
   const {user} = useAuthUser();
 
-  const createNewOrder = async (room) => {
+  const createNewOrder = async () => {
+    console.log(roomSelected);
+
     const userAuth = {
       userId: user.id,
       userRole: user.role,
     };
     try {
-      const response = await startRoom(room.id, userAuth);
-      if (response.order[0].status === 0) {
+      const response = await startRoom(roomSelected?.id, userAuth);
+      if (response.order?.status === 0) {
         router.push({
-          pathname: `/karaoke/room/${room.id}`,
+          pathname: `/karaoke/room/${roomSelected?.id}`,
           query: {
-            orderId: response.order[0].orderId,
+            orderId: response.order?.orderId,
           },
         });
       } else {
         router.push({
-          pathname: `/karaoke/room/${room.id}`,
+          pathname: `/karaoke/room/${roomSelected?.id}`,
           query: {
-            orderId: response.order[0],
+            orderId: response.order,
           },
         });
       }
@@ -141,7 +148,7 @@ const RoomListing: React.FC<RoomGridProps> = () => {
                   border: 3,
                 }}
                 className='room-hover'
-                onClick={() => createNewOrder(room)}
+                onClick={() => openDialogConfirmCalculateTime(room)}
               >
                 <Box
                   sx={{
@@ -195,6 +202,11 @@ const RoomListing: React.FC<RoomGridProps> = () => {
           />
         </Box>
       </AppsContent>
+      <DialogConfirmCalculateTime
+        isConfirmCalculateTime={isConfirmCalculateTime}
+        onConfirmCalculateTime={() => createNewOrder()}
+        onCloseDialog={() => setConfirmCalculateTime(false)}
+      />
     </>
   );
 };

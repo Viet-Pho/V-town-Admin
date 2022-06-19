@@ -23,8 +23,6 @@ const handleRoomById = async (req: NextApiRequest, res: NextApiResponse) => {
   if (method === 'GET') {
     try {
       const getRoomById = await database('rooms')
-        .join('room_type', 'rooms.room_type', '=', 'room_type.type')
-        .where('rooms.id', pid)
         .select(
           'rooms.id',
           'rooms.name',
@@ -39,7 +37,11 @@ const handleRoomById = async (req: NextApiRequest, res: NextApiResponse) => {
           'room_type.weekday_price as weekdayPrice',
           'room_type.weekend_price as weekendPrice',
           'room_type.extra_time_charge as extraTimeCharge',
-        );
+        )
+        .where('rooms.id', pid)
+        .join('room_type', 'rooms.room_type', '=', 'room_type.type')
+        .first();
+
       return res.status(200).json(getRoomById);
     } catch (e) {
       return res.status(400).json({message: `error: ${e}`});

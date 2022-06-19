@@ -35,3 +35,17 @@ export async function getOrderedItems(pid, query) {
     return [];
   }
 }
+
+const calculateBillRoom = async (orderId: number, requestBody) => {
+  const response = await axiosPost(
+    `/order/calculate-bill-room/${orderId}`,
+    requestBody,
+  );
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return [];
+  }
+};
+
+export {calculateBillRoom};
