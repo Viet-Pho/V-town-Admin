@@ -1,5 +1,5 @@
 import jwtAuth from 'middleware/jwt';
-import {calculateBillUsingRoom} from 'util/room';
+import {calculateHourUsedRoomPrice} from 'util/room';
 import {changeHourWithTimeZone} from 'util/time';
 import database from 'database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
@@ -49,7 +49,7 @@ const handleOrderById = async (req: NextApiRequest, res: NextApiResponse) => {
 
       await database('order').where('id', orderId).update('end_time', now);
 
-      const result = calculateBillUsingRoom(
+      const result = calculateHourUsedRoomPrice(
         created,
         now,
         room.extra_time_charge,
