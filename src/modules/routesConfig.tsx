@@ -10,6 +10,7 @@ import {
   RiUserReceived2Line,
   RiMoneyDollarCircleLine,
   RiBillFill,
+  RiTableFill,
 } from 'react-icons/ri';
 import {BiCarousel, BiCartAlt, BiErrorAlt} from 'react-icons/bi';
 import {
@@ -105,6 +106,14 @@ const routesConfig: RouterConfigData[] = [
         type: 'item',
         icon: <RiBillFill />,
         url: '/karaoke/rooms',
+      },
+      {
+        id: 'tables',
+        title: 'Tables',
+        messageId: 'sidebar.app.dashboard.tables',
+        type: 'item',
+        icon: <RiTableFill />,
+        url: '/table/locations',
       },
     ],
   },
