@@ -12,6 +12,8 @@ import {searchRooms} from '../../../../models/room';
 import AppGrid from '../../../../@crema/core/AppGrid';
 import ListEmptyResult from '../../../../@crema/core/AppList/ListEmptyResult';
 import {Room} from 'types/models/Room';
+import {getRoomTypes} from 'models/room-type';
+import {getLocations} from 'models/location';
 import Button from '@mui/material/Button';
 import {Fonts} from '../../../../shared/constants/AppEnums';
 import {useRouter} from 'next/router';
@@ -30,21 +32,56 @@ const RoomListing: React.FC<RoomGridProps> = () => {
 
   const {theme} = useThemeContext();
   const [page, setPage] = useState<number>(0);
-  const [isConfirmCalculateTime, setConfirmCalculateTime] =
-    useState<boolean>(false);
+  const [isConfirmCalculateTime, setConfirmCalculateTime] = useState<boolean>(false);
   const [roomSelected, setRoomSelected] = useState<Room>();
 
-  const {viewType, filterData} = useSelector<AppState, AppState['ecommerce']>(
-    ({ecommerce}) => ecommerce,
-  );
+  const {viewType, filterData} = useSelector<AppState, AppState['ecommerce']>(({ecommerce}) => ecommerce);
+  const [roomStore, setRoomStore] = useState([]);
   const [roomList, setRoomList] = useState([]);
+  const initFilter = [{id: -1, name: 'All'}];
+  const [roomTypes, setRoomTypes] = useState(initFilter);
+  const [locations, setLocations] = useState(initFilter);
+  const roomStatus = [
+    ...initFilter,
+    {
+      id: 0,
+      name: 'Ocupied',
+    },
+    {
+      id: 1,
+      name: 'Available',
+    },
+  ];
 
   const fetchRoom = async () => {
     const roomList = await searchRooms();
     setRoomList(roomList);
+    setRoomStore(roomList);
   };
+  const fetchRoomType = async () => {
+    const roomTypes = await getRoomTypes();
+
+    setRoomTypes([...initFilter, ...roomTypes]);
+  };
+  const fetchLocation = async () => {
+    const locations = await getLocations();
+
+    setLocations([...initFilter, ...locations]);
+  };
+  const filterRoom = async ({status, type, location}) => {
+    const roomList = roomStore.filter(
+      (room: any) =>
+        (status === -1 || room?.availability === status) &&
+        (location === -1 || room?.location === location) &&
+        (type === -1 || room?.roomType === type),
+    );
+    setRoomList(roomList);
+  };
+
   useEffect(() => {
     fetchRoom();
+    fetchRoomType();
+    fetchLocation();
   }, []);
 
   const openDialogConfirmCalculateTime = (room) => {
@@ -85,9 +122,7 @@ const RoomListing: React.FC<RoomGridProps> = () => {
 
   const list = roomList,
     total = roomList?.length;
-  const {loading} = useSelector<AppState, AppState['common']>(
-    ({common}) => common,
-  );
+  const {loading} = useSelector<AppState, AppState['common']>(({common}) => common);
 
   const onPageChange = (value: number) => {
     setPage(value);
@@ -107,6 +142,10 @@ const RoomListing: React.FC<RoomGridProps> = () => {
           totalRooms={total}
           onPageChange={onPageChange}
           onSearch={searchRoom}
+          roomTypes={roomTypes}
+          locations={locations}
+          status={roomStatus}
+          filterRoom={filterRoom}
         />
       </AppsHeader>
 
@@ -196,9 +235,7 @@ const RoomListing: React.FC<RoomGridProps> = () => {
                 </Box>
               </Button>
             )}
-            ListEmptyComponent={
-              <ListEmptyResult content='No product found' loading={loading} />
-            }
+            ListEmptyComponent={<ListEmptyResult content='No product found' loading={loading} />}
           />
         </Box>
       </AppsContent>
