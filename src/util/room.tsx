@@ -14,7 +14,7 @@ type BillUsingRoom = {
   endTime: Date;
 };
 
-const calculateBillUsingRoom = (
+const calculateHourUsedRoomPrice = (
   start: Date,
   end: Date,
   extraTimeCharge: number,
@@ -131,4 +131,4 @@ const getNormalAndExtraTimeFromUsingTimeEachDay = (
   };
 };
 
-export {calculateBillUsingRoom};
+export {calculateHourUsedRoomPrice};

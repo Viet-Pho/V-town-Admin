@@ -15,6 +15,7 @@ import {Item} from '../../../types/models/Items';
 import ItemHeader from './ItemsHeader';
 // import {searchItems} from '../../../../models/item';
 import {fetchItems} from '../../../models/items';
+import {getRoom} from '../../../models/room';
 import {
   addItem,
   updateItem,
@@ -119,6 +120,14 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
   const [menu, setMenu] = useState([]);
   const roomId = router.query.pid;
   const [room, setRoom] = useState({});
+
+  const styleRoomPrice = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: '5px',
+    fontWeight: 300,
+    fontSize: '12px',
+  };
 
   const fetchItem = async () => {
     dispatch(fetchStart());
@@ -268,14 +277,19 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
       timeZone,
     });
     if (result) {
+      console.log(room);
       const {usingTime, roomPrice, startTime, endTime} = result;
       setItems([
         ...items,
         {
-          name: `${startTime.substring(0, 18)} -> ${endTime.substring(0, 18)}`,
-          price: roomPrice,
-          quantitive: room?.roomName,
-          quantity: usingTime,
+          name: room.name,
+          quantitive: `${startTime
+            .substring(0, 16)
+            .split('T')
+            .join(' ')} -> ${endTime.substring(0, 16).split('T').join(' ')}`,
+          totalPrice: roomPrice,
+          price: room.weekdayPrice,
+          quantity: usingTime.toFixed(2),
           isRoomBill: true,
         },
       ]);
@@ -333,10 +347,27 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                         </Box>
                       </StyledTableCell>
                       <StyledTableCell
-                        align='center'
+                        align={data.isRoomBill ? 'left' : 'center'}
                         style={{fontWeight: Fonts.MEDIUM}}
                       >
-                        ${data.price}
+                        {data.isRoomBill ? (
+                          <>
+                            <p style={styleRoomPrice}>
+                              <span>weekday price: </span>
+                              <span>${room.weekdayPrice}</span>
+                            </p>
+                            <p style={styleRoomPrice}>
+                              <span>weekend price: </span>
+                              <span>${room.weekendPrice}</span>
+                            </p>
+                            <p style={styleRoomPrice}>
+                              <span>extra price: </span>
+                              <span>${room.extraTimeCharge}</span>
+                            </p>
+                          </>
+                        ) : (
+                          `$ ${data.price}`
+                        )}
                       </StyledTableCell>
                       <StyledTableCell align='center'>
                         {!data.isRoomBill && (
@@ -373,20 +404,30 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                         )}
                       </StyledTableCell>
                       {/* <StyledTableCell align='center'></StyledTableCell> */}
-
-                      <StyledTableCell
-                        align='center'
-                        style={{fontWeight: Fonts.MEDIUM}}
-                      >
-                        {data?.quantity ? (
-                          <>${data.price * data?.quantity}</>
-                        ) : (
-                          <>$0</>
-                        )}
-                      </StyledTableCell>
-                      <StyledTableCell component='th' scope='row'>
-                        <CancelIcon onClick={() => onRemoveItem(data)} />
-                      </StyledTableCell>
+                      {data.isRoomBill ? (
+                        <StyledTableCell
+                          align='center'
+                          style={{fontWeight: Fonts.MEDIUM}}
+                        >
+                          {data.totalPrice}
+                        </StyledTableCell>
+                      ) : (
+                        <>
+                          <StyledTableCell
+                            align='center'
+                            style={{fontWeight: Fonts.MEDIUM}}
+                          >
+                            {data?.quantity ? (
+                              <>${data.price * data?.quantity}</>
+                            ) : (
+                              <>$0</>
+                            )}
+                          </StyledTableCell>
+                          <StyledTableCell component='th' scope='row'>
+                            <CancelIcon onClick={() => onRemoveItem(data)} />
+                          </StyledTableCell>
+                        </>
+                      )}
                     </TableRowHover>
                   ))}
                 </TableBody>
