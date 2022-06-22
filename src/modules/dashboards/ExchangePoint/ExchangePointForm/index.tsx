@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import {Customer} from 'types/models/dashboards/ExchangePoint';
 import {createExchangePoint} from '../../../../models/exchange-point';
-import {searchCustomers} from '../../../../models/customer';
+import {searchCustomers, getCustomerDetail} from '../../../../models/customer';
 import Alert from '@mui/material/Alert';
 import {
   fetchError,
@@ -34,6 +34,7 @@ import {styled} from '@mui/material/styles';
 
 interface ExchangePointProps {
   customer: Customer;
+  initPoint: Number
 }
 const HeaderWrapper = styled('div')(({theme}) => {
   return {
@@ -83,8 +84,9 @@ const AvatarViewWrapper = styled('div')(({theme}) => {
 
 const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
   const dispatch = useDispatch();
+  
   const [customer, setCustomer] = useState({...props.customer});
-  const [points, setPoints] = useState(0);
+  const [points, setPoints] = useState(props?.initPoint || 0);
   const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
   const [successResult, setSuccessResult] = useState({totalPoints: 0});
   const [showCardDisabledAlert, setShowCardDisabledAlert] = useState(false);
@@ -94,6 +96,18 @@ const ExchangePointForm: React.FC<ExchangePointProps> = (props) => {
   const {
     user: {id: userId},
   } = useAuthUser();
+
+  useEffect(() => {    
+    if (customer.id) {
+      getDetailCustomer();
+    }
+  }, [customer.id]);
+
+  const getDetailCustomer = async () => {
+    const customerInfo = await getCustomerDetail(customer.id)
+    setCustomer(customerInfo);
+    pointsInput.current?.focus();
+  }
 
   const {messages} = useIntl();
 
