@@ -56,6 +56,7 @@ import AppsContent from '@crema/core/AppsContainer/AppsContent';
 import {useThemeContext} from '@crema/utility/AppContextProvider/ThemeContextProvider';
 import AppGrid from '@crema/core/AppGrid';
 import ListEmptyResult from '@crema/core/AppList/ListEmptyResult';
+import BillDialog from '../../bill/BillDialog';
 
 const StyledTableCell = styled(TableCell)(() => ({
   fontSize: 12,
@@ -116,10 +117,12 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
   const {theme} = useThemeContext();
 
   const [items, setItems] = useState([]);
+  const [hourPriceItems, setHourPriceItems] = useState([]);
 
   const [menu, setMenu] = useState([]);
   const roomId = router.query.pid;
   const [room, setRoom] = useState({});
+  const [openBillingDialog, setOpenBillingDialog] = useState(false);
 
   const styleRoomPrice = {
     display: 'flex',
@@ -144,7 +147,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
   const fetchOrderedItems = async () => {
     dispatch(fetchStart());
     try {
-      const orderedItems = await getOrderedItems(router.query.orderId, {
+      const {orderedItems} = await getOrderedItems(router.query.orderId, {
         roomId,
       });
       setItems(orderedItems);
@@ -186,7 +189,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
 
       const addNewItem = await addItem(router.query.orderId, {itemId});
 
-      const orderedItems = await getOrderedItems(router.query.orderId, {
+      const {orderedItems} = await getOrderedItems(router.query.orderId, {
         roomId,
       });
       setItems(orderedItems);
@@ -204,7 +207,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
     dispatch(fetchStart());
     try {
       await updateItem(router.query.orderId, {orderItemId, quantity});
-      const orderedItems = await getOrderedItems(router.query.orderId, {
+      const {orderedItems} = await getOrderedItems(router.query.orderId, {
         roomId,
       });
       setItems(orderedItems);
@@ -221,7 +224,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
     dispatch(fetchStart());
     try {
       await deleteItem(orderItemId);
-      const orderedItems = await getOrderedItems(router.query.orderId, {
+      const {orderedItems} = await getOrderedItems(router.query.orderId, {
         roomId,
       });
       setItems(orderedItems);
@@ -239,7 +242,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
     dispatch(fetchStart());
     try {
       await addItem(router.query.orderId, {itemId, quantity});
-      const orderedItems = await getOrderedItems(router.query.orderId, {
+      const {orderedItems} = await getOrderedItems(router.query.orderId, {
         roomId,
       });
       setItems(orderedItems);
@@ -258,7 +261,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
     dispatch(fetchStart());
     try {
       await updateItem(router.query.orderId, {orderItemId, quantity, onMinus});
-      const orderedItems = await getOrderedItems(router.query.orderId, {
+      const {orderedItems} = await getOrderedItems(router.query.orderId, {
         roomId,
       });
       setItems(orderedItems);
@@ -277,22 +280,20 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
       timeZone,
     });
     if (result) {
-      console.log(room);
       const {usingTime, roomPrice, startTime, endTime} = result;
-      setItems([
-        ...items,
-        {
-          name: room.name,
-          quantitive: `${startTime
-            .substring(0, 16)
-            .split('T')
-            .join(' ')} -> ${endTime.substring(0, 16).split('T').join(' ')}`,
-          totalPrice: roomPrice,
-          price: room.weekdayPrice,
-          quantity: usingTime.toFixed(2),
-          isRoomBill: true,
-        },
-      ]);
+      const hourPriceRecord = {
+        name: room.name,
+        quantitive: `${startTime
+          .substring(0, 16)
+          .split('T')
+          .join(' ')} -> ${endTime.substring(0, 16).split('T').join(' ')}`,
+        totalPrice: roomPrice,
+        price: room.weekdayPrice,
+        quantity: usingTime.toFixed(2),
+        isRoomBill: true,
+      };
+      setHourPriceItems([hourPriceRecord]);
+      setItems(items);
     }
   };
 
@@ -328,7 +329,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                   <TableHeading />
                 </TableHead>
                 <TableBody>
-                  {items.map((data: any) => (
+                  {[...items, ...hourPriceItems].map((data: any) => (
                     <TableRowHover key={data?.id} className='item-hover'>
                       <StyledTableCell>
                         <Box display='flex'>
@@ -462,8 +463,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                 <Button
                   variant='contained'
                   color='secondary'
-                  // onClick={() => {
-                  // }}
+                  onClick={() => setOpenBillingDialog(true)}
                 >
                   Pay
                 </Button>
@@ -630,6 +630,15 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
           </AppCard>
         </Grid>
         <AppInfoView />
+        <BillDialog
+          open={openBillingDialog}
+          onClose={() => setOpenBillingDialog(false)}
+          orderedItems={items}
+          room={room}
+          customer={{}}
+          hourPriceItems={hourPriceItems}
+          orderId={router.query.orderId}
+        />
       </AppGridContainer>
     </>
   );

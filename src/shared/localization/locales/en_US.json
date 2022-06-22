@@ -788,5 +788,8 @@
   "exchangepoint.clearForm": "Clear Form",
   "exchangepoint.exchange": "Exchange",
   "exchangepoint.totalPoint": "Total Points",
-  "exchangepoint.cardDisabled": "This card was disabled. You can not exchange point for this Customer"
+  "exchangepoint.cardDisabled": "This card was disabled. You can not exchange point for this Customer",
+  "bill.previewBill": "Preview Bill",
+  "bill.billSummary": "Bill Summary",
+  "bill.dialogTitle": "Billing Summary"
 }

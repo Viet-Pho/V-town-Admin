@@ -8,3 +8,12 @@ export async function searchCustomers(query) {
     return [];
   }
 }
+
+export async function getCustomerDetail(customerId) {
+  const response = await axiosGet(`/customers/${customerId}`);
+  if (response.status === 200) {
+    return response.data;
+  } else {
+    return {};
+  }
+}

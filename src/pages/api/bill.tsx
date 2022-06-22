@@ -1,7 +1,8 @@
 import database from '../../database';
-import {NextApiRequest, NextApiResponse} from 'next/types';
+import jwtAuth from 'middleware/jwt';
+import {NextApiResponse} from 'next/types';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const billHandler = async (req, res: NextApiResponse) => {
   const {method} = req;
   if (method === 'GET') {
     const billList = await database('bill').select(
@@ -18,50 +19,36 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       'note',
       'status',
     );
-    // const roomList = await database('rooms')
-    //   .join('room_type', 'rooms.room_type', '=', 'room_type.type')
-    //   .select(
-    //     'rooms.id',
-    //     'rooms.name',
-    //     'rooms.room_type as roomType',
-    //     'rooms.location',
-    //     'rooms.wallpaper',
-    //     'rooms.availability',
-    //     'rooms.room_type as roomType',
-    //     'room_type.type_name as typeName',
-    //     'room_type.area_size as areaSize',
-    //     'room_type.max_num_ppl as maxNumPpl',
-    //     'room_type.weekday_price as weekdayPrice',
-    //     'room_type.weekend_price as weekendPrice',
-    //     'room_type.extra_time_charge as extraTimeCharge',
-    //   );
     return res.status(200).json(billList);
   }
-  // if (method === 'POST') {
-  //   const orderId = await database('order').insert({
-  //     room_id: req.body.roomId,
-  //     user_id: req.body.userId,
-  //   });
-  //   console.log('orderId: ', orderId);
-  //   await database('order_items').insert({
-  //     order_id: orderId,
-  //   });
-  //   const postNewBill = await database('bill').insert({
-  //     billing_object: req.body.billingObject,
-  //     order_id: orderId,
-  //     customer_id: req.body.customerId,
-  //     staff_id: req.body.staffId,
-  //     total_price: req.body.totalPrice,
-  //     service_tip: req.body.serviceTip,
-  //     point_earned: req.body.pointEarned,
-  //     point_used: req.body.pointUsed,
-  //     discount: req.body.discount,
-  //     tax: req.body.tax,
-  //     point: req.body.point,
-  //     note: req.body.note,
-  //     status: false,
-  //   });
-  //   console.log('billId', postNewBill);
-  //   return res.status(200).json(postNewBill);
-  // }
+  if (method === 'POST') {
+    const {orderId, customerId, tax, tip, totalPrice, roomId, discountPoint} = req.body;
+
+    const {role} = req.user
+    if (![1,2].includes(role)) return res.status(403).json({message: "You don't have permission to do this action." })
+
+    const newBill = {
+      billing_object: 0,
+      order_id: orderId,
+      customer_id: customerId || null,
+      staff_id: req?.user?.id,
+      // point_earned: 
+      // point_used:
+      // discount:
+      tax,
+      service_tip: tip,
+      total_price: totalPrice,
+      point_used: discountPoint
+    }
+    await database('bill').insert(newBill)
+    await database('order').where('id', orderId).update({status: 2})
+    await database('rooms').where('id', roomId).update({availability: 1})
+
+    return res.status(200).send({message: "Create bill successful."});
+  }
+
+  res.setHeader('Allow', ['POST', 'GET']);
+  return res.status(405).end(`Method ${method} Not Allowed`);
 };
+
+export default jwtAuth(billHandler)

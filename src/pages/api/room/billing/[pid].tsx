@@ -45,7 +45,6 @@ const startBilling = async (req: any, res: any) => {
         });
         const order = await database('order').insert({
           room_id: pid,
-          roomName: room.name,
           user_id: req.user?.role === userRole.customer ? req.user?.id : null,
           created: new Date(),
         });

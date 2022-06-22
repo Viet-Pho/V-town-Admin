@@ -5,23 +5,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import ExchangePointForm from '../ExchangePointForm';
+import BillForm from './BillForm';
 import {useIntl} from 'react-intl';
 
-export default function ExchangePointDialog(props) {
+export default function BillDialog(props) {
   // eslint-disable-next-line react/prop-types
-  const {open, onClose, customerId, initPoint} = props;
+  const {open, onClose, orderedItems, hourPriceItems, customer, room, orderId} = props;
   const {messages} = useIntl();
-
-  const descriptionElementRef = React.useRef<HTMLElement>(null);
-  React.useEffect(() => {
-    if (open) {
-      const {current: descriptionElement} = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [open]);
 
   return (
     <div>
@@ -34,22 +24,15 @@ export default function ExchangePointDialog(props) {
         aria-describedby='scroll-dialog-description'
       >
         <DialogTitle id='scroll-dialog-title'>
-          {messages['sidebar.app.dashboard.exchangePoint'] as string}
+          {messages['bill.dialogTitle'] as string}
         </DialogTitle>
         <DialogContent dividers={true}>
-          <ExchangePointForm
-            customer={{
-              id: customerId || 0,
-              cardId: '',
-              phoneNumber: '',
-              firstName: '',
-              lastName: '',
-              email: '',
-              address: '',
-              totalPoints: 0,
-              avatar: '',
-            }}
-            initPoint={initPoint}
+          <BillForm
+            orderedItems={orderedItems}
+            hourPriceItems={hourPriceItems}
+            customer={customer}
+            room={room}
+            orderId={orderId}
           />
         </DialogContent>
       </Dialog>
