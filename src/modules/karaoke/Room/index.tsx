@@ -410,7 +410,7 @@ const Rooms: React.FC<ItemGridProps> = (props) => {
                           align='center'
                           style={{fontWeight: Fonts.MEDIUM}}
                         >
-                          {data.totalPrice}
+                          ${data.totalPrice}
                         </StyledTableCell>
                       ) : (
                         <>

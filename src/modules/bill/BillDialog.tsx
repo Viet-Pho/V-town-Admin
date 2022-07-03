@@ -1,5 +1,4 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
+import React, {useState, useRef, useEffect} from 'react';
 import Dialog, {DialogProps} from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,7 +9,8 @@ import {useIntl} from 'react-intl';
 
 export default function BillDialog(props) {
   // eslint-disable-next-line react/prop-types
-  const {open, onClose, orderedItems, hourPriceItems, customer, room, orderId} = props;
+  const {open, onClose, orderedItems, hourPriceItems, customer, room, orderId} =
+    props;
   const {messages} = useIntl();
 
   return (

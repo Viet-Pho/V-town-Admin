@@ -24,6 +24,7 @@ import {createBill} from '../../models/bill';
 // MUI
 
 import {Grid} from '@mui/material';
+import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
 import Table from '@mui/material/Table';
 import TableHead from '@mui/material/TableHead';
@@ -44,6 +45,7 @@ import IntlMessages from '../../@crema/utility/IntlMessages';
 import {AppGridContainer} from '../../@crema';
 import AppAnimate from '../../@crema/core/AppAnimate';
 import AppTableContainer from '@crema/core/AppTableContainer';
+import QRReader from './qrcode/QRReader';
 import ReactToPrint from 'react-to-print';
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -114,17 +116,16 @@ const BillForm: React.FC<ItemGridProps> = (props) => {
   const createNewBill = async () => {
     dispatch(fetchStart());
     try {
-      
       const newBill = {
         orderId,
-        customerId: null, 
+        customerId: null,
         tax: getTax(),
         tip,
         totalPrice: calculateTotalPrice(),
         roomId: room.id,
-        discountPoint
-      }
-      await createBill(newBill)
+        discountPoint,
+      };
+      await createBill(newBill);
       dispatch(fetchSuccess());
       dispatch(showMessage('Create bill successful.'));
     } catch (e: any) {
@@ -133,13 +134,16 @@ const BillForm: React.FC<ItemGridProps> = (props) => {
   };
 
   const backToRoomsPage = () => {
-    router.push('/karaoke/rooms');
-  }
+    // router.push('/karaoke/rooms');
+    window.location.href = '/karaoke/rooms';
+  };
 
   const calculateTotalPrice = () => {
     const floatDiscountPoint = !!discountPoint ? parseFloat(discountPoint) : 0;
     const floatTip = !!tip ? parseFloat(tip) : 0;
-    return round2Digits(total + getTax() - floatDiscountPoint + floatTip - discount);
+    return round2Digits(
+      total + getTax() - floatDiscountPoint + floatTip - discount,
+    );
   };
 
   const calculateSumOrderedItems = () => {
@@ -156,6 +160,18 @@ const BillForm: React.FC<ItemGridProps> = (props) => {
   const [discountPoint, setDiscountPoint] = useState(0);
   const [tip, setTip] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [isScanQRCode, setScanQRCode] = useState(false);
+  const [points, setPoint] = useState(-1);
+  const [customerId, setCustomerId] = useState(null);
+
+  const closeScanQRCode = () => {
+    setScanQRCode(false);
+  };
+
+  const setExPoints = ({totalPoints, id}) => {
+    setPoint(totalPoints);
+    setCustomerId(id);
+  };
 
   useEffect(() => {
     // fetchOrderedItems();
@@ -251,6 +267,7 @@ const BillForm: React.FC<ItemGridProps> = (props) => {
                   variant='contained'
                   color='primary'
                   onClick={() => setOpenExchangeDialog(true)}
+                  disabled={isScanQRCode || !customerId}
                 >
                   Exchange Points
                 </Button>
@@ -259,6 +276,7 @@ const BillForm: React.FC<ItemGridProps> = (props) => {
                     trigger={() => (
                       <Button
                         variant='contained'
+                        disabled={isScanQRCode}
                         color='secondary'
                       >
                         Create bill and Print
@@ -360,13 +378,30 @@ const BillForm: React.FC<ItemGridProps> = (props) => {
                     <Box sx={{color: 'text.secondary', mr: 5}}>
                       Exchangeable points:
                     </Box>
-                    <Box sx={{color: 'text.secondary'}}>
-                      <ImQrcode />
+                    <Box
+                      sx={{
+                        color: 'text.secondary',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {points >= 0 ? (
+                        points
+                      ) : (
+                        <>
+                          <ImQrcode onClick={() => setScanQRCode(true)} />
+                          <span style={{marginInline: 5}}>
+                            Click icon to scan
+                          </span>
+                        </>
+                      )}
                     </Box>
                   </Box>
                   <TextField
-                    style={{minWidth: 80, maxWidth: 100}}
+                    style={{width: 100}}
                     value={discountPoint}
+                    disabled={points <= 0}
+                    InputProps={{inputProps: {min: 0, max: points}}}
                     type='number'
                     onChange={(event) => setDiscountPoint(event.target.value)}
                   ></TextField>
@@ -389,10 +424,13 @@ const BillForm: React.FC<ItemGridProps> = (props) => {
           open={openExchangeDialog}
           onClose={() => setOpenExchangeDialog(false)}
           initPoint={calculateTotalPrice()}
-          customerId={1}
+          customerId={customerId}
         />
         <AppInfoView />
       </AppGridContainer>
+      {isScanQRCode && (
+        <QRReader closeScanQRCode={closeScanQRCode} setPoint={setExPoints} />
+      )}
     </>
   );
 };

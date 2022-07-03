@@ -115,22 +115,26 @@ const customerDetailHandler = async (
   }
   if (method === 'GET') {
     try {
-      let customer = database('customers');
-      if (!!pid) customer = customer.where('id', pid);
-      const getCustomer = await customer.select(
-        'id',
-        'card_id as cardId',
-        'first_name as firstName',
-        'last_name as lastName',
-        'phone_number as phoneNumber',
-        'email',
-        'address',
-        'gender',
-        'birthday',
-        'avatar',
-        'age',
-      );
-      res.status(200).json(getCustomer);
+      if (!!pid) {
+        const customer = database('customers')
+          .join('users', 'customers.user_id', 'users.id')
+          .select(
+            'users.id as userId',
+            'card_id as cardId',
+            'users.first_name as firstName',
+            'users.last_name as lastName',
+            'phone_number as phoneNumber',
+            'customers.email',
+            'address',
+            'gender',
+            'birthday',
+            'avatar',
+            'age',
+          )
+          .where('id', pid);
+
+        res.status(200).json(customer);
+      }
     } catch (error) {
       return res.status(400).send({message: ` ${error}`});
     }

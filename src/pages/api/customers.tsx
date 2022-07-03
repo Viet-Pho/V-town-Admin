@@ -19,6 +19,7 @@ const customerHandler = async (req, res) => {
   switch (method) {
     case 'GET': {
       let queryBuilder = database('customers')
+        .join('users', 'users.id', 'customers.user_id')
         .leftJoin('cards', 'cards.card_number', 'customers.card_id')
         .where('customers.is_deleted', false);
 
@@ -30,7 +31,7 @@ const customerHandler = async (req, res) => {
           .orWhereLike('phone_number', likeStringSearchText)
           .orWhereLike('first_name', likeStringSearchText)
           .orWhereLike('last_name', likeStringSearchText)
-          .orWhereLike('email', likeStringSearchText)
+          .orWhereLike('customers.email', likeStringSearchText)
           .orWhereLike('address', likeStringSearchText);
       }
 
@@ -54,7 +55,7 @@ const customerHandler = async (req, res) => {
           'first_name as firstName',
           'last_name as lastName',
           'phone_number as phoneNumber',
-          'email',
+          'customers.email',
           'age',
           'birthday',
           'address',
