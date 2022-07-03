@@ -14,7 +14,7 @@ export const config = {
   },
 };
 
-const itemsHandler = async  (req: NextApiRequest, res: NextApiResponse) => {
+const itemsHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {method} = req;
 
   if (method === 'POST') {
