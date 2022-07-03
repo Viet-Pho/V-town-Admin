@@ -9,9 +9,17 @@ const auth = async (req, res) => {
   }
   const {id: userId} = req.user;
   const [user] = await database('users')
-    .where('id', userId)
-    .where('is_deleted', 0)
-    .select('username', 'account_type as role', 'id', 'email', 'confirmed');
+    .join('customers', 'customers.user_id', 'users.id')
+    .where('users.id', userId)
+    .where('users.is_deleted', 0)
+    .select(
+      'username',
+      'account_type as role',
+      'users.id',
+      'users.email',
+      'confirmed',
+      'card_id as cardId',
+    );
 
   if (!user) return res.status(404).end(`User ${userId} not found`);
 

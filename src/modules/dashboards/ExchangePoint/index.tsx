@@ -2,7 +2,6 @@ import React from 'react';
 import ExchangePointForm from './ExchangePointForm';
 
 const ExchangePoint = () => {
-
   return (
     <>
       <ExchangePointForm
@@ -14,8 +13,10 @@ const ExchangePoint = () => {
           lastName: '',
           email: '',
           address: '',
-          totalPoints: 0
+          totalPoints: 0,
+          avatar: '',
         }}
+        initPoint={0}
       />
     </>
   );
