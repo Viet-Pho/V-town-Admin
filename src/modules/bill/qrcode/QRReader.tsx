@@ -56,7 +56,7 @@ const QRReader = (props) => {
             }
           }
         }}
-        constraints={{facingMode: 'user'}}
+        constraints={{facingMode: 'environment'}}
         ViewFinder={ViewFinder}
       />
       <Button
