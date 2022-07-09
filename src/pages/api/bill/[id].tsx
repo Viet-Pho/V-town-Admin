@@ -44,12 +44,32 @@ const billHandler = async (req, res: NextApiResponse) => {
         database.raw(
           `CONCAT(customer.first_name, ' ', customer.last_name) as "customerName"`,
         ),
-      );
+      )
+      .first();
     return res.status(200).json(billList);
   } else if (method === 'PUT') {
-    const form = {...req.body};
+    const {
+      //   billingObject,
+      serviceTip,
+      tax,
+      discount,
+      pointEarned,
+      pointUsed,
+      totalPrice,
+      note,
+      status,
+    } = req.body;
 
-    await database('bill').where('id', id).update(form);
+    await database('bill').where('id', id).update({
+      service_tip: serviceTip,
+      tax,
+      discount,
+      point_earned: pointEarned,
+      point_used: pointUsed,
+      note,
+      status,
+      total_price: totalPrice,
+    });
 
     return res.status(200).send({message: 'Update bill successful.'});
   } else if (method === 'DELETE') {

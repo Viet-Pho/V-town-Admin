@@ -35,7 +35,7 @@ const billHandler = async (req, res: NextApiResponse) => {
     const {total} =
       (await queryBuilder.clone().count('bill.id as total').first()) || {};
 
-    const billList = await queryBuilder
+    const bills = await queryBuilder
       .offset((page - 1) * limit)
       .limit(limit)
       .select(
@@ -60,7 +60,7 @@ const billHandler = async (req, res: NextApiResponse) => {
         ),
       );
 
-    return res.status(200).json({total, billList});
+    return res.status(200).json({total, bills});
   } else if (method === 'POST') {
     const {orderId, customerId, tax, tip, totalPrice, roomId, discountPoint} =
       req.body;
