@@ -37,6 +37,7 @@ import {
   AiOutlineLayout,
   AiOutlineUnorderedList,
   AiOutlineUserAdd,
+  AiOutlineSetting
 } from 'react-icons/ai';
 import {ReactNode} from 'react';
 import {RoutePermittedRole} from '../shared/constants/AppConst';
@@ -114,6 +115,14 @@ const routesConfig: RouterConfigData[] = [
         type: 'item',
         icon: <RiTableFill />,
         url: '/table/locations',
+      },
+      {
+        id: 'settings',
+        title: 'Settings',
+        messageId: 'sidebar.app.dashboard.settings',
+        type: 'item',
+        icon: <AiOutlineSetting />,
+        url: '/settings',
       },
     ],
   },
