@@ -6,6 +6,33 @@ import {
   RiBillLine,
 } from 'react-icons/ri';
 import {CgUserList} from 'react-icons/cg';
+import {BiCarousel, BiCartAlt, BiErrorAlt} from 'react-icons/bi';
+import {
+  BsBriefcase,
+  BsCart4,
+  BsChatDots,
+  BsCurrencyBitcoin,
+  BsQuestionDiamond,
+  BsFillFilePersonFill,
+  BsPersonLinesFill,
+} from 'react-icons/bs';
+import {DiHtml5Multimedia} from 'react-icons/di';
+import {
+  MdOutlineAnalytics,
+  MdOutlineContactPhone,
+  MdOutlineContactSupport,
+  MdOutlineManageAccounts,
+} from 'react-icons/md';
+import {CgFeed} from 'react-icons/cg';
+import {ImFeed, ImLab} from 'react-icons/im';
+import {GrDatabase, GrNavigate} from 'react-icons/gr';
+import {VscTable, VscTools} from 'react-icons/vsc';
+import {
+  AiOutlineLayout,
+  AiOutlineUnorderedList,
+  AiOutlineUserAdd,
+  AiOutlineSetting,
+} from 'react-icons/ai';
 import {ReactNode} from 'react';
 import {RoutePermittedRole} from '../shared/constants/AppConst';
 
@@ -91,7 +118,15 @@ const routesConfig: RouterConfigData[] = [
         type: 'item',
         icon: <RiBillLine />,
         url: '/management/bill',
-      }
+      },
+      {
+        id: 'settings',
+        title: 'Settings',
+        messageId: 'sidebar.app.dashboard.settings',
+        type: 'item',
+        icon: <AiOutlineSetting />,
+        url: '/settings',
+      },
     ],
   },
 ];
