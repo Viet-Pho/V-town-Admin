@@ -38,7 +38,7 @@ interface ItemGridProps {
   onCloseAddCustomer: () => void;
 }
 
-const Menu: React.FC<ItemGridProps> = (props) => {
+const Menu: React.FC<any> = (props) => {
   const {isEditCustomerOpen, isCustomerInfoOpen} = props;
   const dispatch = useDispatch();
 

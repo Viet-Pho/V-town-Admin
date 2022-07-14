@@ -138,7 +138,7 @@ const handleOrderById = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (method === 'GET') {
     try {
-      const order = await database('order').where('id', pid).first('*')
+      const order = await database('order').where('id', pid).first('*');
       const orderedItems = await database('order')
         .select(
           'order_items.id as orderItemId',
@@ -156,7 +156,7 @@ const handleOrderById = async (req: NextApiRequest, res: NextApiResponse) => {
         .leftJoin('order_items', 'order_items.order_id', '=', 'order.id')
         .leftJoin('items', 'items.id', '=', 'order_items.item_id')
         .where('order_items.order_id', pid)
-        .whereNot('order_items.status', 2)
+        .whereNot('order_items.status', 2);
 
       return res.status(200).json({...order, orderedItems});
     } catch (e) {

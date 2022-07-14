@@ -8,7 +8,7 @@ import {AiOutlineLock} from 'react-icons/ai';
 import {BsDoorOpenFill} from 'react-icons/bs';
 import {RiTableFill} from 'react-icons/ri';
 import AccountTabsWrapper from './AccountTabsWrapper';
-import Menu from './Menu';
+import MenuComponent from './Menu';
 import ChangePassword from './ChangePassword';
 
 import {AppAnimate} from '../../../@crema';
@@ -82,7 +82,7 @@ const Account = () => {
             ))}
           </Tabs>
           <Box className='account-tabs-content'>
-            {value === 0 && <Menu />}
+            {value === 0 && <MenuComponent />}
             {value === 1 && <ChangePassword />}
             {value === 2 && <ChangePassword />}
           </Box>

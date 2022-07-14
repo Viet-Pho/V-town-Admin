@@ -15,7 +15,11 @@ const menuHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {method} = req;
 
   if (method === 'GET') {
-    const roomTypes = await database('room_type').select('id', 'type', 'type_name as name');
+    const roomTypes = await database('room_type').select(
+      'id',
+      'type',
+      'type_name as name',
+    );
 
     return res.status(200).send(roomTypes);
   }

@@ -15,7 +15,12 @@ const menuHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {method} = req;
 
   if (method === 'GET') {
-    const locations = await database('location').select('id', 'name', 'address', 'phone_number as phoneNumber');
+    const locations = await database('location').select(
+      'id',
+      'name',
+      'address',
+      'phone_number as phoneNumber',
+    );
 
     return res.status(200).send(locations);
   }

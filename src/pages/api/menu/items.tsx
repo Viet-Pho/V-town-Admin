@@ -2,7 +2,6 @@ import jwtAuth from 'middleware/jwt';
 import database from '../../../database';
 import {NextApiRequest, NextApiResponse} from 'next/types';
 
-
 export const config = {
   api: {
     bodyParser: {
