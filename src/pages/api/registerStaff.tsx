@@ -85,7 +85,7 @@ const registerStaff = (req: NextApiRequest, res: NextApiResponse) => {
           service: 'gmail',
           auth: {
             user: 'vtownmailservice@gmail.com',
-            pass: 'ABC123456!',
+            pass: 'rvpjelgutveldijy',
           },
         });
 

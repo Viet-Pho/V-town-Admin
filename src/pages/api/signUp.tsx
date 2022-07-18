@@ -101,7 +101,7 @@ export default async function signUp(
           service: 'gmail',
           auth: {
             user: 'vtownmailservice@gmail.com',
-            pass: 'ABC123456!',
+            pass: 'rvpjelgutveldijy',
           },
         });
 

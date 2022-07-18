@@ -2,6 +2,15 @@ import jwtAuth from 'middleware/jwt';
 import database from '../../../database';
 import {NextApiResponse, NextApiRequest} from 'next';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+    responseLimit: '10mb',
+  },
+};
+
 const getCustomerDetail = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: {customerId},
@@ -32,7 +41,7 @@ const getCustomerDetail = async (req: NextApiRequest, res: NextApiResponse) => {
       if (!customer) return res.status(404).send('Not Found');
 
       const [totalPoints] = await database('exchange_points')
-        .where('customer_id', customer.id)
+        .where('customer_id', customerId)
         .sum('points as totalPoints');
 
       return res.status(200).send({...customer, ...totalPoints});

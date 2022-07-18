@@ -58,7 +58,7 @@ export default async function ForgetPassword(
           service: 'gmail',
           auth: {
             user: 'vtownmailservice@gmail.com',
-            pass: 'ABC123456!',
+            pass: 'rvpjelgutveldijy',
           },
         });
 

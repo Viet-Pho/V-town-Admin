@@ -57,7 +57,7 @@ export default async function sendVerifyEmail(
           service: 'gmail',
           auth: {
             user: 'vtownmailservice@gmail.com',
-            pass: 'ABC123456!',
+            pass: 'rvpjelgutveldijy',
           },
         });
 
