@@ -15,7 +15,7 @@ const auth = async (req, res) => {
     .select(
       'username',
       'account_type as role',
-      'users.id',
+      'users.id as userId',
       'users.email',
       'confirmed',
       'card_id as cardId',

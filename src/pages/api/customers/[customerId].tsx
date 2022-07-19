@@ -43,8 +43,9 @@ const getCustomerDetail = async (req: NextApiRequest, res: NextApiResponse) => {
       const [totalPoints] = await database('exchange_points')
         .where('customer_id', customerId)
         .sum('points as totalPoints');
+      const concatTotalPoint = totalPoints.totalPoints ?? {totalPoints: 0};
 
-      return res.status(200).send({...customer, ...totalPoints});
+      return res.status(200).send({...customer, ...concatTotalPoint});
     }
     case 'PATCH': {
       const {

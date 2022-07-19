@@ -58,7 +58,7 @@ export default async function signUp(
       }
 
       try {
-        const insertUser = await database('users').insert({
+        const [insertedUserId] = await database('users').insert({
           email: req.body.email,
           first_name: req.body.first_name,
           last_name: req.body.last_name,
@@ -69,6 +69,13 @@ export default async function signUp(
           password: hash,
           account_type: 3,
           confirmed: 0,
+        });
+
+        await database('customers').insert({
+          user_id: insertedUserId,
+          email: req.body.email,
+          gender: 0,
+          birthday: new Date(),
         });
 
         const user: any = await database('users')
